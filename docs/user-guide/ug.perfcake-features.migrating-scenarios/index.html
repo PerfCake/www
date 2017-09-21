@@ -1,0 +1,206 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>2.6.&nbsp;Migrating scenarios to latest version</title><link rel="stylesheet" type="text/css" href="../css/guides.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="perfcake-user-guide.html" title="PerfCake 7.x"><link rel="up" href="ug.perfcake-features.html" title="Chapter&nbsp;2.&nbsp;PerfCake Features"><link rel="prev" href="ug.perfcake-features.exit-codes.html" title="2.5.&nbsp;Exit codes"><link rel="next" href="ug.general-usage.html" title="Chapter&nbsp;3.&nbsp;General Usage"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">2.6.&nbsp;Migrating scenarios to latest version</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ug.perfcake-features.exit-codes.html">Prev</a>&nbsp;</td><th width="60%" align="center">Chapter&nbsp;2.&nbsp;PerfCake Features</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ug.general-usage.html">Next</a></td></tr></table><hr></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.perfcake-features.migrating-scenarios"></a>2.6.&nbsp;Migrating scenarios to latest version</h2></div></div></div><p>
+      This chapter describes all you need to do in order to migrate PerfCake to a newer version.
+   </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.perfcake-features.migrating-scenarios.1-to-2"></a>2.6.1.&nbsp;From v1.0 to v2.x</h3></div></div></div><p>
+      The following list shows the steps that are needed to migrate from PerfCake version 1.0 to 2.x:
+      </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">Rename scenario XML schema namespace</li><li class="listitem">Rename message number constant name</li></ul></div><p>
+      The following sections describe each step in detail.
+   </p><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="ug.perfcake-features.migrating-scenarios.mirating.1-to-2.steps"></a>Migration steps</h4></div></div></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="ug.perfcake-features.migrating-scenarios.1-to-2.steps.xml-namespace"></a>Rename XML schema namespace</h5></div></div></div><p>The namespace of the XML schema for scenarios has been renamed from
+               <code class="code">urn:perfcake:scenario:1.0</code> to <code class="code">urn:perfcake:scenario:2.0</code> so
+            it must be updated in the scenario XML files. </p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="ug.perfcake-features.migrating-scenarios.1-to-2.steps.message-number"></a>Rename Message Number Constant Name</h5></div></div></div><p>If your sender depends on message ordinal number you need to change the name of the
+            particular constant from <code class="code">PerfCakeConst.MESSAGE_NUMBER_PROPERTY</code> to
+               <code class="code">PerfCakeConst.MESSAGE_NUMBER_HEADER</code>
+         </p></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.perfcake-features.migrating-scenarios.2-to-3"></a>2.6.2.&nbsp;From v2.x to v3.x</h3></div></div></div><p>There are several steps that are needed to migrate scenarios from PerfCake version 2.x to
+      3.x. The following list shows them: </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">Rename scenario XML schema namespace</li><li class="listitem">Rename class names</li><li class="listitem">Replace reporters</li><li class="listitem">Update RequestResponseJmsSender</li></ul></div><p>The following sections take a look at each step in detail. </p><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="ug.perfcake-features.migrating-scenarios.mirating.2-to-3.steps"></a>Migration steps</h4></div></div></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="ug.perfcake-features.migrating-scenarios.2-to-3.steps.xml-namespace"></a>Rename XML schema namespace</h5></div></div></div><p>The namespace of the XML schema for scenarios has been renamed from
+               <code class="code">urn:perfcake:scenario:2.0</code> to <code class="code">urn:perfcake:scenario:3.0</code> so
+            it must be updated in the scenario XML files. </p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="ug.perfcake-features.migrating-scenarios.2-to-3.steps.class-names"></a>Rename class names</h5></div></div></div><p>Following classes has been renamed to follow the naming conventions (See Developers' Guide).</p><div class="table"><a name="d0e1782"></a><div class="table-contents"><table summary="Renamed classes in PerfCake v3.x" border="1"><colgroup><col width="50%" align="left" class="v2.x"><col width="50%" align="left" class="v3.x"></colgroup><thead><tr><th align="left">Class name in version 2.x</th><th align="left">Class name in version 3.x</th></tr></thead><tbody><tr><td align="left">HTTPSender</td><td align="left">HttpSender</td></tr><tr><td align="left">HTTPSSender</td><td align="left">HttpsSender</td></tr><tr><td align="left">JDBCSender</td><td align="left">JdbcSender</td></tr><tr><td align="left">JMSSender</td><td align="left">JmsSender</td></tr><tr><td align="left">RequestResponseJMSSender</td><td align="left">RequestResponseJmsSender</td></tr><tr><td align="left">SOAPSocketSender</td><td align="left">SoapSocketSender</td></tr><tr><td align="left">SSLSocketSender</td><td align="left">SslSocketSender</td></tr><tr><td align="left">CSVDestination</td><td align="left">CsvDestination</td></tr><tr><td align="left">TextMessageValidator</td><td align="left">RegExpValidator</td></tr><tr><td align="left">RulesMessageValidator</td><td align="left">RulesValidator</td></tr></tbody></table></div><p class="title"><b>Table&nbsp;2.6.&nbsp;Renamed classes in PerfCake v3.x</b></p></div><br class="table-break"></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="ug.perfcake-features.migrating-scenarios.2-to-3.steps.reporters"></a>Replace reporters</h5></div></div></div><p>There are several reporters that has been removed from PerfCake and has been replaced
+            by others. The following sections illustrate that change and how to perform the
+            migration at the same time. </p><div class="section"><div class="titlepage"><div><div><h6 class="title"><a name="d0e1850"></a>AverageThroughputReporter -&gt; ThroughputStatsReporter</h6></div></div></div><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;reporter</span> <span class="hl-attribute">class</span>=<span class="hl-value">"AverageThroughputReporter"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       ...
+&nbsp;&nbsp;3       (destinations)
+&nbsp;&nbsp;4       ...
+&nbsp;&nbsp;5    <span class="hl-tag">&lt;/reporter&gt;</span></pre><p>is replaced by</p><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;reporter</span> <span class="hl-attribute">class</span>=<span class="hl-value">"ThroughputStatsReporter"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"minimumEnabled"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"false"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;3       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"maximumEnabled"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"false"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;4          ...
+&nbsp;&nbsp;5          (destinations)
+&nbsp;&nbsp;6          ...
+&nbsp;&nbsp;7    <span class="hl-tag">&lt;/reporter&gt;</span></pre></div><div class="section"><div class="titlepage"><div><div><h6 class="title"><a name="d0e1859"></a>ResponseTimeReporter -&gt; ResponseTimeStatsReporter</h6></div></div></div><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;reporter</span> <span class="hl-attribute">class</span>=<span class="hl-value">"ResponseTimeReporter"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       ...
+&nbsp;&nbsp;3       (destinations)
+&nbsp;&nbsp;4       ...
+&nbsp;&nbsp;5    <span class="hl-tag">&lt;/reporter&gt;</span></pre><p>is replaced by</p><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;reporter</span> <span class="hl-attribute">class</span>=<span class="hl-value">"ResponseTimeStatsReporter"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"minimumEnabled"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"false"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;3       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"maximumEnabled"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"false"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;4          ... 
+&nbsp;&nbsp;5          (destinations)
+&nbsp;&nbsp;6          ...
+&nbsp;&nbsp;7    <span class="hl-tag">&lt;/reporter&gt;</span></pre></div><div class="section"><div class="titlepage"><div><div><h6 class="title"><a name="d0e1868"></a>WindowResponseTimeReporter -&gt; ResponseTimeStatsReporter</h6></div></div></div><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;reporter</span> <span class="hl-attribute">class</span>=<span class="hl-value">"WindowResponseTimeReporter"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"windowSize"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"10"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;3          ...
+&nbsp;&nbsp;4          (destinations)
+&nbsp;&nbsp;5          ...
+&nbsp;&nbsp;6    <span class="hl-tag">&lt;/reporter&gt;</span></pre><p>is replaced by</p><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;reporter</span> <span class="hl-attribute">class</span>=<span class="hl-value">"ResponseTimeStatsReporter"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"windowSize"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"10"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;3       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"minimumEnabled"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"false"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;4       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"maximumEnabled"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"false"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;5          ...
+&nbsp;&nbsp;6          (destinations)
+&nbsp;&nbsp;7          ...
+&nbsp;&nbsp;8    <span class="hl-tag">&lt;/reporter&gt;</span></pre></div></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="ug.perfcake-features.migrating-scenarios.2-to-3.steps.RequestResponseJmsSender"></a>Update RequestResponseJmsSender</h5></div></div></div><p>The <code class="code">RequestResponseJmsSender</code> newly introduces the possibility to specify
+            different connection properties for request and response. But it changes the default
+            behavior. To ensure the original behavior is kept, the security properties for the
+            response has to be added to keep request and response credentials the same. </p><div class="section"><div class="titlepage"><div><div><h6 class="title"><a name="d0e1885"></a>RequestResponseJMSSender -&gt; RequestResponseJmsSender</h6></div></div></div><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;sender</span> <span class="hl-attribute">class</span>=<span class="hl-value">"RequestResponseJMSSender"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       ...
+&nbsp;&nbsp;3       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"connectionFactory"</span>
+&nbsp;&nbsp;4                 <span class="hl-attribute">value</span>=<span class="hl-value">"${jms.connection.factory}"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;5    
+&nbsp;&nbsp;6       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"username"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"${username}"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;7       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"password"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"${password}"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;8       <span class="hl-comment">&lt;!-- JNDI --&gt;</span>
+&nbsp;&nbsp;9       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"jndiContextFactory"</span>
+&nbsp;10                 <span class="hl-attribute">value</span>=<span class="hl-value">"${jndi.ctx.factory}"</span><span class="hl-tag">/&gt;</span>
+&nbsp;11       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"jndiUrl"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"${jndi.url}"</span><span class="hl-tag">/&gt;</span>
+&nbsp;12       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"jndiSecurityPrincipal"</span>
+&nbsp;13                 <span class="hl-attribute">value</span>=<span class="hl-value">"${jndi.username}"</span><span class="hl-tag">/&gt;</span>
+&nbsp;14       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"jndiSecurityCredentials"</span>
+&nbsp;15                 <span class="hl-attribute">value</span>=<span class="hl-value">"${jndi.password}"</span><span class="hl-tag">/&gt;</span>
+&nbsp;16       ...
+&nbsp;17    <span class="hl-tag">&lt;/sender&gt;</span></pre><p>is replaced by</p><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;sender</span> <span class="hl-attribute">class</span>=<span class="hl-value">"RequestResponseJmsSender"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       ...
+&nbsp;&nbsp;3       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"connectionFactory"</span>
+&nbsp;&nbsp;4                 <span class="hl-attribute">value</span>=<span class="hl-value">"${jms.connection.factory}"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;5       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"username"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"${username}"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;6       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"password"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"${password}"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;7       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"responseUsername"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"${username}"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;8       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"responsePassword"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"${password}"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;9       <span class="hl-comment">&lt;!-- JNDI --&gt;</span>
+&nbsp;10       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"jndiContextFactory"</span>
+&nbsp;11                 <span class="hl-attribute">value</span>=<span class="hl-value">"${jndi.ctx.factory}"</span><span class="hl-tag">/&gt;</span>
+&nbsp;12       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"jndiUrl"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"${jndi.url}"</span><span class="hl-tag">/&gt;</span>
+&nbsp;13       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"jndiSecurityPrincipal"</span>
+&nbsp;14                 <span class="hl-attribute">value</span>=<span class="hl-value">"${jndi.username}"</span><span class="hl-tag">/&gt;</span>
+&nbsp;15       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"jndiSecurityCredentials"</span>
+&nbsp;16                 <span class="hl-attribute">value</span>=<span class="hl-value">"${jndi.password}"</span><span class="hl-tag">/&gt;</span>
+&nbsp;17       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"responseJndiSecurityPrincipal"</span>
+&nbsp;18                 <span class="hl-attribute">value</span>=<span class="hl-value">"${jndi.username}"</span><span class="hl-tag">/&gt;</span>
+&nbsp;19       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"responseJndiSecurityCredentials"</span>
+&nbsp;20                 <span class="hl-attribute">value</span>=<span class="hl-value">"${jndi.password}"</span><span class="hl-tag">/&gt;</span>
+&nbsp;21       ...
+&nbsp;22    <span class="hl-tag">&lt;/sender&gt;</span></pre></div></div></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="ug.perfcake-features.migrating-scenarios.2-to-3.xslt"></a>Scenario conversion using XSLT</h4></div></div></div><p>After understanding all the steps needed to migrate PerfCake scenarios from version 2.x
+         to version 3.x we can take a look at an option to make the migration automatically using
+         XSL transformation <a href="#ftn.d0e1899" class="footnote" name="d0e1899"><sup class="footnote">[5]</sup></a> . The particular XSLT is available as a part of the PerfCake distribution and
+         it can be found at <code class="code">$PERFCAKE_HOME/resources/xslt/scenario-2.0-to-3.0.xsl</code>
+         .</p><p>There is a way to perform tha automated transformation using PerfCake sources. Please
+         refer to the section <span class="emphasis"><em>"Transformation of Scenarios"</em></span> in the Developers'
+         Guide.</p></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.perfcake-features.migrating-scenarios.3-to-4"></a>2.6.3.&nbsp;From v3.x to v4.x</h3></div></div></div><p>
+      The following list shows the steps that are needed to migrate from PerfCake version 3.x to 4.x:
+      </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">Rename scenario XML schema namespace</li></ul></div><p>
+      The following sections describe each step in detail.
+   </p><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="ug.perfcake-features.migrating-scenarios.mirating.3-to-4.steps"></a>Migration steps</h4></div></div></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="ug.perfcake-features.migrating-scenarios.3-to-4.steps.xml-namespace"></a>Rename XML schema namespace</h5></div></div></div><p>The namespace of the XML schema for scenarios has been renamed from
+               <code class="code">urn:perfcake:scenario:3.0</code> to <code class="code">urn:perfcake:scenario:4.0</code> so
+            it must be updated in the scenario XML files. </p></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.perfcake-features.migrating-scenarios.4-to-5"></a>2.6.4.&nbsp;From v4.x to v5.x</h3></div></div></div><p>
+      The following list shows the steps that are needed to migrate from PerfCake version 4.x to 5.x:
+      </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">Rename scenario XML schema namespace</li><li class="listitem">Move
+               <code class="code">run</code>
+               element out of generator
+            </li><li class="listitem">Change
+               <code class="code">target</code>
+               property of senders to a dedicated
+               <code class="code">&lt;target&gt;</code>
+               element.
+            </li></ul></div><p>
+      The following sections describe each step in detail.
+   </p><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="ug.perfcake-features.migrating-scenarios.mirating.4-to-5.steps"></a>Migration steps</h4></div></div></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="ug.perfcake-features.migrating-scenarios.4-to-5.steps.xml-namespace"></a>Rename XML schema namespace</h5></div></div></div><p>The namespace of the XML schema for scenarios has been renamed from
+               <code class="code">urn:perfcake:scenario:4.0</code> to <code class="code">urn:perfcake:scenario:5.0</code> so
+            it must be updated in the scenario XML files. </p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="ug.perfcake-features.migrating-scenarios.4-to-5.steps.move-run"></a>Move
+            <code class="code">run</code>
+            element out of generator
+         </h5></div></div></div><p>The <code class="code">run</code> element of <code class="code">generator</code> has been moved out of
+               <code class="code">generator</code> to a dedicatd element. </p><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;generator</span> <span class="hl-attribute">class</span>=<span class="hl-value">"..."</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;run</span> <span class="hl-attribute">type</span>=<span class="hl-value">"..."</span> <span class="hl-attribute">value</span>=<span class="hl-value">"..."</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;3       ...
+&nbsp;&nbsp;4       (properties)
+&nbsp;&nbsp;5       ...
+&nbsp;&nbsp;6    <span class="hl-tag">&lt;/reporter&gt;</span></pre><p>is replaced by</p><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;run</span> <span class="hl-attribute">type</span>=<span class="hl-value">"..."</span> <span class="hl-attribute">value</span>=<span class="hl-value">"..."</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;generator</span> <span class="hl-attribute">class</span>=<span class="hl-value">"..."</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;3       ...
+&nbsp;&nbsp;4       (properties)
+&nbsp;&nbsp;5       ...
+&nbsp;&nbsp;6    <span class="hl-tag">&lt;/reporter&gt;</span></pre></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="ug.perfcake-features.migrating-scenarios.4-to-5.steps.sender-target"></a>Change
+            <code class="code">target</code>
+            property of senders to a dedicated
+            <code class="code">&lt;target&gt;</code>
+            element.
+         </h5></div></div></div><p>
+            The
+            <code class="code">target</code>
+            property of senders was ascended from ordinary property to a dedicated element.
+         </p><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;sender</span> <span class="hl-attribute">class</span>=<span class="hl-value">"..."</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"target"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"..."</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;3       ...
+&nbsp;&nbsp;4       (properties)
+&nbsp;&nbsp;5       ...
+&nbsp;&nbsp;6    <span class="hl-tag">&lt;/sender&gt;</span></pre><p>is replaced by</p><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;sender</span> <span class="hl-attribute">class</span>=<span class="hl-value">"..."</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;target&gt;</span>...<span class="hl-tag">&lt;/target&gt;</span>
+&nbsp;&nbsp;3       ...
+&nbsp;&nbsp;4       (properties)
+&nbsp;&nbsp;5       ...
+&nbsp;&nbsp;6    <span class="hl-tag">&lt;/sender&gt;</span></pre></div></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="ug.perfcake-features.migrating-scenarios.mirating.4-to-5.xslt"></a>Scenario conversion using XSLT</h4></div></div></div><p>It is possible to automatically migrate scenarios from version 4 to version 5. For
+         instructions on running the migration using PerfCake sources, please refer to
+            <span class="emphasis"><em>"Transformation of Scenarios"</em></span> section in the Developers'
+         Guide.</p></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.perfcake-features.migrating-scenarios.5-to-6"></a>2.6.5.&nbsp;From v5.x to v6.x</h3></div></div></div><p>
+      The following list shows the steps that are needed to migrate from PerfCake version 5.x to 6.x:
+      </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">Rename scenario XML schema namespace</li></ul></div><p>
+      The following sections describe each step in detail.
+   </p><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="ug.perfcake-features.migrating-scenarios.mirating.5-to-6.steps"></a>Migration steps</h4></div></div></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="ug.perfcake-features.migrating-scenarios.5-to-6.steps.xml-namespace"></a>Rename XML schema namespace</h5></div></div></div><p>The namespace of the XML schema for scenarios has been renamed from
+               <code class="code">urn:perfcake:scenario:5.0</code> to <code class="code">urn:perfcake:scenario:6.0</code> so
+            it must be updated in the scenario XML files. </p></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.perfcake-features.migrating-scenarios.6-to-7"></a>2.6.6.&nbsp;From v6.x to v7.x</h3></div></div></div><p> The following list shows the steps that are needed to migrate from PerfCake version 6.x to
+      7.x: </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">Rename scenario XML schema namespace.</li><li class="listitem"><p>RegExp validator now needs to have the backslashed in the patter specification
+               escaped as well.</p></li><li class="listitem"><p>Due to an update in the templating engine, we now longer support arithmetic
+               expressions in templates and the default values in property placeholders are replaced
+               by colon (instead of the <span class="emphasis"><em>pipe</em></span> "|" character).</p></li><li class="listitem"><p>There is no sequence defined by default (although the default sequences were not
+               documented).</p></li><li class="listitem"><p>The implicit message header storing the <span class="emphasis"><em>Message Number</em></span> was
+               removed, instead the same value is now available in message attributes passed to
+               every sender and available for usage in both message headers and payload. It is now
+               correctly stored under the key <code class="code">perfcake.iteration.number</code> (which is
+               defined in the constant <code class="code">PerfCakeConst.ITERATION_NUMBER_PROPERTY</code>). If
+               there are more messages or any of the messages has multiplicity higher than one in
+               the scenario definition, all of the messages will have the same iteration number for
+               each iteration.</p></li><li class="listitem"><p>We changed the configuration of sequences to be aligned with validators. This
+               means that the sequence <code class="code">name</code> attribute has been changed to sequence
+                  <code class="code">id</code>.</p></li><li class="listitem"><p>We unified and corrected component package names. This required changing
+                  <code class="code">org.perfcake.reporting.reporters</code> and
+                  <code class="code">org.perfcake.reporting.destinations</code> to singular
+                  <code class="code">org.perfcake.reporting.reporter</code> and
+                  <code class="code">org.perfcake.reporting.destination</code>.</p></li><li class="listitem"><p>Sequences interface has updated the method to obtain the next value of the
+               sequence.</p></li><li class="listitem"><p>Support for JMS API 2.0 in <code class="code">JmsSender</code> and
+                  <code class="code">RequestResponseJmsSender</code>.</p></li></ul></div><p> The following sections describe some steps in more detail. </p><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="ug.perfcake-features.migrating-scenarios.mirating.6-to-7.steps"></a>Migration steps</h4></div></div></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="ug.perfcake-features.migrating-scenarios.6-to-7.steps.xml-namespace"></a>Rename XML schema namespace</h5></div></div></div><p>The namespace of the XML schema for scenarios has been renamed from
+               <code class="code">urn:perfcake:scenario:6.0</code> to <code class="code">urn:perfcake:scenario:7.0</code> so
+            it must be updated in the scenario XML files. </p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="ug.perfcake-features.migrating-scenarios.6-to-7.steps.regexp"></a>Update RegExp Validator patterns</h5></div></div></div><p>In every patter specified in the scenario, add one more backslash to places where a
+            backslash was previously used to escape RegExp character. For example, change
+               <code class="code">.*"I'm a [Ff]ish"!\.*</code> to <code class="code">.*"I'm a [Ff]ish"!\\.*</code> because the
+            second dot is meant to match a dot character and not any character as it does in a
+            RegExp.</p><p>Please refer to <a class="xref" href="ug.reference-guide.validation.html#ug.reference-guide.validation.validators.RegExpValidator" title="RegExpValidator">the section called &#8220;RegExpValidator&#8221;</a> for more
+            details.</p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="ug.perfcake-features.migrating-scenarios.6-to-7.steps.templates"></a>Update template placeholders</h5></div></div></div><p>Replace <code class="code">${property||default}</code> with <code class="code">${property:default}</code>.
+            Replace arithmetic expressions like <code class="code">@{property + 1}</code> with custom <a class="xref" href="ug.reference-guide.sequences.html" title="4.6.&nbsp;Sequences">Section&nbsp;4.6, &#8220;Sequences&#8221;</a>.</p><p>For more details on the advanced features of proeprties filtering read <a class="xref" href="ug.perfcake-features.scenario-definition.html#ug.perfcake-features.scenario-definition.filtering-properties" title="2.2.5.&nbsp;Filtering properties">Section&nbsp;2.2.5, &#8220;Filtering properties&#8221;</a>.</p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e2171"></a>Rename the name attribute in sequences</h5></div></div></div><p>In all scenario definitions change the sequence name attribute to sequence id. For
+            example, in XML scenarios change the following:</p><div class="example"><a name="d0e2176"></a><p class="title"><b>Example&nbsp;2.8.&nbsp;Old sequence configuration in XML</b></p><div class="example-contents"><pre class="programlisting">&lt;sequence name="..." class="..."&gt;</pre></div></div><br class="example-break"><p>To read like this:</p><div class="example"><a name="d0e2183"></a><p class="title"><b>Example&nbsp;2.9.&nbsp;New sequence configuration in XML</b></p><div class="example-contents"><pre class="programlisting">&lt;sequence id="..." class="..."&gt;</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e2188"></a>Rename of packages under org.perfcake.reporting</h5></div></div></div><p>This would affect you only when you used the canonical package name in scenario
+            configurations, or when you developed custom components and put them in the same
+            packages as PerfCake components are. Namely under
+               <code class="code">org.perfcake.reporting.reporters</code> and
+               <code class="code">org.perfcake.reporting.destinations</code>. All the plural package names should
+            be now converted to singular (i.e. <code class="code">org.perfcake.reporting.reporter</code> and
+               <code class="code">org.perfcake.reporting.destination</code>).</p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e2205"></a>Update Sequence implementations</h5></div></div></div><p>In your <code class="code">Sequence</code> implementations change the following:</p><div class="example"><a name="d0e2213"></a><p class="title"><b>Example&nbsp;2.10.&nbsp;Old Sequence implementation</b></p><div class="example-contents"><pre class="programlisting">public String getNext() {
+   ...
+   return nextValue;
+}</pre></div></div><br class="example-break"><p>To the new implementation:</p><div class="example"><a name="d0e2220"></a><p class="title"><b>Example&nbsp;2.11.&nbsp;New Sequence implementation</b></p><div class="example-contents"><pre class="programlisting">public void publishNext(final String sequenceId, final Properties values) {
+   ...
+   values.setProperty(sequenceId, nextValue);
+}</pre></div></div><br class="example-break"><p>This update allow a single section to publish more values. All the value keys should
+            start with the sequence specific prefix from the <code class="code">sequenceId</code>
+            parameter.</p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e2230"></a>Support for JMS API 2.0</h5></div></div></div><p>By default, JmsSender and RequestResponseJmsSender now use JMS API 2.0. If you want
+            to continue using JMS API 1.1, change your scenarios to use <code class="code">Jms11Sender</code>, or
+               <code class="code">RequestResponseJms11Sender</code> respectively.</p></div></div></div><div class="footnotes"><br><hr style="width:100; text-align:left;margin-left: 0"><div id="ftn.d0e1899" class="footnote"><p><a href="#d0e1899" class="simpara"><sup class="simpara">[5] </sup></a>
+               <a class="link" href="http://www.w3.org/TR/xslt" target="_top">http://www.w3.org/TR/xslt</a>
+            </p></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ug.perfcake-features.exit-codes.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="ug.perfcake-features.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ug.general-usage.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">2.5.&nbsp;Exit codes&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="perfcake-user-guide.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;3.&nbsp;General Usage</td></tr></table></div></body></html>

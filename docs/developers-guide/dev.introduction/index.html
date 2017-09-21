@@ -1,0 +1,28 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;1.&nbsp;Introduction</title><link rel="stylesheet" type="text/css" href="../css/guides.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="perfcake-developers-guide.html" title="PerfCake 7.x"><link rel="up" href="perfcake-developers-guide.html" title="PerfCake 7.x"><link rel="prev" href="acknowledgements.html" title="Acknowledgements"><link rel="next" href="dev.contributor.html" title="Part&nbsp;I.&nbsp;General Contributors' and Developers' Guide"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;1.&nbsp;Introduction</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="acknowledgements.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="dev.contributor.html">Next</a></td></tr></table><hr></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="dev.introduction"></a>Chapter&nbsp;1.&nbsp;Introduction</h1></div></div></div><p>PerfCake is a lightweight performance testing framework and a load generator. It has a
+      component design which means that you can build up your own performance measurements from some
+      basic building blocks. This allows a high flexibility in configuration and the components can
+      be reused in different tests. </p><p>PerfCake has a pluggable architecture with many supported interfaces/protocols out of the
+      box (HTTP, REST, JMS, JDBC, SOAP, socket, file etc.). If you need support for another
+      interface ask our community or provide the implementation. It is really easy as you will find
+      later in this guide. </p><p>Except for interfaces/protocols, PerfCake also supports various means of generating the
+      load. It can send a preset count of messages, it can send as many messages as the target
+      system is able to consume for a given period of time, or it can carefully aim for maximum
+      allowable throughput. </p><p>What would be a measurement with proper reports?! PerfCake supports various means of
+      reporting the measured values including average throughput (possibly over a time window),
+      memory consumption of the target JVM with linear regression analysis to see if there is a
+      memory leak and others. There are various output formats supported. Except for console or a
+      log file, we support CSV that can be imported as a spreadsheet. In the future we plan to add
+      more output formats as the requests arise. </p><p>What if the target system crashed and just quickly returns error messages? There are
+      validators that can validate the response to see if everything is OK. With validators you can
+      also use PerfCake to write an end-to-end test of your system. Like in case of JDBC - when you
+      provide a list of SQL commands and expected results. </p><p>To run PerfCake, one just needs to supply a so called "scenario". This is an XML file that
+      describes the building blocks that should be used together. Then you just run the scenario
+      using Maven or a prepared shell script if you downloaded just the binaries. We understand the
+      need for an IDE plugin and this is one of our short term goals. You can also use PerfCake in
+      your application using its API. In future we plan integration with Arquillian and testing
+      frameworks including TestNG and jUnit. </p><p>We hope to make your performance testing a real piece of cake! </p><p>This book is further divided into two main parts. This first part describes general
+      information useful for all developers and contributors. The second part is intended for core
+      developers with major control over the project. It describes release procedure, automatic site
+      generation etc. </p></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="acknowledgements.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="dev.contributor.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Acknowledgements&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="perfcake-developers-guide.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Part&nbsp;I.&nbsp;General Contributors' and Developers' Guide</td></tr></table></div></body></html>

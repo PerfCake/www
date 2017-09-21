@@ -1,0 +1,159 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>2.3.&nbsp;Running PerfCake</title><link rel="stylesheet" type="text/css" href="../css/guides.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="perfcake-user-guide.html" title="PerfCake 7.x"><link rel="up" href="ug.perfcake-features.html" title="Chapter&nbsp;2.&nbsp;PerfCake Features"><link rel="prev" href="ug.perfcake-features.scenario-definition.html" title="2.2.&nbsp;Performance scenario definition"><link rel="next" href="ug.perfcake-features.handling-issues.html" title="2.4.&nbsp;What to take care of during execution"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">2.3.&nbsp;Running PerfCake</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ug.perfcake-features.scenario-definition.html">Prev</a>&nbsp;</td><th width="60%" align="center">Chapter&nbsp;2.&nbsp;PerfCake Features</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ug.perfcake-features.handling-issues.html">Next</a></td></tr></table><hr></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.perfcake-features.configuration"></a>2.3.&nbsp;Running PerfCake</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.perfcake-features.configuration.cli"></a>2.3.1.&nbsp;Command line parameters</h3></div></div></div><p>PerfCake is a command line tool so it provides a CLI (command line interface) for executing
+      a PerfCake scenario (see <a class="xref" href="ug.perfcake-features.scenario-definition.html" title="2.2.&nbsp;Performance scenario definition">Section&nbsp;2.2, &#8220;Performance scenario definition&#8221;</a> ). The
+      main script can be found in <code class="code">$PERFCAKE_HOME/bin/perfcake.sh</code> for Linux OS or
+         <code class="code">%PERFCAKE_HOME%\bin\perfcake.bat</code> in case of Windows OS. </p><p>If the script is run without arguments, from the
+      following help that is printed you can see the arguments that can be
+      used to control the scenario execution.
+   </p><pre class="programlisting">[PERFCAKE_HOME]$ ./bin/perfcake.sh
+=== Welcome to PerfCake 7.5 ===
+usage: ScenarioExecution -s &lt;SCENARIO&gt; [options] [-D&lt;property=value&gt;]*
+ -d,--debug                                start debug JMX agent for
+                                           external monitoring
+ -D &lt;property=value&gt;                       system properties
+ -dn,--debug-name &lt;AGENT_NAME&gt;             debug agent name in the JMX
+                                           tree
+ -h,--help                                 prints help/usage
+ -log,--log-level &lt;LOG_LEVEL&gt;              logging level
+ -md,--messages-dir &lt;MESSAGES_DIR&gt;         directory for messages
+ -pd,--plugins-dir &lt;PLUGINS_DIR&gt;           directory for plugins
+ -pf,--properties-file &lt;PROPERTIES_FILE&gt;   custom system properties file
+ -r,--replay &lt;RAW_FILE&gt;                    raw file to be replayed
+ -s,--scenario &lt;SCENARIO&gt;                  scenario to be executed
+ -sd,--scenarios-dir &lt;SCENARIOS_DIR&gt;       directory for scenarios
+ -skip,--skip-timer-benchmark              skip system timer benchmark</pre><p>The only mandatory argument is <code class="code">-s</code> (or <code class="code">--scenario</code> ), that
+      specifies the name of the scenario to be executed. PerfCake will look for the scenario
+      definition in the file called <code class="code">&lt;SCENARIO&gt;.xml</code> that is placed under the
+      directory that is located at <code class="code">$PERFCAKE_HOME/resources/scenarios</code> . The path to the
+      directory with scenarios can be specified by the <code class="code">-sd</code> (or
+         <code class="code">--scenarios-dir</code> ) argument. </p><p>If the scenario is configured to send any message (see <a class="xref" href="ug.reference-guide.messages.html" title="4.5.&nbsp;What - Messages">Section&nbsp;4.5, &#8220;What - Messages&#8221;</a> ), it will look under the directory that is by
+      placed at <code class="code">$PERFCAKE_HOME/resources/messages</code> . That location can be specified by
+      the <code class="code">-md</code> (or <code class="code">--messages-dir</code> ) argument. </p><p>If you need to set one or more system properties for scenario (see <a class="xref" href="ug.perfcake-features.scenario-definition.html#ug.perfcake-features.scenario-definition.filtering-properties" title="2.2.5.&nbsp;Filtering properties">Section&nbsp;2.2.5, &#8220;Filtering properties&#8221;</a> ), there are two
+      ways. You can either use <code class="code">-Dproperty=value</code> like arguments or specify a path to the
+      property file using the <code class="code">-pf</code> (or <code class="code">--properties-file</code> ) argument. </p><p>Following table describes all the PerfCake CLI arguments. </p><div class="table"><a name="d0e1101"></a><div class="table-contents"><table summary="PerfCake CLI arguments" border="1"><colgroup><col width="28%" align="left" class="argument-name"><col width="29%" align="justify" class="description"><col width="14%" align="left" class="required"><col width="29%" align="left" class="default-value"></colgroup><thead><tr><th align="left">Argument</th><th align="justify">Description</th><th align="left">Required</th><th align="left">Default value</th></tr></thead><tbody><tr><td align="left">-s, --scenario</td><td align="justify">Name of the scenario to be executed.</td><td align="left">Yes</td><td align="left">-</td></tr><tr><td align="left">-log, --log-level &lt;LOG_LEVEL&gt;</td><td align="justify">Default PerfCake logging level. Can be <code class="code">trace</code>,
+                        <code class="code">debug</code>, <code class="code">info</code>, <code class="code">warn</code>,
+                     <code class="code">error</code>.</td><td align="left">No</td><td align="left"><code class="code">info</code></td></tr><tr><td align="left">-D&lt;property&gt;=&lt;value&gt;</td><td align="justify">Sets a single system property with a given name and value. Multiple
+                     property arguments are allowed.</td><td align="left">No</td><td align="left">-</td></tr><tr><td align="left">-sd, --scenarios-dir</td><td align="justify">Path to the directory where scenarios are located.</td><td align="left">No</td><td align="left"><code class="code">$PERFCAKE_HOME/resources/scenarios</code></td></tr><tr><td align="left">-md, --messages-dir</td><td align="justify">Path to the directory where message files are located.</td><td align="left">No</td><td align="left"><code class="code">$PERFCAKE_HOME/resources/messages</code></td></tr><tr><td align="left">-pd, --plugins-dir</td><td align="justify">Path to the directory where plugins are located (see <a class="xref" href="ug.extending.plugins.html" title="6.2.&nbsp;Custom components - Plugins">Section&nbsp;6.2, &#8220;Custom components - Plugins&#8221;</a> ). </td><td align="left">No</td><td align="left"><code class="code">$PERFCAKE_HOME/resources/plugins</code></td></tr><tr><td align="left">-r, --replay &lt;RAW_FILE&gt;</td><td align="justify">Replay the previously raw data with the given scenario. No test is
+                     executed, just the reporters are used to create reports from the
+                        <code class="code">&lt;RAW_FILE&gt;</code> data file.</td><td align="left">No</td><td align="left">-</td></tr><tr><td align="left">-pf, --properties-file</td><td align="justify">Path to the file containing system properties.</td><td align="left">No</td><td align="left">-</td></tr><tr><td align="left">-skip, --skip-timer-benchmark</td><td align="justify">Skip system timer benchmark during PerfCake startup. This can speedup the
+                     startup a little bit.</td><td align="left">No</td><td align="left"><code class="code">false</code></td></tr><tr><td align="left">-d, --debug</td><td align="justify">Starts an internal debug agent that publishes status of PerfCake components
+                     via JMX. This is an experimental feature suited for performance scenario
+                     development. It has a significant performance drawback and must not be used for
+                     real testing.</td><td align="left">No</td><td align="left"><code class="code">false</code></td></tr><tr><td align="left">-dn, --debug-name</td><td align="justify">Name of the debug agent for the case when there were multiple PerfCake
+                     instances in the same JVM sharing the JMX data.</td><td align="left">No</td><td align="left">perfcake-1</td></tr><tr><td align="left">-h, --help</td><td align="justify">Prints PerfCake help/usage information.</td><td align="left">No</td><td align="left">-</td></tr></tbody></table></div><p class="title"><b>Table&nbsp;2.3.&nbsp;PerfCake CLI arguments</b></p></div><p><br class="table-break">Some useful properties can be configured using the <code class="code">-Dproperty=value
+         parameter</code>. These are not so common so there is no dedicated short parameter variant.
+      The following table lists the other properties recognized by PerfCake. None of them is
+      required.</p><div class="table"><a name="d0e1258"></a><div class="table-contents"><table summary="PerfCake recognized properties" border="1"><colgroup><col width="33%" align="left" class="c1"><col width="33%" align="justify" class="c2"><col width="34%" align="left" class="c3"></colgroup><thead><tr><th align="left">Property name</th><th align="justify">Description</th><th align="left">Default value</th></tr></thead><tbody><tr><td align="left">perfcake.scenario</td><td align="justify">An alternative way to specify the PerfCake scenario. It is equivalent to the
+                     <code class="code">-s</code> parameter.</td><td align="left">-</td></tr><tr><td align="left">perfcake.encoding</td><td align="justify">The encoding used for all inputs and outputs.</td><td align="left">UTF-8</td></tr><tr><td align="left">perfcake.scenarios.dir</td><td align="justify">Equivalent of the <code class="code">-sd</code> command line parameter.</td><td align="left"><code class="code">$PERFCAKE_HOME/resources/scenarios</code></td></tr><tr><td align="left">perfcake.messages.dir</td><td align="justify">Equivalent of the <code class="code">-md</code> command line parameter.</td><td align="left"><code class="code">$PERFCAKE_HOME/resources/messages</code></td></tr><tr><td align="left">perfcake.plugins.dir</td><td align="justify">Equivalent of the <code class="code">-pd</code> command line parameter.</td><td align="left"><code class="code">$PERFCAKE_HOME/resources/plugins</code></td></tr><tr><td align="left">perfcake.properties.file</td><td align="justify">Equivalent of the <code class="code">-pf</code> command line parameter.</td><td align="left">-</td></tr><tr><td align="left">perfcake.logging.level</td><td align="justify">Equivalent of the <code class="code">-log</code> command line parameter.</td><td align="left">info</td></tr><tr><td align="left">perfcake.fail.fast</td><td align="justify">Allows preliminary termination of PerfCake in the case there is a failure
+                  during sending a message. PerfCake needs to wait for all the threads to finish, so
+                  you might see an error to be shown multiple times actually. In case this is set to
+                  true, no more requests for sending a messages will be created.</td><td align="left"><code class="code">false</code></td></tr><tr><td align="left">perfcake.templates.disabled</td><td align="justify">Completely disables the templating engine, no placeholders will be replaced in
+                  scenarios and messages. Normally, it is sufficient just not to use the templates.
+                  Having the engine on and not using it does not bring any performance overhead. By
+                  setting this to true, PerfCake can also run in JRE (the templating is the only
+                  part of PerfCake depending on JDK).</td><td align="left"><code class="code">false</code></td></tr><tr><td align="left">perfcake.skip.timer.benchmark</td><td align="justify">Equivalent of the <code class="code">-skip</code> command line parameter.</td><td align="left"><code class="code">false</code></td></tr><tr><td align="left">perfcake.replay</td><td align="justify">Equivalent of the <code class="code">-r</code> command line parameter.</td><td align="left">-</td></tr><tr><td align="left">perfcake.debug</td><td align="justify">Equivalent of the <code class="code">-d</code> command line parameter.</td><td align="left"><code class="code">false</code></td></tr><tr><td align="left">perfcake.debug.name</td><td align="justify">Equivalent of the <code class="code">-dn</code> command line parameter.</td><td align="left">perfcake-1</td></tr></tbody></table></div><p class="title"><b>Table&nbsp;2.4.&nbsp;PerfCake recognized properties</b></p></div><br class="table-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.perfcake-features.configuration.maven"></a>2.3.2.&nbsp;Running scenarios from Maven</h3></div></div></div><p>PerfCake is provided with a Maven plugin which allows to run PerfCake scenario within Maven
+      build. This makes perfomance test automation more easy and encourages you to run performance
+      tests on a regular basis (e.g. within your favourite CI server). Running performance test on a
+      regular basis allows you to spot performance drops very soon and thus makes it much easier to
+      identify which commit has caused performance regression.</p><p>Currently, the plugin has only one goal <code class="code">scenario-run</code>, which runs specified
+      PerfCake scenario. By default, this goal is executed in <span class="emphasis"><em>integration-test</em></span>
+      phase (i.e. assumes, that you deploy/start your application in
+         <span class="emphasis"><em>pre-integration-test</em></span> phase and shut it down in
+         <span class="emphasis"><em>post-integration-test</em></span> phase). </p><p>The only mandatory parameter is <code class="code">&lt;scenario&gt;</code>, which specifies the name of the
+      scenario to be run. Optionally, you can also specify <code class="code">&lt;scenarios-dir&gt;</code>,
+         <code class="code">&lt;messages-dir&gt;</code> and <code class="code">&lt;plugins-dir&gt;</code>, which specify paths to
+      directories containing scenarios, messages and plugins, respectively. If you don't setup these
+      parameters, plugin assumes, that appropriate directories (<code class="code">scenarios</code>,
+         <code class="code">messages</code>, <code class="code">plugins</code>) are in
+         <code class="code">src/test/resources/perfcake</code>. This can be switched to
+         <code class="code">src/main/resources/perfcake</code> by configuring
+         <code class="code">&lt;use-test-resources&gt;</code> to <code class="code">false</code>. If any of these directories
+      does not exists, plugin will use <code class="code">src/test/resources</code> (or
+         <code class="code">src/main/resources</code>) as a fallback value for missing parameter.</p><p>The PerfCake Maven plugin requires log4j2 configuration file for PerfCake to report
+      properly. By default it assumes the file to be located in project root and named
+         <code class="code">log4j2.xml</code>. This can be changed by the <code class="code">&lt;log4j2-config&gt;</code> tag.
+      The PerfCake logging level can be configured with <code class="code">&lt;log-level&gt;</code> tag and a file
+      with additional configuration properties can be specified by
+      <code class="code">&lt;properties-file&gt;</code>.</p><p>The PerfCake version used with the plugin is always the same as plugin version. Both jar
+      files are released together.</p><div class="example"><a name="d0e1478"></a><p class="title"><b>Example&nbsp;2.6.&nbsp;PerfCake Maven plugin sample configuration</b></p><div class="example-contents"><pre class="programlisting">   <span class="hl-tag">&lt;properties&gt;</span>
+      <span class="hl-tag">&lt;perfcake.version&gt;</span>7.5<span class="hl-tag">&lt;/perfcake.version&gt;</span>
+      ...
+   <span class="hl-tag">&lt;/properties&gt;</span>
+   ...
+   <span class="hl-tag">&lt;build&gt;</span>
+      <span class="hl-tag">&lt;plugins&gt;</span>
+         <span class="hl-tag">&lt;plugin&gt;</span>
+            <span class="hl-tag">&lt;groupId&gt;</span>org.perfcake.maven<span class="hl-tag">&lt;/groupId&gt;</span>
+            <span class="hl-tag">&lt;artifactId&gt;</span>perfcake-maven-plugin<span class="hl-tag">&lt;/artifactId&gt;</span>
+            <span class="hl-tag">&lt;version&gt;</span>${perfcake.version}<span class="hl-tag">&lt;/version&gt;</span>
+            <span class="hl-tag">&lt;configuration&gt;</span>
+               <span class="hl-tag">&lt;scenario&gt;</span>my_perfcake_scenario<span class="hl-tag">&lt;/scenario&gt;</span>
+               <span class="hl-tag">&lt;log4j2-config&gt;</span>src/test/resources/log4j2.xml<span class="hl-tag">&lt;/log4j2-config&gt;</span>
+            <span class="hl-tag">&lt;/configuration&gt;</span>
+            <span class="hl-tag">&lt;executions&gt;</span>
+               <span class="hl-tag">&lt;execution&gt;</span>
+                  <span class="hl-tag">&lt;id&gt;</span>perfcake-scenario-run<span class="hl-tag">&lt;/id&gt;</span>
+                  <span class="hl-tag">&lt;goals&gt;</span>
+                     <span class="hl-tag">&lt;goal&gt;</span>scenario-run<span class="hl-tag">&lt;/goal&gt;</span>
+                  <span class="hl-tag">&lt;/goals&gt;</span>
+               <span class="hl-tag">&lt;/execution&gt;</span>
+            <span class="hl-tag">&lt;/executions&gt;</span>
+            <span class="hl-tag">&lt;dependencies&gt;</span>
+               <span class="hl-tag">&lt;dependency&gt;</span>
+                  <span class="hl-tag">&lt;groupId&gt;</span>org.perfcake<span class="hl-tag">&lt;/groupId&gt;</span>
+                  <span class="hl-tag">&lt;artifactId&gt;</span>perfcake<span class="hl-tag">&lt;/artifactId&gt;</span>
+                  <span class="hl-tag">&lt;version&gt;</span>${perfcake.version}<span class="hl-tag">&lt;/version&gt;</span>
+                  <span class="hl-tag">&lt;scope&gt;</span>test<span class="hl-tag">&lt;/scope&gt;</span>
+               <span class="hl-tag">&lt;/dependency&gt;</span>
+            <span class="hl-tag">&lt;/dependencies&gt;</span>
+         <span class="hl-tag">&lt;/plugin&gt;</span>
+      ...
+      <span class="hl-tag">&lt;/plugins&gt;</span>
+   <span class="hl-tag">&lt;/build&gt;</span></pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.perfcake-features.configuration.logging"></a>2.3.3.&nbsp;Logging</h3></div></div></div><p>By default, PerfCake comes configured for a production environment. Logging level is set to
+         <span class="emphasis"><em>info</em></span> and validation messages are logged in a separate file. You can
+      change the default logging level for PerfCake by a command line parameter <code class="code">-log</code>
+      (see <a class="xref" href="ug.perfcake-features.configuration.html#ug.perfcake-features.configuration.cli" title="2.3.1.&nbsp;Command line parameters">Section&nbsp;2.3.1, &#8220;Command line parameters&#8221;</a> for more details). Possible
+      logging levels are: <span class="emphasis"><em>all</em></span>, <span class="emphasis"><em>trace</em></span>,
+         <span class="emphasis"><em>debug</em></span>, <span class="emphasis"><em>info</em></span>, <span class="emphasis"><em>warn</em></span>,
+         <span class="emphasis"><em>error</em></span>, <span class="emphasis"><em>fatal</em></span>, <span class="emphasis"><em>off</em></span>.</p><p>More tweaking can be done in the <code class="code">log4j2.xml</code> file. It is out of the scope of
+      this guide to describe this configuration as this is a standard Log4j2 configuration file and
+      one can find its own documentation. </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.perfcake-features.configuration.replay"></a>2.3.4.&nbsp;Results Replay</h3></div></div></div><p>It is possible to record raw results data from a performance test run and later replay
+      them. This can be useful when we use a remote machine to run the test and we need to process
+      the data on a different location or when we want to fine-tune the reporting facilities and we
+      cannot or don't want to rerun the real test many times.</p><p>To record the test data, you can use <a class="xref" href="ug.reference-guide.reporting.html#ug.reference-guide.reporting.reporters.RawReporter" title="RawReporter">the section called &#8220;RawReporter&#8221;</a>. This will create a single
+      output file with the recorded data. The file can be of a significant size depending on the
+      number of test iterations. From our experience, a test with 100,000 iterations results in
+      afile of size approx 4-8MB (depending on test meta-data available, sequences used
+      etc.).</p><p>The file can be later replayed by providing the corresponding scenario with a different
+      configuration of reporting section and passing the recorded data file to PerfCake in the
+         <code class="code">--replay</code> parameter. </p><div class="example"><a name="d0e1539"></a><p class="title"><b>Example&nbsp;2.7.&nbsp;Sample usage of the results replay mode</b></p><div class="example-contents"><pre class="programlisting">&gt; $PERFCAKE_HOME/bin/perfcake.sh -s http-reporting -r perfcake-measurement-1465935794498.raw 
+2016-06-14 22:37:20,359 INFO  {org.perfcake.ScenarioExecution} === Welcome to PerfCake 7.5 ===
+2016-06-14 22:37:20,699 INFO  {org.perfcake.scenario.ScenarioBuilder} Scenario configuration: file:/home/perfcake/perfcake-7.5/resources/scenarios/http-reporting.xml
+2016-06-14 22:37:20,660 INFO  {org.perfcake.ScenarioExecution} Replaying raw results recorded in perfcake-measurement-1465935794498.raw.
+[0:00:00][1 iterations][3%] [319.848264 ms] [warmUp =&gt; false] [Threads =&gt; 10] [ResponseSize =&gt; 0.00 B] [failures =&gt; 0] [RequestSize =&gt; 0.00 B] [Average =&gt; 319.848264 ms]
+[0:00:01][59 iterations][14%] [179.383135 ms] [warmUp =&gt; false] [Threads =&gt; 10] [ResponseSize =&gt; 0.00 B] [failures =&gt; 0] [RequestSize =&gt; 0.00 B] [Average =&gt; 207.6054971694915 ms]
+[0:00:02][128 iterations][24%] [148.827863 ms] [warmUp =&gt; false] [Threads =&gt; 10] [ResponseSize =&gt; 0.00 B] [failures =&gt; 0] [RequestSize =&gt; 0.00 B] [Average =&gt; 179.01238675000008 ms]
+[0:00:03][198 iterations][34%] [138.458243 ms] [warmUp =&gt; false] [Threads =&gt; 10] [ResponseSize =&gt; 0.00 B] [failures =&gt; 0] [RequestSize =&gt; 0.00 B] [Average =&gt; 167.52745448989901 ms]
+[0:00:04][265 iterations][44%] [172.478225 ms] [warmUp =&gt; false] [Threads =&gt; 10] [ResponseSize =&gt; 0.00 B] [failures =&gt; 0] [RequestSize =&gt; 0.00 B] [Average =&gt; 161.4592350792453 ms]
+[0:00:05][315 iterations][54%] [232.630756 ms] [warmUp =&gt; false] [Threads =&gt; 10] [ResponseSize =&gt; 0.00 B] [failures =&gt; 0] [RequestSize =&gt; 0.00 B] [Average =&gt; 167.65647934285724 ms]
+[0:00:06][369 iterations][64%] [170.956762 ms] [warmUp =&gt; false] [Threads =&gt; 10] [ResponseSize =&gt; 0.00 B] [failures =&gt; 0] [RequestSize =&gt; 0.00 B] [Average =&gt; 170.2701377127373 ms]
+[0:00:07][421 iterations][74%] [205.153517 ms] [warmUp =&gt; false] [Threads =&gt; 10] [ResponseSize =&gt; 0.00 B] [failures =&gt; 0] [RequestSize =&gt; 0.00 B] [Average =&gt; 173.20733971496443 ms]
+[0:00:08][470 iterations][85%] [201.284832 ms] [warmUp =&gt; false] [Threads =&gt; 10] [ResponseSize =&gt; 0.00 B] [failures =&gt; 0] [RequestSize =&gt; 0.00 B] [Average =&gt; 176.6280006106384 ms]
+[0:00:09][520 iterations][95%] [232.02807 ms] [warmUp =&gt; false] [Threads =&gt; 10] [ResponseSize =&gt; 0.00 B] [failures =&gt; 0] [RequestSize =&gt; 0.00 B] [Average =&gt; 179.5895076057694 ms]
+[0:00:10][536 iterations][100%] [196.740767 ms] [warmUp =&gt; false] [Threads =&gt; 10] [ResponseSize =&gt; 0.00 B] [failures =&gt; 0] [RequestSize =&gt; 0.00 B] [Average =&gt; 181.79292323694048 ms]
+2016-06-14 22:37:21,058 INFO  {org.perfcake.ScenarioExecution} === Goodbye! ===</pre><p>Please not the time difference between the start and the end of the replay (22:37:20,660
+         - 22:37:21,058). This means that all the results from a test that originally took 10
+         seconds was replayed in less than a second.</p></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.perfcake-features.configuration.debug"></a>2.3.5.&nbsp;Debug Agent</h3></div></div></div><p>The Debug Agent is an experimental feature suited for performance scenario development. It
+      has a significant performance drawback and must not be used for real testing.</p><p>This agent publishes status of PerfCake components via JMX and can be read by utilities
+      like <code class="code">jvisualvm</code> (with MBean plugin).</p><p>The agent can be started by configuring the system property <code class="code">perfcake.debug</code> to
+         <code class="code">true</code> or by passing the <code class="code">-d</code> or <code class="code">--debug</code> command line
+      options. For the agent to work properly, the JDK's <code class="code">tools.jar</code> must be on the
+      classpath. This necessity will be removed in Java 9. The PerfCake startup scripts try to
+      configure the classpath accordingly but they still might fail. As a workaround, you might copy
+      the <code class="code">tools.jar</code> file to <code class="code">${PERFCAKE_HOME}/lib/ext</code>.</p><p>When there are multiple PerfCake instances running in the same JVM, they can be
+      differentiated by setting <code class="code">perfcake.debug.name</code> property (or <code class="code">-dn</code>,
+         <code class="code">--debug-name</code> command line options). The default agent name is
+         <code class="code">perfcake-1</code>.</p><p>The main purpose of the Debug Agent is for IDE plugin integration and debugging performance
+      scenarios. The feature state will be claimed stable once there is enough testing with the IDE
+      plugins and probably when we can remove the <code class="code">tools.jar</code> dependency.</p><div class="figure"><a name="ug.perfcake-features.configuration.debug.jmx"></a><div class="figure-contents"><div class="mediaobject" align="center"><img src="./images/jmx.png" align="middle" alt="JMX tree with PerfCake debug information in jvisualvm"></div></div><p class="title"><b>Figure&nbsp;2.2.&nbsp;JMX tree with PerfCake debug information in <code class="code">jvisualvm</code></b></p></div><br class="figure-break"></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ug.perfcake-features.scenario-definition.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="ug.perfcake-features.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ug.perfcake-features.handling-issues.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">2.2.&nbsp;Performance scenario definition&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="perfcake-user-guide.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;2.4.&nbsp;What to take care of during execution</td></tr></table></div></body></html>

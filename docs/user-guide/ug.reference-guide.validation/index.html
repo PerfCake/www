@@ -1,0 +1,111 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>4.8.&nbsp;Validation</title><link rel="stylesheet" type="text/css" href="../css/guides.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="perfcake-user-guide.html" title="PerfCake 7.x"><link rel="up" href="ug.reference-guide.html" title="Chapter&nbsp;4.&nbsp;Reference Guide"><link rel="prev" href="ug.reference-guide.reporting.html" title="4.7.&nbsp;Reporting"><link rel="next" href="ug.result-repository.html" title="Chapter&nbsp;5.&nbsp;Result repository"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">4.8.&nbsp;Validation</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ug.reference-guide.reporting.html">Prev</a>&nbsp;</td><th width="60%" align="center">Chapter&nbsp;4.&nbsp;Reference Guide</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ug.result-repository.html">Next</a></td></tr></table><hr></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.reference-guide.validation"></a>4.8.&nbsp;Validation</h2></div></div></div><p>Validation can be used to check if the response received by a sender is
+      valid. It is optional and if it is used, it is performed in a gentle way
+      (only once in a 0.5 sec) not to add any significant overhead and not
+      to affect the measuring.
+   </p><p>The validation is configured in a scenario in two places. First there is a kind of
+      validator pool where all validators available in the scenario are placed. The validator pool
+      is configured in the <code class="code">validation</code> section of the scenario. Each validator has a
+      unique ID by which it can be referenced. Once at least one of the validators is configured, it
+      can be referenced by a <code class="code">message</code> 's sub-element <code class="code">validatorRef</code>, which is
+      the second place the validation is configured. By adding a validator refecence to the messages
+      we tell PerfCake that the response to that particular messages should be validated by that
+      particular validator. Any message can have multiple validator references and each validator
+      must be passed in order to set the response valid. Any validator can be referenced from more
+      than one message. </p><p>The validation as a whole can be enabled or disabled by setting the optional boolean
+      attribute called <code class="code">enabled</code> on the <code class="code">validation</code> element to the value of
+         <code class="code">true</code>. By default the validation is disabled. </p><p>The validation thread has some sleep for to wait between validations not to influence the
+      measured results. At the end, when there is nothing else to do, it goes through the remaining
+      responses faster. This behavior can be controlled via the optional <code class="code">fastForward</code>
+      attribute on the <code class="code">validation</code> element. If the value is <code class="code">true</code> the sleep
+      periods are ignored and the validation goes as fast as possible. However, that influences the
+      measured results. For that reason the default value is <code class="code">false</code>. </p><div class="example"><a name="d0e7648"></a><p class="title"><b>Example&nbsp;4.66.&nbsp;An example of validation configuration:</b></p><div class="example-contents"><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;messages&gt;</span>
+&nbsp;&nbsp;2       ...
+&nbsp;&nbsp;3       <span class="hl-tag">&lt;message</span> <span class="hl-attribute">uri</span>=<span class="hl-value">"..."</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;4          <span class="hl-tag">&lt;validatorRef</span> <span class="hl-attribute">id</span>=<span class="hl-value">"validator1"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;5          ...
+&nbsp;&nbsp;6       <span class="hl-tag">&lt;/message&gt;</span>
+&nbsp;&nbsp;7       <span class="hl-tag">&lt;message</span> <span class="hl-attribute">uri</span>=<span class="hl-value">"..."</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;8          <span class="hl-tag">&lt;validatorRef</span> <span class="hl-attribute">id</span>=<span class="hl-value">"validator1"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;9          <span class="hl-tag">&lt;validatorRef</span> <span class="hl-attribute">id</span>=<span class="hl-value">"validator2"</span><span class="hl-tag">/&gt;</span>
+&nbsp;10          ...
+&nbsp;11       <span class="hl-tag">&lt;/message&gt;</span>
+&nbsp;12       ...
+&nbsp;13    <span class="hl-tag">&lt;/messages&gt;</span>
+&nbsp;14    ...
+&nbsp;15    <span class="hl-tag">&lt;validation</span> <span class="hl-attribute">fastForward</span>=<span class="hl-value">"false"</span> <span class="hl-attribute">enabled</span>=<span class="hl-value">"true"</span><span class="hl-tag">&gt;</span>
+&nbsp;16       <span class="hl-tag">&lt;validator</span> <span class="hl-attribute">id</span>=<span class="hl-value">"validator1"</span> <span class="hl-attribute">class</span>=<span class="hl-value">"..."</span><span class="hl-tag">&gt;</span> 
+&nbsp;17          ...
+&nbsp;18       <span class="hl-tag">&lt;/validator&gt;</span>
+&nbsp;19       <span class="hl-tag">&lt;validator</span> <span class="hl-attribute">id</span>=<span class="hl-value">"validator2"</span> <span class="hl-attribute">class</span>=<span class="hl-value">"..."</span><span class="hl-tag">&gt;</span> 
+&nbsp;20          ...
+&nbsp;21       <span class="hl-tag">&lt;/validator&gt;</span>
+&nbsp;22    <span class="hl-tag">&lt;/validation&gt;</span></pre><p>In the example above there are two validators (<code class="code">validator1</code> and
+            <code class="code">validator2</code>) and two messages configured. The first message has just the
+            <code class="code">validator1</code> attached so the response message received to the first message
+         will be validated just by the <code class="code">validator1</code>.</p><p>On the other hand there is a second
+         message that has both validators attached. So the response to the second message will be validated
+         by both of the validators.
+      </p><p>The validation is enabled and the fast validation mode will be activated once the performance test finishes.</p><p>When specifying the validator class, unless you enter a fully classified class name, the
+         default package <code class="code">org.perfcake.validation</code> is assumed.</p><p>The rest of the chapter will present all the available validators that can be used in PerfCake.</p></div></div><br class="example-break"><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.reference-guide.validation.validators"></a>4.8.1.&nbsp;Validators</h3></div></div></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="ug.reference-guide.validation.validators.DictionaryValidator"></a>DictionaryValidator</h4></div></div></div><p>Dictionary validator can create a dictionary of valid responses and use this to validate
+      them in another run. It is also possible to create the dictionary manually, however, this is
+      too complicated task and we always recommend running the validation in record mode first. Any
+      manual changes can be done later. </p><p>The validator creates an index file and a separate file for each response. A writable
+      directory must be specified using the <code class="code">dictionaryDirectory</code> property. The default
+      index file name can be redefined. The response file names are based on hash codes of the
+      original messages. Empty, null or equal messages will overwrite the file but this is not the
+      intended use of this validator. Index file is never overwritten, if you really insist on
+      recreating it, please rename or delete the file manually (this is for safety reasons). It is
+      not sufficient to store just the index as it is likely that the correct messages will be
+      manually modified after they are recorded.</p><p>The idea of usage is to first activate the record mode, run the whole test, switch the
+      record mode off and then reuse the created <code class="code">dictionaryDirectory</code> with future test
+      runs.</p><p>Following table shows the properties of the DictionaryValidator: </p><div class="table"><a name="d0e7698"></a><div class="table-contents"><table summary="DictionaryValidator properties" border="1"><colgroup><col width="28%" align="left" class="property-name"><col width="29%" align="left" class="description"><col width="14%" align="left" class="required"><col width="29%" align="left" class="default-value"></colgroup><thead><tr><th align="left">Property name</th><th align="left">Description</th><th align="left">Required</th><th align="left">Default value</th></tr></thead><tbody><tr><td align="left">dictionaryDirectory</td><td align="left">The directory where the dictionary is/will be store.</td><td align="left">Yes</td><td align="left">-</td></tr><tr><td align="left">record</td><td align="left">Activates the record mode.</td><td align="left">No</td><td align="left"><code class="code">false</code></td></tr></tbody></table></div><p class="title"><b>Table&nbsp;4.51.&nbsp;DictionaryValidator properties</b></p></div><p><br class="table-break">
+   </p><div class="example"><a name="d0e7737"></a><p class="title"><b>Example&nbsp;4.67.&nbsp;An example of DictionaryValidator configuration</b></p><div class="example-contents"><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;validator</span> <span class="hl-attribute">id</span>=<span class="hl-value">"rimmerValidator"</span> <span class="hl-attribute">class</span>=<span class="hl-value">"DictionaryValidator"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"dictionaryDirectory"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"/home/rimmer/work/tests"</span><span class="hl-tag"> /&gt;</span>
+&nbsp;&nbsp;3       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"record"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"true"</span><span class="hl-tag"> /&gt;</span>
+&nbsp;&nbsp;4    <span class="hl-tag">&lt;/validator&gt;</span></pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="ug.reference-guide.validation.validators.PrintingValidator"></a>PrintingValidator</h4></div></div></div><p>Just prints out the original message and its response for the validation by human eyes.
+      Please note that the validation output is normally stored in a separate log file and not
+      printed to all other logging output. All messages controlled by this validator are stated
+      valid.</p><p>There are no configuration properties available to this validator.</p><div class="example"><a name="d0e7749"></a><p class="title"><b>Example&nbsp;4.68.&nbsp;An example of ScriptValidator configuration</b></p><div class="example-contents"><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;validator</span> <span class="hl-attribute">id</span>=<span class="hl-value">"print"</span> <span class="hl-attribute">class</span>=<span class="hl-value">"PrintingValidator"</span><span class="hl-tag"> /&gt;</span></pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="ug.reference-guide.validation.validators.RegExpValidator"></a>RegExpValidator</h4></div></div></div><p>The text validator treats each rule line as a regular expression and checks if the response
+      message matches that regular expression. The response message must match all lines in order to
+      be successfully validated.</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>Please note that the value of pattern is passed through a template engine. The benefit
+         of this is the ability to use standard properties in the pattern like <code class="code">${prop1}</code>
+         and <code class="code">@{prop2}</code>. The disadvantage is that each backslah character used to escape
+         an RegExp character needs to be escaped as well. In reality this means that instead of
+         writing <code class="code">\.</code> to escape the dot character, one need to enter
+         <code class="code">\\.</code>.</p></div><div class="example"><a name="d0e7774"></a><p class="title"><b>Example&nbsp;4.69.&nbsp;An example of RegExpValidator configuration</b></p><div class="example-contents"><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;validator</span> <span class="hl-attribute">id</span>=<span class="hl-value">"rimmerValidator"</span> <span class="hl-attribute">class</span>=<span class="hl-value">"RegExpValidator"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"pattern"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;3          <span class="hl-tag">&lt;text&gt;</span><span class="hl-tag">&lt;![CDATA[</span>.*"I'm a [Ff]ish"!\\.*<span class="hl-tag">]]&gt;</span><span class="hl-tag">&lt;/text&gt;</span>
+&nbsp;&nbsp;4       <span class="hl-tag">&lt;/property&gt;</span>
+&nbsp;&nbsp;5    <span class="hl-tag">&lt;/validator&gt;</span></pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="ug.reference-guide.validation.validator.RulesValidator"></a>RulesValidator</h4></div></div></div><p>
+      This validator uses Drools
+      <a href="#ftn.d0e7784" class="footnote" name="d0e7784"><sup class="footnote">[17]</sup></a>
+      engine to assert the validator rules. The rules for this validator have their own DSL
+      <a href="#ftn.d0e7790" class="footnote" name="d0e7790"><sup class="footnote">[18]</sup></a>
+      in a form of human readable sentences. The rules are listed in a following listing:
+   </p><div class="example"><a name="d0e7794"></a><p class="title"><b>Example&nbsp;4.70.&nbsp;RulesValidator rules</b></p><div class="example-contents"><pre class="programlisting">&nbsp;&nbsp;1 Message body contains "{string}".
+&nbsp;&nbsp;2 Message body equals "{string}".</pre></div></div><br class="example-break"><div class="example"><a name="d0e7799"></a><p class="title"><b>Example&nbsp;4.71.&nbsp;An example of RulesValidator configuration</b></p><div class="example-contents"><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;validator</span> <span class="hl-attribute">id</span>=<span class="hl-value">"fareWellValidator"</span> <span class="hl-attribute">class</span>=<span class="hl-value">"RulesValidator"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"pattern"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;3          <span class="hl-tag">&lt;text&gt;</span><span class="hl-tag">&lt;![CDATA[</span>Message body contains "Farewell World!".<span class="hl-tag">]]&gt;</span><span class="hl-tag">&lt;/text&gt;</span>
+&nbsp;&nbsp;4       <span class="hl-tag">&lt;/property&gt;</span>
+&nbsp;&nbsp;5    <span class="hl-tag">&lt;/validator&gt;</span></pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="ug.reference-guide.validation.validators.ScriptValidator"></a>ScriptValidator</h4></div></div></div><p>Validates messages using Java Script Engine and the provided script. The script engine must
+      be installed in the extensions directory. The original message is passed to the script in the
+         <code class="code">originalMessage</code> property, the response is inserted as <code class="code">message</code>,
+      the attributes used for the particular message instance are passed as <code class="code">attributes</code>,
+      and logger is passed as <code class="code">log</code>, all using script bindings. The script return value
+      is evaluated for validation success (<code class="code">true</code> for passed, <code class="code">false</code> for
+      failed). </p><p>Following table shows the properties of the ScriptValidator: </p><div class="table"><a name="d0e7829"></a><div class="table-contents"><table summary="ScriptValidator properties" border="1"><colgroup><col width="28%" align="left" class="property-name"><col width="29%" align="left" class="description"><col width="14%" align="left" class="required"><col width="29%" align="left" class="default-value"></colgroup><thead><tr><th align="left">Property name</th><th align="left">Description</th><th align="left">Required</th><th align="left">Default value</th></tr></thead><tbody><tr><td align="left">engine</td><td align="left">The name of the Java Scripting Engine (please do not confuse with
+                     JavaScript).</td><td align="left">Yes</td><td align="left">-</td></tr><tr><td align="left">script</td><td align="left">The code of the validation script. Takes priority over
+                     <code class="code">scriptFile</code>.</td><td align="left">Either <code class="code">script</code> or <code class="code">scriptFile</code> must be present</td><td align="left">-</td></tr><tr><td align="left">scriptFile</td><td align="left">The location of the validation script file.</td><td align="left">Either <code class="code">script</code> or <code class="code">scriptFile</code> must be present</td><td align="left">-</td></tr></tbody></table></div><p class="title"><b>Table&nbsp;4.52.&nbsp;ScriptValidator properties</b></p></div><p><br class="table-break">
+   </p><div class="example"><a name="d0e7891"></a><p class="title"><b>Example&nbsp;4.72.&nbsp;An example of ScriptValidator configuration</b></p><div class="example-contents"><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;validator</span> <span class="hl-attribute">id</span>=<span class="hl-value">"groovyValidator"</span> <span class="hl-attribute">class</span>=<span class="hl-value">"ScriptValidator"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"engine"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"groovy"</span><span class="hl-tag"> /&gt;</span>
+&nbsp;&nbsp;3       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"script"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;4          <span class="hl-tag">&lt;![CDATA[</span>
+&nbsp;&nbsp;5             log.info("Be groovy")
+&nbsp;&nbsp;6             return message.payload.toString().contains('Pepa')
+&nbsp;&nbsp;7          <span class="hl-tag">]]&gt;</span>
+&nbsp;&nbsp;8       <span class="hl-tag">&lt;/property&gt;</span>
+&nbsp;&nbsp;9    <span class="hl-tag">&lt;/validator&gt;</span></pre></div></div><br class="example-break"></div></div><div class="footnotes"><br><hr style="width:100; text-align:left;margin-left: 0"><div id="ftn.d0e7784" class="footnote"><p><a href="#d0e7784" class="para"><sup class="para">[17] </sup></a>
+            <a class="link" href="http://www.jboss.org/drools/" target="_top">http://www.jboss.org/drools/</a>
+         </p></div><div id="ftn.d0e7790" class="footnote"><p><a href="#d0e7790" class="para"><sup class="para">[18] </sup></a>Domain Specific Language</p></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ug.reference-guide.reporting.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="ug.reference-guide.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ug.result-repository.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">4.7.&nbsp;Reporting&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="perfcake-user-guide.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;5.&nbsp;Result repository</td></tr></table></div></body></html>

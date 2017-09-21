@@ -1,0 +1,46 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>4.4.&nbsp;Correlating messages</title><link rel="stylesheet" type="text/css" href="../css/guides.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="perfcake-user-guide.html" title="PerfCake 7.x"><link rel="up" href="ug.reference-guide.html" title="Chapter&nbsp;4.&nbsp;Reference Guide"><link rel="prev" href="ug.reference-guide.receiving.html" title="4.3.&nbsp;Receiving messages"><link rel="next" href="ug.reference-guide.messages.html" title="4.5.&nbsp;What - Messages"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">4.4.&nbsp;Correlating messages</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ug.reference-guide.receiving.html">Prev</a>&nbsp;</td><th width="60%" align="center">Chapter&nbsp;4.&nbsp;Reference Guide</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ug.reference-guide.messages.html">Next</a></td></tr></table><hr></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.reference-guide.correlating"></a>4.4.&nbsp;Correlating messages</h2></div></div></div><p>All messages/responses received via a <code class="code">Receiver</code> are passed to a
+         <code class="code">Correlator</code> which notifies the correct <code class="code">SenderTask</code>. The
+         <code class="code">Correlator</code> component can extract a <span class="emphasis"><em>correlation ID</em></span> from
+      both the requesnt and the response. It can also have an active role and actually create a
+         <span class="emphasis"><em>correlation ID</em></span> and store it in the request message. </p><p><code class="code">Correlator</code> is always bound to a <code class="code">Receiver</code> and does not make any
+      sense without it.</p><div class="example"><a name="d0e4801"></a><p class="title"><b>Example&nbsp;4.27.&nbsp;An example of a correlator configuration</b></p><div class="example-contents"><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;receiver</span> <span class="hl-attribute">class</span>=<span class="hl-value">"..."</span> <span class="hl-attribute">threads</span>=<span class="hl-value">"..."</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;correlator</span> <span class="hl-attribute">class</span>=<span class="hl-value">"..."</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;3          ...
+&nbsp;&nbsp;4          correlator properties
+&nbsp;&nbsp;5          ...
+&nbsp;&nbsp;6       <span class="hl-tag">&lt;/correlator&gt;</span>
+&nbsp;&nbsp;7       <span class="hl-tag">&lt;source&gt;</span>...<span class="hl-tag">&lt;/source&gt;</span>
+&nbsp;&nbsp;8       ...
+&nbsp;&nbsp;9       receiver properties
+&nbsp;10       ...
+&nbsp;11    <span class="hl-tag">&lt;/receiver&gt;</span></pre><p>When specifying the correlator class, unless you enter a fully classified class name,
+         the default package <code class="code">org.perfcake.message.correlator</code> is assumed.</p><p>In the following sections you can find a complete description of all
+         correlators that can be used by PerfCake including all of their properties.
+      </p></div></div><br class="example-break"><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.reference-guide.correlating.GenerateHeaderCorrelator"></a>4.4.1.&nbsp;GenerateHeaderCorrelator</h3></div></div></div><p><code class="code">GenerateHeaderCorrelator</code> creates a new UUID style <span class="emphasis"><em>correlation
+         ID</em></span> and stores it in a request message header and in message attributes. It then
+      searches for the same value in the response message headers. The header name used for storing
+      the UUID is <code class="code">perfcake.correlation.id</code>.</p><p><code class="code">GenerateHeaderCorrelator</code> does not have any configurable properties. </p><div class="example"><a name="d0e4830"></a><p class="title"><b>Example&nbsp;4.28.&nbsp;An example of GenerateHeaderCorrelator usage</b></p><div class="example-contents"><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;receiver</span> <span class="hl-attribute">class</span>=<span class="hl-value">"HttpReceiver"</span> <span class="hl-attribute">threads</span>=<span class="hl-value">"10"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;correlator</span> <span class="hl-attribute">class</span>=<span class="hl-value">"GenerateHeaderCorrelator"</span><span class="hl-tag"> /&gt;</span>
+&nbsp;&nbsp;3       <span class="hl-tag">&lt;source&gt;</span>localhost:8080<span class="hl-tag">&lt;/source&gt;</span>
+&nbsp;&nbsp;4    <span class="hl-tag">&lt;/receiver&gt;</span></pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.reference-guide.correlating.PrefixCorrelator"></a>4.4.2.&nbsp;PrefixCorrelator</h3></div></div></div><p>
+      <code class="code">PrefixCorrelator</code>
+      uses a message prefix - a string from the beginning of the message to a prefix boundary (<code class="code">:</code> by default) - as a correlation ID.
+      The prefix boundary can be configured via <code class="code">prefixBoundary</code> property of the correlator.
+   </p><p>Following table shows the properties of the PrefixCorrelator:
+      </p><div class="table"><a name="d0e4851"></a><div class="table-contents"><table summary="PrefixCorrelator properties" border="1"><colgroup><col width="28%" align="left" class="property-name"><col width="29%" align="left" class="description"><col width="14%" align="left" class="required"><col width="29%" align="left" class="default-value"></colgroup><thead><tr><th align="left">Property name</th><th align="left">Description</th><th align="left">Required</th><th align="left">Default value</th></tr></thead><tbody><tr><td align="left">prefixBoundary</td><td align="left">A character or a string specifying the prefix boundary.
+                  </td><td align="left">No</td><td align="left">:</td></tr></tbody></table></div><p class="title"><b>Table&nbsp;4.25.&nbsp;PrefixCorrelator properties</b></p></div><p><br class="table-break">
+   </p><div class="example"><a name="d0e4880"></a><p class="title"><b>Example&nbsp;4.29.&nbsp;An example of PrefixCorrelator usage</b></p><div class="example-contents"><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;receiver</span> <span class="hl-attribute">class</span>=<span class="hl-value">"HttpReceiver"</span> <span class="hl-attribute">threads</span>=<span class="hl-value">"10"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;correlator</span> <span class="hl-attribute">class</span>=<span class="hl-value">"PrefixCorrelator"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;3          <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"prefixBoundary"</span> <span class="hl-attribute">value</span>=<span class="hl-value">":"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;4       <span class="hl-tag">&lt;/correlator&gt;</span>
+&nbsp;&nbsp;5       <span class="hl-tag">&lt;source&gt;</span>localhost:8080<span class="hl-tag">&lt;/source&gt;</span>
+&nbsp;&nbsp;6    <span class="hl-tag">&lt;/receiver&gt;</span></pre><p>In the example, when a message <code class="code">prefix-01:What is the meaning of life?</code> is sent through a sender,
+         the correlator extract the prefix <code class="code">prefix-01</code> according to the prefix boundary
+         <code class="code">:</code>
+         and uses it as a correlation ID. The receiver then listens on HTTP address
+         <code class="code">http://localhost:8080</code>
+         and waits for a response message with the same prefix
+         (e.g. <code class="code">prefix-01:I don't know, the computers are down.</code>).
+      </p></div></div><br class="example-break"></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ug.reference-guide.receiving.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="ug.reference-guide.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ug.reference-guide.messages.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">4.3.&nbsp;Receiving messages&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="perfcake-user-guide.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;4.5.&nbsp;What - Messages</td></tr></table></div></body></html>

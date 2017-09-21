@@ -1,0 +1,40 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;4.&nbsp;Release Procedure</title><link rel="stylesheet" type="text/css" href="../css/guides.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="perfcake-developers-guide.html" title="PerfCake 7.x"><link rel="up" href="dev.core-developer.html" title="Part&nbsp;II.&nbsp;Core Developers' Guide"><link rel="prev" href="dev.core-developer.html" title="Part&nbsp;II.&nbsp;Core Developers' Guide"><link rel="next" href="dev.core-developer.continuous-integration.html" title="Chapter&nbsp;5.&nbsp;Continuous Integration"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;4.&nbsp;Release Procedure</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="dev.core-developer.html">Prev</a>&nbsp;</td><th width="60%" align="center">Part&nbsp;II.&nbsp;Core Developers' Guide</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="dev.core-developer.continuous-integration.html">Next</a></td></tr></table><hr></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a name="dev.core-developer.release"></a>Chapter&nbsp;4.&nbsp;Release Procedure</h2></div></div></div><p>This chapter describes details about the release procedure using Maven and following the
+      git flow principles. The target audience are core developers with appropriate access rights.
+   </p><p>First, start off with a new release branch and let Maven prepare the release for us
+      <a class="xref" href="dev.core-developer.release.html#fig-release-prepare" title="Figure&nbsp;4.1.&nbsp;Prepare a release branch">Figure&nbsp;4.1, &#8220;Prepare a release branch&#8221;</a>.
+   </p><div class="figure"><a name="fig-release-prepare"></a><div class="figure-contents"><pre class="programlisting">
+         $ git checkout -b release/v{VERSION} devel
+$ mvn release:prepare -Psign -Pproduction
+      </pre></div><p class="title"><b>Figure&nbsp;4.1.&nbsp;Prepare a release branch</b></p></div><br class="figure-break"><p>At this point, you should get the artifacts from the
+      <code class="code">target</code>
+      directory for later publishing
+      <a class="xref" href="dev.core-developer.release.html#fig-release-branches-devel" title="Figure&nbsp;4.2.&nbsp;Merge the changes to the devel branch">Figure&nbsp;4.2, &#8220;Merge the changes to the devel branch&#8221;</a>.
+   </p><p>Never ever try to perform the release using the Maven release plugin. It cannot be configured to publish the artifacts and
+      breaks the git-flow branching/tagging.
+   </p><p>The rest is about getting git into a good shape. This starts by getting the updated
+      <code class="code">pom.xml</code>
+      into the devel branch.
+   </p><div class="figure"><a name="fig-release-branches-devel"></a><div class="figure-contents"><pre class="programlisting">
+         $ git checkout devel
+$ git merge --no-ff release/v{VERSION}
+      </pre></div><p class="title"><b>Figure&nbsp;4.2.&nbsp;Merge the changes to the devel branch</b></p></div><br class="figure-break"><p>We need to get the correct
+      <code class="code">pom.xml</code>
+      to the master branch as well. For this, we will use the
+      commit prior to the head in the release branch
+      <a class="xref" href="dev.core-developer.release.html#fig-release-branches-master" title="Figure&nbsp;4.3.&nbsp;Merge the changes to the master branch as well">Figure&nbsp;4.3, &#8220;Merge the changes to the master branch as well&#8221;</a>.
+   </p><div class="figure"><a name="fig-release-branches-master"></a><div class="figure-contents"><pre class="programlisting">
+         $ git checkout master
+$ git merge --no-ff release/v{VERSION}~<span class="hl-number">1</span>
+      </pre></div><p class="title"><b>Figure&nbsp;4.3.&nbsp;Merge the changes to the master branch as well</b></p></div><br class="figure-break"><p>The last step is to clean everything up and go public
+      <a class="xref" href="dev.core-developer.release.html#fig-release-branches-cleanup" title="Figure&nbsp;4.4.&nbsp;Merge the changes to the master branch as well">Figure&nbsp;4.4, &#8220;Merge the changes to the master branch as well&#8221;</a>.
+   </p><div class="figure"><a name="fig-release-branches-cleanup"></a><div class="figure-contents"><pre class="programlisting">
+         $ git branch -D release/v{VERSION}
+$ git push --all &amp;&amp; git push --tags
+      </pre></div><p class="title"><b>Figure&nbsp;4.4.&nbsp;Merge the changes to the master branch as well</b></p></div><br class="figure-break"><p>Only users with an approved account in the Sonatype JIRA <a href="#ftn.d0e3034" class="footnote" name="d0e3034"><sup class="footnote">[3]</sup></a> can upload the artifacts. Then follow the rules specified in the Sonatype OSS
+      Maven Repository Usage Guide <a href="#ftn.d0e3040" class="footnote" name="d0e3040"><sup class="footnote">[4]</sup></a> . </p><div class="footnotes"><br><hr style="width:100; text-align:left;margin-left: 0"><div id="ftn.d0e3034" class="footnote"><p><a href="#d0e3034" class="para"><sup class="para">[3] </sup></a>
+            <a class="link" href="https://issues.sonatype.org/browse/OSSRH-7134" target="_top">https://issues.sonatype.org/browse/OSSRH-7134</a>
+         </p></div><div id="ftn.d0e3040" class="footnote"><p><a href="#d0e3040" class="para"><sup class="para">[4] </sup></a>
+            <a class="link" href="http://goo.gl/xBSm4" target="_top">http://goo.gl/xBSm4</a>
+         </p></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="dev.core-developer.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="dev.core-developer.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="dev.core-developer.continuous-integration.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Part&nbsp;II.&nbsp;Core Developers' Guide&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="perfcake-developers-guide.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;5.&nbsp;Continuous Integration</td></tr></table></div></body></html>

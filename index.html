@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>PerfCake -- A Lightweight Performance Testing Framework</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="A Lightweight Performance Testing Framework PerfCake" name="description">
+    <meta content="Apache License 2.0 - Copyright since 2010 by the original author or authors" name="copyright">
+    <!--[if lt IE 9]>
+      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="http://www.perfcake.org/stylesheets/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="http://www.perfcake.org/stylesheets/bootstrap-responsive.min.css" rel="stylesheet" type="text/css">
+    <link href="http://www.perfcake.org/stylesheets/custom.css" rel="stylesheet" type="text/css">
+    <link href="http://www.perfcake.org/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="http://www.perfcake.org/stylesheets/syntax-hl.css" rel="stylesheet" type="text/css">
+    <link href="http://www.perfcake.org/stylesheets/flipclock.min.css" rel="stylesheet" type="text/css">
+    <link href="http://www.perfcake.org/images/logo-revert.svg" rel="shortcut icon">
+    <link href="http://www.perfcake.org/images/logo-revert.svg" rel="icon">
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      
+      ga('create', 'UA-42279823-1', 'perfcake.org');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body id="home">
+    <!--
+      Navbar
+      ==================================================
+    -->
+    <div class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="http://www.perfcake.org/">PerfCake</a>
+          <button class="navbar-toggle" data-target="#navbar-main" data-toggle="collapse" type="button">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+        <div class="navbar-collapse collapse" id="navbar-main">
+          <ul class="nav navbar-nav">
+            <li>
+              <a href="http://www.perfcake.org/community" rel="tooltip" title="Learn about the community, how to contribute, etc.">Community</a>
+            </li>
+            <li>
+              <a href="http://www.perfcake.org/quickstart" rel="tooltip" title="Run your first benchmark in 5 minutes">Get started!</a>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="guides">
+                Documentation
+                <span class="caret"></span>
+              </a>
+              <ul aria-labelledby="guides" class="dropdown-menu">
+                <li>
+                  <a href="http://www.perfcake.org/guide/user">Users' guide</a>
+                </li>
+                <li>
+                  <a href="http://www.perfcake.org/guide/devel">Developers' guide</a>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="http://www.perfcake.org/download" rel="tooltip" title="Download binary distributions or source code">Download</a>
+            </li>
+            <li>
+              <form action="https://www.google.com/search" class="navbar-search pull-left" target="_blank">
+                <input name="sitesearch" type="hidden" value="perfcake.org">
+                <input class="search-query" name="q" placeholder="Search" type="text">
+              </form>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <a href="http://www.perfcake.org/support" rel="tooltip" title="Get some help improving performance of your applications">
+                <strong>Get support!</strong>
+                <i class="fa fa-share"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+      <script src="http://www.perfcake.org/javascripts/flipclock.min.js" type="text/javascript"></script>
+      <script src="http://www.perfcake.org/javascripts/countdown.js" type="text/javascript"></script>
+      <div class="row">
+        <div class="col-lg-12">
+          <p class="pull-right">
+            <a class="btn btn-primary" href="download" id="download-text">
+              <i class="fa fa-download"></i>
+              Download version
+            </a>
+          </p>
+          <span style="float: left; margin: 0 15px 10px 0;">
+            <a class="header" href="http://www.perfcake.org">
+              <img src="http://www.perfcake.org/images/logo-revert.svg">
+            </a>
+          </span>
+          <h1>
+            <a class="header" href="http://www.perfcake.org">PerfCake</a>
+          </h1>
+          <p class="lead">A Lightweight Performance Testing Framework</p>
+        </div>
+      </div>
+      <div class="page-header">
+        <h1>This is PerfCake!</h1>
+        <p>
+          PerfCake is a lightweight performance testing tool and a load generator with the aim to be minimalistic, easy to use, provide stable results, have minimum influence on the measured system, be platform independent, use component design, allow high throughput.
+        </p>
+        <p>
+          Just give it a try and soon you'll be
+          <strong>lovin' it!</strong>
+          <a name="about"></a>
+        </p>
+      </div>
+      <div class="row">
+        <div class="col-lg-6">
+          <h2>About</h2>
+          <p>
+            PerfCake has a component design which means that you can build up your own tests from some basic building blocks. This allows a high flexibility in configuration and the components can be reused in different tests.
+          </p>
+          <p>
+            PerfCake has a pluggable architecture with many supported interfaces/protocols out of the box (HTTP, REST, JMS, JDBC, SOAP, socket, file etc.). To cover some complex scenarios, PerfCake can use different procols to
+            send requests and to receive responses (e.g. send via JMS and receive via HTTP).
+            If you need support for another interface ask
+            <a href="http://www.perfcake.org/community">our community</a>
+            or provide the implementation. It is really easy!
+          </p>
+          <p>
+            Except for interfaces/protocols, PerfCake can be used for any type of performance testing including load testing, stress testing, endurance/soak testing, scalability testing or benchmarking. PerfCake is capable to automatically find
+            the sweet spot of a system under test in a relatively short time with minimal efforts. Compared to other tools, PerfCake is one of the most performant and reliable in the load generation.
+          </p>
+          <p>
+            PerfCake supports various means of reporting the measured values including average throughput (possibly over a time window), memory consumption of the target JVM with linear regression analysis to see if there is a memory leak and others.
+            There are various output formats supported. Except for console or a log file, we support CSV that can be imported as a spreadsheet, and it is possible to generate live charts that can be viewed on the fly during a running test.
+            PerfCake can store results in the PerfRepo result repository for easy comparison to previous measurements.
+          </p>
+          <p>
+            There are validators that can validate the response to see if the system under test operates correctly. With validators you can also use PerfCake to write an end-to-end test of your system.
+          </p>
+          <p>
+            To run PerfCake, you just need to supply a so called
+            <em>scenario</em>.
+            This is an XML-based recipe file that describes the building blocks of the performance test. The scenario can be included into you application lifecycle using Maven, or
+            it can be directly invoked from a test via
+            <a href="http://www.perfcake.org/javadoc">PerfCake fluent API</a>,
+            or as a standalone application from a command line.
+            <em>We understand the need for an IDE plugin and this is one of our short term goals.</em>
+          </p>
+          <p>
+            We hope to make your performance testing a real
+            <a href="http://www.youtube.com/watch?v=DXf3U2z4IJs" target="_blank">piece of cake</a>.
+          </p>
+          <p>
+            Where to go next? Continue with one of the links below
+            <i class="fa fa-hand-o-down"></i>
+          </p>
+        </div>
+        <div class="col-lg-6">
+          <h2>Goals</h2>
+          <p>
+            We strive to keep PerfCake a bleeding edge technology for performance testing. This requires a continuous improvement and enhancement. Following are a few items from our priority list. If you want to work on any of theese, we would be
+            very happy to welcome you in
+            <a href="http://www.perfcake.org/community">our community</a>.
+          </p>
+          <ul>
+            <li>Improve reporting, for PerfCake to automatically provide the most useful information about system under test</li>
+            <li>Develop more senders and receivers</li>
+            <li>
+              We finally have someone working on
+              <a href="https://github.com/PerfCake/PerfCake/issues/270" target="_blank">IDE plugins that will be really cool</a>
+              (planned support for IntelliJ Idea, Eclipse and NetBeans)
+            </li>
+            <li>
+              <a href="https://github.com/PerfCake/PerfCake/issues/44" target="_blank">Automated clustering support is under development</a>
+            </li>
+            <li>
+              Write a
+              <a href="https://leanpub.com/perfcake" target="_blank">cook book with PerfCake recipes</a>
+              including videos and sources
+            </li>
+            <li>
+              Make sure PerfCake is
+              <a href="https://github.com/PerfCake/PerfCake/issues/263" target="_blank">microservices and IoT ready</a>
+            </li>
+            <li>Rework PerfRepo UI to make it easier to configure and use based on recent feedback</li>
+            <li>
+              Make sure PerfCake is the best tool on the market
+              <i class="fa fa-smile-o"></i>
+            </li>
+          </ul>
+          <p>
+            From a long term perspective, we would like to see PerfCake being used as a standard performance measurement tool. We believe to achieve this through its minimalistic component design, stable results, and easy usage.
+          </p>
+          <br>
+          <span id="countdown">
+            <script type="text/javascript">
+              var clock;
+              $(document).ready(countdown());
+              $(document).ready(download());
+            </script>
+          </span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-4">
+          <h2>Learn</h2>
+          <ul>
+            <li>
+              <i class="fa fa-clock-o"></i>
+              <a href="http://www.perfcake.org/quickstart">Quickstart Example</a>
+            </li>
+            <li>
+              <a href="http://www.perfcake.org/guide/user">Users'</a>
+              and
+              <a href="http://www.perfcake.org/guide/devel">Developers'</a>
+              guide
+            </li>
+            <li>
+              <a alt="Read the blog" href="http://perfcake.blogspot.com" target="_blank">Read Success Stories on our Blog</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-lg-4">
+          <h2>Get Involved</h2>
+          <ul>
+            <li>
+              <a href="http://www.perfcake.org/community">Community</a>
+            </li>
+            <li>
+              <a href="https://github.com/PerfCake/PerfCake/issues" target="_blank">Issue Tracker</a>
+            </li>
+            <li>
+              <a href="https://github.com/PerfCake/PerfCake" target="_blank">Source Code</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-lg-4">
+          <h2>Stay Informed</h2>
+          <ul>
+            <li>
+              <a alt="Browse the PerfCakeTool on Twitter" href="https://twitter.com/search?q=PerfCakeTool" target="_blank">Watch us on Twitter</a>
+            </li>
+            <li>
+              <a alt="Read the blog" href="http://perfcake.blogspot.com" target="_blank">Read our Blog</a>
+            </li>
+            <li>
+              <i class="fa fa-leanpub">
+                <a alt="Performance Engineering book" href="https://leanpub.com/perfengineering" target="_blank">Performance Engineering</a>
+              </i>
+            </li>
+            <li>
+              <i class="fa fa-leanpub">
+                <a alt="PerfCake: Performance Testing Scenarios book" href="https://leanpub.com/perfcake" target="_blank">Performance Testing Scenarios</a>
+              </i>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!--
+        Footer
+        ==================================================
+      -->
+      <hr>
+      <footer>
+        <div class="row">
+          <div class="col-lg-12">
+            <ul class="list-unstyled">
+              <li class="pull-right">
+                <a href="#top">Back to top</a>
+              </li>
+              <li>
+                <i class="fa fa-quote-left">
+                  <a href="http://perfcake.blogspot.com" target="_blank">Blog</a>
+                </i>
+              </li>
+              <li>
+                <i class="fa fa-rss">
+                  <a href="http://perfcake.blogspot.com/feeds/posts/default" target="_blank">Atom</a>
+                </i>
+              </li>
+              <li>
+                <i class="fa fa-twitter">
+                  <a href="https://twitter.com/perfcaketool" target="_blank">Twitter</a>
+                </i>
+              </li>
+              <li>
+                <i class="fa fa-github">
+                  <a href="https://github.com/PerfCake" target="_blank">GitHub</a>
+                </i>
+              </li>
+              <li>
+                <i class="fa fa-slack">
+                  <a href="https://perfcake.slack.com/" target="_blank">Slack</a>
+                </i>
+              </li>
+              <li>
+                <i class="fa fa-google-plus">
+                  <a href="https://groups.google.com/forum/#!forum/perfcake" target="_blank">Google Group</a>
+                </i>
+              </li>
+              <li>
+                <i class="fa fa-google-plus">
+                  <a href="https://plus.google.com/+PerfcakeOrg" rel="publisher" target="_blank">Google+</a>
+                </i>
+              </li>
+              <li>
+                <i class="fa fa-info">
+                  <a href="http://www.perfcake.org/javadoc">API</a>
+                </i>
+              </li>
+              <li>
+                <i class="fa fa-bar-chart">
+                  <a href="http://www.seethestats.com/site/perfcake.org" target="_blank">See The Stats</a>
+                </i>
+              </li>
+            </ul>
+            <p class="pull-right">
+              <a href="http://www.ej-technologies.com/products/jprofiler/overview.html" style="text-decoration: none" target="_blank">
+                <img alt="Java Profiler" src="http://www.perfcake.org/images/jprofiler_medium.png" title="Java Profiler">
+                &nbsp;
+              </a>
+              <a href="http://www.oxygenxml.com" style="text-decoration: none" target="_blank">
+                <img alt="Oxygen XML Editor" src="http://www.perfcake.org/images/oxygen190x62.png" title="Oxygen XML Editor">
+              </a>
+              <img alt="Built on CloudBees" src="http://www.perfcake.org/images/Button-Built-on-CB-1.png">
+            </p>
+            <p>
+              Code licensed under the
+              <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License v2.0</a>.
+              <br>
+              Website and docs licensed under
+              <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.
+              <br>
+              <i class="fa fa-fire"></i>
+              &nbsp;
+              Based on
+              <a href="http://twitter.github.com/bootstrap/">Bootstrap</a>.
+              Baked by
+              <a href="http://awestruct.org/">Awestruct</a>.
+              <br>
+              <i class="fa fa-font"></i>
+              &nbsp;
+              Web fonts from
+              <a href="http://www.google.com/webfonts">Google</a>.
+              Icons from
+              <a href="http://fortawesome.github.io/Font-Awesome">Font Awesome</a>.
+              <br>
+              <i class="fa fa-pencil"></i>
+              &nbsp;
+              Design by
+              <a href="http://thomaspark.me/">Thomas Park</a>.
+              <br>
+              &copy; Copyright PerfCake 2010-2017
+              <br>
+              We don't give away any free
+              <img alt="cookies" src="http://www.perfcake.org/images/cookies-icon-16.png" title="cookies">
+              &nbsp; It's just
+              <a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/cookie-usage#analyticsjs" target="_blank">Google Analytics</a>
+              who stores two of them in your browser.
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+    <script src="http://www.perfcake.org/javascripts/jquery.smooth-scroll.min.js" type="text/javascript"></script>
+    <script src="http://www.perfcake.org/javascripts/bootstrap.min.js" type="text/javascript"></script>
+  </body>
+</html>

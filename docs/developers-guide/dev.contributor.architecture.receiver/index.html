@@ -1,0 +1,46 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>3.5.&nbsp;Receivers and Correlators</title><link rel="stylesheet" type="text/css" href="../css/guides.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="perfcake-developers-guide.html" title="PerfCake 7.x"><link rel="up" href="dev.contributor.architecture.html" title="Chapter&nbsp;3.&nbsp;PerfCake Architecture"><link rel="prev" href="dev.contributor.architecture.sender.html" title="3.4.&nbsp;Message Senders"><link rel="next" href="dev.contributor.architecture.sequences.html" title="3.6.&nbsp;Sequences"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">3.5.&nbsp;Receivers and Correlators</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="dev.contributor.architecture.sender.html">Prev</a>&nbsp;</td><th width="60%" align="center">Chapter&nbsp;3.&nbsp;PerfCake Architecture</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="dev.contributor.architecture.sequences.html">Next</a></td></tr></table><hr></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dev.contributor.architecture.receiver"></a>3.5.&nbsp;Receivers and Correlators</h2></div></div></div><p><span class="emphasis"><em>Receivers</em></span> and <span class="emphasis"><em>Correlators</em></span> are two optional
+      components of a performance test scenario that enables us to receive response from a separate
+      message channel. We can for instance send a request through a REST API and await for the
+      response in the file system or in a database.</p><p>A <code class="code">Receiver</code> has three mandatory properties. These are the number of concurrent
+         <code class="code">threads</code> that should be created to receive responses, the
+         <code class="code">correlator</code> to be used to match responses to requests, and the
+         <code class="code">source</code> from where to receive the responses. An instance of
+         <code class="code">Correlator</code> is also passed to the <code class="code">Receiver</code> for it to be able to
+      register the response.</p><p>It is a crucial responsibility of the <code class="code">Receiver</code> to spawn the threads and
+      establish communication channels. A <code class="code">Receiver</code> must start the defined number
+      threads to receive messages. These threads are later stopped with
+         <code class="code">Thread.interrupt()</code>. It is up to the receiver threads to react accordingly. The
+      receiver threads must be executed as daemon threads and can be terminated at the end of the
+      test execution if they do not react to the interruption.</p><p>During a performance test execution there is just a single instance of a
+         <code class="code">Receiver</code> created. For the developers convenience there is
+         <code class="code">AbstractReceiver</code>. For the most common situations where the
+         <code class="code">Receiver</code> simply creates a thread pool, there is
+         <code class="code">AbstractAutoSpawnReceiver</code>. A developer just needs to extends the
+         <code class="code">run()</code> method then. On the other hand, <code class="code">HttpReceiver</code> is an example
+      of a <code class="code">Receiver</code> where the underlying framework did not allow us to spawn the
+      threads ourself and manages the pool itself, thus is extends
+      <code class="code">AbstractReceiver</code>.</p><p>All received messages are passed to a <code class="code">Correlator</code> which notifies the correct
+         <code class="code">SenderTask</code>. The <code class="code">Correlator</code> interface defines two methods, first
+      for the outbound requests (<code class="code">registerRequest()</code>), and second for the inbound
+      responses (<code class="code">registerResponse()</code>). The Correlator then correlates requests with
+      their responses and notifies <code class="code">SenderTask</code> of receiving the appropriate response to
+      the original request. This is done based on a <span class="emphasis"><em>correlation ID</em></span> that is
+      extracted from both request and response. Upon a successful match,
+         <code class="code">SenderTask.registerResponse(Serializable)</code> is called.</p><p>For performance reasons, all interface methods should be implemented thread safe without
+      locking and or synchronization. All implementations should make sure that they do not keep
+      eating up the memory and clean their data structures regularly.</p><p>For the developers convenience, there is <code class="code">AbstractCorrelator</code> that takes care
+      about matching the messages together. All one needs to implement are methods to extract the
+         <span class="emphasis"><em>correlation ID</em></span> from both the request
+         (<code class="code">getRequestCorrelationId()</code>) and the response
+         (<code class="code">getResponseCorrelationIds()</code>).</p><p>Please note the difference that a response can actually contain multiple
+         <span class="emphasis"><em>IDs</em></span>. The method for processing responses also takes a
+         <code class="code">MultiMap</code> instance with the message headers. This is because some protocols
+      allow the same message header to be present multiple times (e.g. HTTP). </p><p>The <code class="code">Correlator</code> does not necessarily need to have just a passive role. It can
+      even add the <span class="emphasis"><em>correlation ID</em></span> in the request if there is none yet. See
+         <code class="code">GenerateHeaderCorrelator</code> that can be used for many protocols.</p><p>It is possible that multiple requests will be aggregated in a single response. It is a task
+      of a <code class="code">Correlator</code> implementation to report all the aggregated responses. It is also
+      possible that a single request will trigger multiple responses. Again, a specialized
+         <code class="code">Correlator</code> implementation can handle this situation and wait for all the parts
+      to be received.</p></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="dev.contributor.architecture.sender.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="dev.contributor.architecture.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="dev.contributor.architecture.sequences.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">3.4.&nbsp;Message Senders&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="perfcake-developers-guide.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;3.6.&nbsp;Sequences</td></tr></table></div></body></html>

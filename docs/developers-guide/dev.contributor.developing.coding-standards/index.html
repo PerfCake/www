@@ -1,0 +1,774 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>2.4.&nbsp;Coding Standards</title><link rel="stylesheet" type="text/css" href="../css/guides.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="perfcake-developers-guide.html" title="PerfCake 7.x"><link rel="up" href="dev.contributor.developing.html" title="Chapter&nbsp;2.&nbsp;Developing with PerfCake"><link rel="prev" href="dev.contributor.developing.maven.html" title="2.3.&nbsp;Maven Project"><link rel="next" href="dev.contributor.developing.tests.html" title="2.5.&nbsp;Test Development"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">2.4.&nbsp;Coding Standards</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="dev.contributor.developing.maven.html">Prev</a>&nbsp;</td><th width="60%" align="center">Chapter&nbsp;2.&nbsp;Developing with PerfCake</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="dev.contributor.developing.tests.html">Next</a></td></tr></table><hr></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dev.contributor.developing.coding-standards"></a>2.4.&nbsp;Coding Standards</h2></div></div></div><p>This section describes coding standards used for the PerfCake project. The detailed
+      guidlines are based on Google Java Coding Standard
+      <a href="#ftn.foot-google-code" class="footnote" name="foot-google-code"><sup class="footnote">[1]</sup></a>
+      with some changes applied. For a brief overview, please make sure to:
+   </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>Develop tests for your features/fixes (keep the high level of test coverage),
+         </p></li><li class="listitem"><p>Use the appropriate code style and formatting (Eclipse configuration file is present
+            in the repo),
+         </p></li><li class="listitem"><p>Avoid introducing new FindBugs warnings (see Developers' Guide to find out how to
+            generate the site report),
+         </p></li><li class="listitem"><p>Keep backward compatibility unless previously discussed with the developers,</p></li><li class="listitem"><p>Write/update the JavaDoc comments,</p></li><li class="listitem"><p>Avoid bad practices
+            <a href="#ftn.d0e426" class="footnote" name="d0e426"><sup class="footnote">[2]</sup></a>
+            ,
+         </p></li><li class="listitem"><p>You do not keep unused imports, FIXME comments, unused variables, cryptic code or
+            anything ugly,
+         </p></li><li class="listitem"><p>Submit only a masterpiece code that you could be proud of.</p></li></ul></div><p>Following is the complete definition of PerfCake's coding standards for source code in the
+      Java&#8482; Programming Language. A Java source file is described as being in PerfCake Style if and
+      only if it adheres to the rules herein.
+   </p><p>Like other programming style guides, the issues covered span not only aesthetic issues of
+      formatting, but other types of conventions or coding standards as well. However, this document
+      focuses primarily on the hard-and-fast rules that we follow universally, and avoids giving
+      advice that isn't clearly enforceable (whether by human or tool).
+   </p><p>In this document, unless otherwise clarified:</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>The term
+            <span class="emphasis"><em>class</em></span>
+            is used inclusively to mean an "ordinary" class,
+            enum class, interface or annotation type (<code class="code">@interface</code>),
+         </p></li><li class="listitem"><p>The term
+            <span class="emphasis"><em>comment</em></span>
+            always refers to implementation comments. We
+            do not use the phrase "documentation comments", instead using the common term "Javadoc."
+         </p></li></ol></div><p>Example code in this document is non-normative. That is, while the examples are in
+      PerfCake Style, they may not illustrate the only stylish way to represent the code. Optional
+      formatting choices made in examples should not be enforced as rules.
+   </p><p>Previous four paragraphs are copied from the Google Java Coding Standard
+      <a href="dev.contributor.developing.coding-standards.html#ftn.foot-google-code" class="footnoteref"><sup class="footnoteref">[1]</sup></a>
+      as well as the rest of this section.
+   </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="dev.contributor.developing.code-standards.src-basics"></a>2.4.1.&nbsp;Source file basics</h3></div></div></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="d0e469"></a>File name</h4></div></div></div><p>The source file name consists of the case-sensitive name of the top-level class it
+         contains, plus the
+         <code class="code">.java</code>
+         extension.
+      </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="d0e477"></a>File encoding: UTF-8</h4></div></div></div><p>Source files are encoded in UTF-8.</p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="d0e482"></a>Special characters</h4></div></div></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e485"></a>Whitespace characters</h5></div></div></div><p>Aside from the line terminator sequence, the
+            <span class="strong"><strong>ASCII
+               horizontal space character (0x20)
+            </strong></span>
+            is the only whitespace character that
+            appears anywhere in a source file. This implies that:
+         </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>All other whitespace characters in string and character literals are
+                  escaped,
+               </p></li><li class="listitem"><p>Tab characters are not used for indentation.</p></li></ol></div></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e500"></a>Special escape sequences</h5></div></div></div><p>For any character that has a special escape sequence (<code class="code">\b</code>,<code class="code">\t</code>,<code class="code">\n</code>,
+            <code class="code">\f</code>,<code class="code">\r</code>,<code class="code">\"</code>,
+            <code class="code">\'</code>
+            and<code class="code">\\</code>), that sequence is used rather than the corresponding
+            octal (e.g.<code class="code">\012</code>) or Unicode (e.g.<code class="code">\u000a</code>) escape.
+         </p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e535"></a>Non-ASCII characters</h5></div></div></div><p>For the remaining non-ASCII characters, either the actual Unicode character (e.g.
+            &#8734;) or the equivalent Unicode escape (e.g. \u221e) is used, depending only on which
+            makes the code<span class="strong"><strong>easier to read and understand</strong></span>.
+         </p><div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Tip</h3><p>In the Unicode escape case, and occasionally even when actual Unicode
+               characters are used, an explanatory comment can be very helpful.
+            </p></div><div class="table"><a name="d0e546"></a><div class="table-contents"><table summary="Special characters examples" border="1"><colgroup><col width="50%" align="left" class="Example"><col width="50%" align="left" class="Discussion"></colgroup><thead><tr><th align="left">Example</th><th align="left">Discussion</th></tr></thead><tbody><tr><td align="left">
+                        <pre class="programlisting">String unitAbbrev = <span class="hl-string">"&#956;s"</span>;</pre>
+                     </td><td align="left">Best: perfectly clear even without a comment.</td></tr><tr><td align="left">
+                        <pre class="programlisting"><span class="hl-comment">// "&#956;s"</span>
+String unitAbbrev = <span class="hl-string">"\u03bcs"</span>;</pre>
+                     </td><td align="left">Allowed, but there's no reason to do this.</td></tr><tr><td align="left">
+                        <pre class="programlisting"><span class="hl-comment">// Greek letter mu, "s"</span>
+String unitAbbrev = <span class="hl-string">"\u03bcs"</span>;</pre>
+                     </td><td align="left">Allowed, but awkward and prone to mistakes.</td></tr><tr><td align="left">
+                        <pre class="programlisting">String unitAbbrev = <span class="hl-string">"\u03bcs"</span>;</pre>
+                     </td><td align="left">Poor: the reader has no idea what this is.</td></tr><tr><td align="left">
+                        <pre class="programlisting"><span class="hl-comment">// byte order mark</span>
+<span class="hl-keyword">return</span> <span class="hl-string">'\ufeff'</span> + content;</pre>
+                     </td><td align="left">Good: use escapes for non-printable characters, and comment if
+                        necessary.
+                     </td></tr></tbody></table></div><p class="title"><b>Table&nbsp;2.2.&nbsp;Special characters examples</b></p></div><br class="table-break"><div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Tip</h3><p>Never make your code less readable simply out of fear that some programs might
+               not handle non-ASCII characters properly. If that should happen, those programs
+               are
+               <span class="strong"><strong>broken</strong></span>
+               and they must be<span class="strong"><strong>fixed</strong></span>.
+            </p></div></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="dev.contributor.developing.code-standards.src-structure"></a>2.4.2.&nbsp;Source file structure</h3></div></div></div><p>A source file consists of,<span class="strong"><strong>in order</strong></span>:
+   </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>License or copyright information, if present,</p></li><li class="listitem"><p>Package statement,</p></li><li class="listitem"><p>Import statements,</p></li><li class="listitem"><p>Exactly one top-level class.</p></li></ol></div><p>
+      <span class="strong"><strong>Exactly one blank line</strong></span>
+      separates each section that is
+      present.
+   </p><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="d0e634"></a>License or copyright information, if present</h4></div></div></div><p>If license or copyright information belongs in a file, it belongs here.</p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="d0e639"></a>Package statement</h4></div></div></div><p>The package statement is<span class="strong"><strong>not line-wrapped</strong></span>. The
+         column limit (
+         <a class="xref" href="dev.contributor.developing.coding-standards.html#sec-column-limit" title="Column limit: 400">the section called &#8220;Column limit: 400&#8221;</a>) does not apply to package statements.
+      </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="sec-import-stat"></a>Import statements</h4></div></div></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e652"></a>No wildcard imports</h5></div></div></div><p>
+            <span class="strong"><strong>Wildcard imports</strong></span>, static or otherwise,<span class="strong"><strong>are not used</strong></span>.
+         </p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e663"></a>No line-wrapping</h5></div></div></div><p>Import statements are<span class="strong"><strong>not line-wrapped</strong></span>. The
+            column limit (
+            <a class="xref" href="dev.contributor.developing.coding-standards.html#sec-column-limit" title="Column limit: 400">the section called &#8220;Column limit: 400&#8221;</a>) does not apply to import
+            statements.
+         </p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e673"></a>Ordering and spacing</h5></div></div></div><p>Import statements are divided into the following groups, in this order, with each
+            group separated by a single blank line:
+            </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>All static imports in a single group</p></li><li class="listitem"><p>
+                     <code class="code">org.perfcake</code>
+                     imports (only if this source
+                     file is in the
+                     <code class="code">org.perfcake</code>
+                     package
+                     space)
+                  </p></li><li class="listitem"><p>Third-party imports, one group per top-level package, in ASCII sort
+                     order
+                  </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>for example: com, org, junit, sun</p></li></ul></div></li><li class="listitem"><p>
+                     <code class="code">java</code>
+                     imports
+                  </p></li><li class="listitem"><p>
+                     <code class="code">javax</code>
+                     imports
+                  </p></li></ol></div><p>
+         </p><p>Within a group there are no blank lines, and the imported names appear in ASCII
+            sort order. (
+            <span class="bold"><strong>Note:</strong></span>
+            this is not the same as the
+            import
+            <span class="italic">statements</span>
+            being in ASCII sort order; the
+            presence of semicolons warps the result.)
+         </p></div></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="d0e719"></a>Class declaration</h4></div></div></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e722"></a>Exactly one top-level class declaration</h5></div></div></div><p>Each top-level class resides in a source file of its own.</p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e727"></a>Class member ordering</h5></div></div></div><p>The ordering of the members of a class can have a great effect on learnability,
+            but there is no single correct recipe for how to do it. Different classes may order
+            their members differently.
+         </p><p>What is important is that each class order its members in<span class="strong"><strong>some logical order</strong></span>, which its maintainer could explain if asked. For
+            example, new methods are not just habitually added to the end of the class, as that
+            would yield "chronological by date added" ordering, which is not a logical ordering.
+         </p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e737"></a>Overloads: never split</h5></div></div></div><p>When a class has multiple constructors, or multiple methods with the same name,
+            these appear sequentially, with no intervening members.
+         </p></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="dev.contributor.developing.code-standards.formating"></a>2.4.3.&nbsp;Formating</h3></div></div></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+         <span class="strong"><strong>Terminology Note:</strong></span>
+         <span class="emphasis"><em>block-like construct</em></span>
+         refers to the body of a class, method or
+         constructor. Note that, by
+         <a class="xref" href="dev.contributor.developing.coding-standards.html#sec-array-init" title="Arrays">the section called &#8220;Arrays&#8221;</a>, any array initializer
+         <span class="emphasis"><em>may</em></span>
+         optionally be treated as if it were a block-like construct.
+      </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="d0e759"></a>Braces</h4></div></div></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e762"></a>Braces are used where optional</h5></div></div></div><p>Braces are used with<code class="code">if</code>,<code class="code">else</code>,<code class="code">for</code>,
+            <code class="code">do</code>
+            and
+            <code class="code">while</code>
+            statements, even when the body is empty or
+            contains only a single statement.
+         </p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="sec-nonempty-blocks"></a>Nonempty blocks: K &amp; R style</h5></div></div></div><p>Braces follow the Kernighan and Ritchie style ("Egyptian brackets") for
+            <span class="emphasis"><em>nonempty</em></span>
+            blocks and block-like constructs:
+         </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>No line break before the opening brace,</p></li><li class="listitem"><p>Line break after the opening brace,</p></li><li class="listitem"><p>Line break before the closing brace</p></li><li class="listitem"><p>Line break after the closing brace
+                  <span class="emphasis"><em>if</em></span>
+                  that brace
+                  terminates a statement or the body of a method, constructor or
+                  <span class="emphasis"><em>named</em></span>
+                  class. For example, there is
+                  <span class="emphasis"><em>no</em></span>
+                  line break after the brace if it is followed by
+                  <code class="code">else</code>
+                  or a comma.
+               </p></li></ul></div><p>Example:</p><pre class="programlisting"><span class="hl-keyword">return</span> <span class="hl-keyword">new</span> MyClass() {
+  <span class="hl-annotation">@Override</span> <span class="hl-keyword">public</span> <span class="hl-keyword">void</span> method() {
+    <span class="hl-keyword">if</span> (condition()) {
+      <span class="hl-keyword">try</span> {
+        something();
+      } <span class="hl-keyword">catch</span> (ProblemException e) {
+        recover();
+      }
+    }
+  }
+};           </pre><p>A few exceptions for enum classes are given in
+            <a class="xref" href="dev.contributor.developing.coding-standards.html#sec-enum-classes" title="Enum classes">the section called &#8220;Enum classes&#8221;</a>.
+         </p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e823"></a>Empty blocks: may be concise</h5></div></div></div><p>An empty block or block-like construct
+            <span class="italics">may</span>
+            be
+            closed immediately after it is opened, with no characters or line break in between
+            (<code class="code">{}</code>),
+            <span class="strong"><strong>unless</strong></span>
+            it is
+            part of a
+            <span class="emphasis"><em>multi-block statement</em></span>
+            (one that directly contains
+            multiple blocks:
+            <code class="code">if/else-if/else</code>
+            or<code class="code">try/catch/finally</code>).
+         </p><p>Example:</p><pre class="programlisting"><span class="hl-keyword">void</span> doNothing() {}</pre></div></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="d0e850"></a>Block indentation: +3 spaces</h4></div></div></div><p>Each time a new block or block-like construct is opened, the indent increases by two
+         spaces. When the block ends, the indent returns to the previous indent level. The indent
+         level applies to both code and comments throughout the block. (See the example in
+         <a class="xref" href="dev.contributor.developing.coding-standards.html#sec-nonempty-blocks" title="Nonempty blocks: K &amp; R style">the section called &#8220;Nonempty blocks: K &amp; R style&#8221;</a>.)
+      </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="d0e857"></a>One statement per line</h4></div></div></div><p>Each statement is followed by a line-break.</p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="sec-column-limit"></a>Column limit: 400</h4></div></div></div><p>PerfCake uses a column limit of 400 characters. Except as noted below, any line that
+         would exceed this limit must be line-wrapped, as explained in
+         <a class="xref" href="dev.contributor.developing.coding-standards.html#sec-line-wrap" title="Line-wrapping">the section called &#8220;Line-wrapping&#8221;</a>.
+      </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="sec-line-wrap"></a>Line-wrapping</h4></div></div></div><p>
+         <span class="bold"><strong>Terminology Note:</strong></span>
+         When code that might otherwise
+         legally occupy a single line is divided into multiple lines, typically to avoid
+         overflowing the column limit, this activity is called <span class="italic">line-wrapping</span>.
+      </p><p>There is no comprehensive, deterministic formula showing
+         <span class="italic">exactly
+         </span>
+         how to line-wrap in every situation. Very often there are several
+         valid ways to line-wrap the same piece of code.
+      </p><div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Tip</h3><p>Extracting a method or local variable may solve the problem without the need to
+            line-wrap.
+         </p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e888"></a>Where to break</h5></div></div></div><p>The prime directive of line-wrapping is: prefer to break at a <span class="bold"><strong>higher syntactic level</strong></span>. Also:
+         </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>When a line is broken at a
+                  <span class="italic">non-assignment</span>
+                  operator the break comes
+                  <span class="italic">before</span>
+                  the symbol.
+                  (Note that this is not the same practice used in Google style for other
+                  languages, such as C++ and JavaScript.)
+               </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>This also applies to the following "operator-like" symbols: the dot
+                        separator (<code class="code">.</code>), the ampersand in type bounds
+                        (<code class="code">&lt;T extends Foo &amp; Bar&gt;</code>), and the
+                        pipe in catch blocks (<code class="code">catch (FooException |
+                           BarException e)</code>).
+                     </p></li></ul></div></li><li class="listitem"><p>When a line is broken at an
+                  <span class="italic">assignment</span>
+                  operator the break typically comes
+                  <span class="italic">after</span>
+                  the
+                  symbol, but either way is acceptable.
+               </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>This also applies to the "assignment-operator-like" colon in an
+                        enhanced
+                        <code class="code">for</code>
+                        ("foreach") statement.
+                     </p></li></ul></div></li><li class="listitem"><p>A method or constructor name stays attached to the open parenthesis (<code class="code">(</code>) that follows it.
+               </p></li><li class="listitem"><p>A comma (<code class="code">,</code>) stays attached to the token that
+                  precedes it.
+               </p></li></ol></div></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e947"></a>Indent continuation lines at least +6 spaces</h5></div></div></div><p>When line-wrapping, each line after the first (each
+            <span class="italic">continuation line</span>
+            ) is indented at least +6 from the original
+            line.
+         </p><p>When there are multiple continuation lines, indentation may be varied beyond +6 as
+            desired. In general, two continuation lines use the same indentation level if and
+            only if they begin with syntactically parallel elements.
+         </p><p>
+            <a class="xref" href="dev.contributor.developing.coding-standards.html#sec-horiz-align" title="Horizontal alignment: never required">the section called &#8220;Horizontal alignment: never required&#8221;</a>
+            addresses the discouraged practice of using a
+            variable number of spaces to align certain tokens with previous lines.
+         </p></div></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="d0e961"></a>Whitespace</h4></div></div></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e964"></a>Vertical whitespace</h5></div></div></div><p>A single blank line appears:</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+                  <span class="italic">Between</span>
+                  consecutive members (or
+                  initializers) of a class: fields, constructors, methods, nested classes, static
+                  initializers, instance initializers.
+               </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+                        <span class="bold"><strong>Exception:</strong></span>
+                        A blank line between two
+                        consecutive fields (having no other code between them) is optional. Such
+                        blank lines are used as needed to create
+                        <span class="italic">logical
+                           groupings
+                        </span>
+                        of fields.
+                     </p></li></ul></div></li><li class="listitem"><p>Within method bodies, as needed to create
+                  <span class="italic">logical
+                     groupings
+                  </span>
+                  of statements.
+               </p></li><li class="listitem"><p>
+                  <span class="italic">Optionally</span>
+                  before the first member or
+                  after the last member of the class (neither encouraged nor discouraged).
+               </p></li><li class="listitem"><p>As required by other sections of this document (such as
+                  <a class="xref" href="dev.contributor.developing.coding-standards.html#sec-import-stat" title="Import statements">the section called &#8220;Import statements&#8221;</a>).
+               </p></li></ol></div><p>
+            <span class="italic">Multiple</span>
+            consecutive blank lines are permitted,
+            but never required (or encouraged).
+         </p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e1008"></a>Horizontal whitespace</h5></div></div></div><p>Beyond where required by the language or other style rules, and apart from
+            literals, comments and Javadoc, a single ASCII space also appears in the following
+            places<span class="bold"><strong>only</strong></span>.
+         </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>Separating any reserved word, such as<code class="code">if</code>,
+                  <code class="code">for
+                  </code>
+                  or<code class="code">catch</code>, from an
+                  open parenthesis (<code class="code">(</code>) that follows it on that
+                  line.
+               </p></li><li class="listitem"><p>Separating any reserved word, such as
+                  <code class="code">else</code>
+                  or
+                  <code class="code">catch</code>, from a closing curly brace (<code class="code">}</code>) that precedes it on that line.
+               </p></li><li class="listitem"><p>Before any open curly brace (<code class="code">{</code>), with two
+                  exceptions:
+               </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+                        <code class="code">@SomeAnnotation({a, b})</code>
+                        (no space is
+                        used)
+                     </p></li><li class="listitem"><p>
+                        <code class="code">String[][] x = {{"foo"}};</code>
+                        (no space is
+                        required between<code class="code">{{</code>, by item 8 below)
+                     </p></li></ul></div></li><li class="listitem"><p>On both sides of any binary or ternary operator. This also applies to the
+                  following "operator-like" symbols:
+               </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>the ampersand in a conjunctive type bound:
+                        <code class="code">&lt;T
+                           extends Foo &amp; Bar&gt;
+                        </code>
+                     </p></li><li class="listitem"><p>the pipe for a catch block that handles multiple exceptions:
+                        <code class="code">catch (FooException | BarException e)
+                        </code>
+                     </p></li><li class="listitem"><p>the colon (<code class="code">:</code>) in an enhanced
+                        <code class="code">for
+                        </code>
+                        ("foreach") statement
+                     </p></li></ul></div></li><li class="listitem"><p>After
+                  <code class="code">,:;</code>
+                  or the closing parenthesis (<code class="code">)</code>) of a cast
+               </p></li><li class="listitem"><p>On both sides of the double slash (<code class="code">//</code>) that
+                  begins an end-of-line comment. Here, multiple spaces are allowed, but not
+                  required
+               </p></li><li class="listitem"><p>Between the type and variable of a declaration:
+                  <code class="code">List&lt;String&gt; list
+                  </code>
+               </p></li><li class="listitem"><p>
+                  <span class="italic">Optional</span>
+                  just inside both braces of an
+                  array initializer
+               </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+                        <code class="code">new int[] {5, 6}</code>
+                        and
+                        <code class="code">new int[] { 5, 6 }
+                        </code>
+                        are both valid
+                     </p></li></ul></div></li></ol></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>This rule never requires or forbids additional space at the start or end of a
+               line, only interior space.
+            </p></div></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="sec-horiz-align"></a>Horizontal alignment: never required</h5></div></div></div><p>
+            <span class="bold"><strong>Terminology Note:</strong></span>
+            <span class="italic">Horizontal alignment</span>
+            is the practice of adding a
+            variable number of additional spaces in your code with the goal of making certain
+            tokens appear directly below certain other tokens on previous lines.
+         </p><p>This practice is permitted, but is
+            <span class="bold"><strong>never required</strong></span>
+            by PerfCake Style. It is not even required to
+            <span class="italic">maintain
+            </span>
+            horizontal alignment in places where it was already used.
+            Here is an example without alignment, then using alignment:
+         </p><pre class="programlisting"><span class="hl-keyword">private</span> <span class="hl-keyword">int</span> x; <span class="hl-comment">// this is fine</span>
+<span class="hl-keyword">private</span> Color color; <span class="hl-comment">// this too</span>
+
+<span class="hl-keyword">private</span> <span class="hl-keyword">int</span>   x;     <span class="hl-comment">// permitted, but future edits</span>
+<span class="hl-keyword">private</span> Color color; <span class="hl-comment">// may leave it unaligned</span></pre><div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Tip</h3><p>Alignment can aid readability, but it creates problems for future maintenance.
+               Consider a future change that needs to touch just one line. This change may leave
+               the formerly-pleasing formatting mangled, and that is<span class="bold"><strong>allowed</strong></span>. More often it prompts the coder (perhaps you) to adjust
+               whitespace on nearby lines as well, possibly triggering a cascading series of
+               reformattings. That one-line change now has a "blast radius." This can at worst
+               result in pointless busywork, but at best it still corrupts version history
+               information, slows down reviewers and exacerbates merge conflicts.
+            </p></div></div></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="d0e1158"></a>Grouping parentheses: recommended</h4></div></div></div><p>Optional grouping parentheses are omitted only when author and reviewer agree that
+         there is no reasonable chance the code will be misinterpreted without them, nor would
+         they have made the code easier to read. It is not reasonable to assume that every reader
+         has the entire Java operator precedence table memorized.
+      </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="d0e1163"></a>Specific constructs</h4></div></div></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="sec-enum-classes"></a>Enum classes</h5></div></div></div><p>After each comma that follows an enum constant, a line-break is optional.</p><p>An enum class with no methods and no documentation on its constants may optionally
+            be formatted as if it were an array initializer (see
+            <a class="xref" href="dev.contributor.developing.coding-standards.html#sec-array-init" title="Arrays">the section called &#8220;Arrays&#8221;</a>).
+         </p><pre class="programlisting"><span class="hl-keyword">private</span> enum Suit { CLUBS, HEARTS, SPADES, DIAMONDS }</pre><p>Since enum classes<span class="italic">are classes</span>, all other rules
+            for formatting classes apply.
+         </p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e1182"></a>Variable declarations</h5></div></div></div><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+                  <span class="bold"><strong>One variable per declaration</strong></span>
+               </p><p>Every variable declaration (field or local) declares only one variable:
+                  declarations such as
+                  <code class="code">int a, b;</code>
+                  are not
+                  used.
+               </p></li><li class="listitem"><p>
+                  <span class="bold"><strong>Declared when needed, initialized as soon as
+                     possible
+                  </strong></span>
+               </p><p>Local variables are
+                  <span class="bold"><strong>not</strong></span>
+                  habitually declared
+                  at the start of their containing block or block-like construct. Instead, local
+                  variables are declared close to the point they are first used (within reason),
+                  to minimize their scope. Local variable declarations typically have
+                  initializers, or are initialized immediately after declaration.
+               </p></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="sec-array-init"></a>Arrays</h5></div></div></div><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+                  <span class="bold"><strong>Array initializers: can be
+                     "block-like"
+                  </strong></span>
+               </p><p>Any array initializer may optionally be formatted as if it were a
+                  "block-like construct." For example, the following are all valid (not an
+                  exhaustive list):
+               </p><pre class="programlisting"><span class="hl-keyword">new</span> <span class="hl-keyword">int</span>[] {        <span class="hl-keyword">new</span> <span class="hl-keyword">int</span>[] {
+   <span class="hl-number">0</span>, <span class="hl-number">1</span>, <span class="hl-number">2</span>, <span class="hl-number">3</span>          <span class="hl-number">0</span>,
+}                      <span class="hl-number">1</span>,
+                       <span class="hl-number">2</span>,
+<span class="hl-keyword">new</span> <span class="hl-keyword">int</span>[] {            <span class="hl-number">3</span>,
+   <span class="hl-number">0</span>, <span class="hl-number">1</span>,            }
+   <span class="hl-number">2</span>, <span class="hl-number">3</span>
+}                   <span class="hl-keyword">new</span> <span class="hl-keyword">int</span>[]
+                       {<span class="hl-number">0</span>, <span class="hl-number">1</span>, <span class="hl-number">2</span>, <span class="hl-number">3</span>}</pre></li><li class="listitem"><p>
+                  <span class="bold"><strong>No C-style array declarations</strong></span>
+               </p><p>The square brackets form a part of the type, not the variable:<code class="code">String[] args</code>, not<code class="code">String
+                  args[]</code>.
+               </p></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e1236"></a>Switch statements</h5></div></div></div><p><span class="bold"><strong>Terminology Note</strong></span>: Inside the braces of a
+            <span class="italic">switch block</span>
+            are one or more<span class="italic">statement groups</span>. Each statement group consists of one or
+            more
+            <span class="italic">switch labels</span>
+            (either
+            <code class="code">case FOO:
+            </code>
+            or<code class="code">default:</code>), followed by one or
+            more statements.
+         </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+                  <span class="bold"><strong>Indentation</strong></span>
+               </p><p>As with any other block, the contents of a switch block are indented
+                  +3.
+               </p><p>After a switch label, a newline appears, and the indentation level is
+                  increased +3, exactly as if a block were being opened. The following switch
+                  label returns to the previous indentation level, as if a block had been
+                  closed.
+               </p></li><li class="listitem"><p>
+                  <span class="bold"><strong>Fall-through: commented</strong></span>
+               </p><p>Within a switch block, each statement group either terminates abruptly (with
+                  a<code class="code">break</code>,<code class="code">continue</code>,
+                  <code class="code">return</code>
+                  or thrown exception), or is marked with
+                  a comment to indicate that execution will or
+                  <span class="italic">might
+                  </span>
+                  continue into the next statement group. Any comment that
+                  communicates the idea of fall-through is sufficient (typically<code class="code">// fall through</code>). This special comment is not
+                  required in the last statement group of the switch block. Example:
+               </p><pre class="programlisting"><span class="hl-keyword">switch</span> (input) {
+   <span class="hl-keyword">case</span> <span class="hl-number">1</span>:
+   <span class="hl-keyword">case</span> <span class="hl-number">2</span>:
+      prepareOneOrTwo();
+      <span class="hl-comment">// fall through</span>
+   <span class="hl-keyword">case</span> <span class="hl-number">3</span>:
+      handleOneTwoOrThree();
+      <span class="hl-keyword">break</span>;
+   <span class="hl-keyword">default</span>:
+      handleLargeNumber(input);
+}</pre></li><li class="listitem"><p>
+                  <span class="bold"><strong>The default case is present</strong></span>
+               </p><p>Each switch statement includes a
+                  <code class="code">default</code>
+                  statement group, even if it contains no code.
+               </p></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e1305"></a>Annotations</h5></div></div></div><p>Annotations applying to a class, method or constructor appear immediately after
+            the documentation block, and each annotation is listed on a line of its own (that is,
+            one annotation per line). These line breaks do not constitute line-wrapping (
+            <a class="xref" href="dev.contributor.developing.coding-standards.html#sec-line-wrap" title="Line-wrapping">the section called &#8220;Line-wrapping&#8221;</a>), so the indentation level is not increased.
+            Example:
+         </p><pre class="programlisting"><span class="hl-annotation">@Override</span>
+<span class="hl-annotation">@Nullable</span>
+<span class="hl-keyword">public</span> String getNameIfPresent() { ... }</pre><p>
+            <span class="bold"><strong>Exception:</strong></span>
+            A single parameterless annotation may
+            instead appear together with the first line of the signature, for example:
+         </p><pre class="programlisting"><span class="hl-annotation">@Override</span> <span class="hl-keyword">public</span> <span class="hl-keyword">int</span> hashCode() { ... }</pre><p>Annotations applying to a field also appear immediately after the documentation
+            block, but in this case,
+            <span class="italic">multiple</span>
+            annotations
+            (possibly parameterized) may be listed on the same line; for example:
+         </p><pre class="programlisting"><span class="hl-annotation">@Partial</span> <span class="hl-annotation">@Mock</span> DataLoader loader;</pre><p>There are no specific rules for formatting parameter and local variable
+            annotations.
+         </p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e1330"></a>Comments</h5></div></div></div><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+                  <span class="bold"><strong>Block comment style</strong></span>
+               </p><p>Block comments are indented at the same level as the surrounding code. They
+                  may be in
+                  <code class="code">/* ... */</code>
+                  style or
+                  <code class="code">// ...
+                  </code>
+                  style. For multi-line
+                  <code class="code">/* ... */</code>
+                  comments, subsequent lines must start with
+                  <code class="code">*</code>
+                  aligned with the
+                  <code class="code">*</code>
+                  on the previous line.</p><pre class="programlisting"><span class="hl-comment">/*
+ * This is          // And so          /* Or you can
+ * okay.            // is this.         * even do this. */</span>
+ */</pre><p>Comments are not enclosed in boxes drawn with asterisks or other
+                  characters.
+               </p><div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Tip</h3><p>When writing multi-line comments, use the
+                     <code class="code">/* ...
+                        */
+                     </code>
+                     style if you want automatic code formatters to re-wrap the
+                     lines when necessary (paragraph-style). Most formatters don't re-wrap lines
+                     in
+                     <code class="code">// ...</code>
+                     style comment blocks.
+                  </p></div></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e1369"></a>Modifiers</h5></div></div></div><p>Class and member modifiers, when present, appear in the order recommended by the
+            Java Language Specification:
+         </p><p>
+            </p><pre class="programlisting"><span class="hl-keyword">public</span> <span class="hl-keyword">protected</span> <span class="hl-keyword">private</span> <span class="hl-keyword">abstract</span> <span class="hl-keyword">static</span> <span class="hl-keyword">final</span> <span class="hl-keyword">transient</span>
+               <span class="hl-keyword">volatile</span> <span class="hl-keyword">synchronized</span> <span class="hl-keyword">native</span> <span class="hl-keyword">strictfp</span>
+            </pre><p>
+         </p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e1379"></a>Numeric literals</h5></div></div></div><p><code class="code">long</code>-valued integer literals use an uppercase
+            <code class="code">L
+            </code>
+            suffix, never lowercase (to avoid confusion with the
+            digit<code class="code">1</code>). For example,
+            <code class="code">3000000000L
+            </code>
+            rather than<code class="code">3000000000l</code>.
+         </p><p>It is advised to use the numeric literal underscore separator (<code class="code">_</code>) as it comes with Java 7. This is even better for
+            readability:<code class="code">3_000_000_000L</code>.
+         </p></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="dev.contributor.developing.code-standards.naming"></a>2.4.4.&nbsp;Naming</h3></div></div></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="d0e1409"></a>Rules common to all identifiers</h4></div></div></div><p>Identifiers use only ASCII letters and digits, and in two cases noted below,
+         underscores. Thus each valid identifier name is matched by the regular expression<code class="code">\w+</code>.
+      </p><p>In PerfCake Style special prefixes or suffixes, like those seen in the examples<code class="code">name_</code>,<code class="code">mName</code>,
+         <code class="code">s_name
+         </code>
+         and<code class="code">kName</code>, are
+         <span class="bold"><strong>not
+         </strong></span>
+         used.
+      </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="d0e1434"></a>Rules by identifier type</h4></div></div></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e1437"></a>Package names</h5></div></div></div><p>Package names are all lowercase, singular, with consecutive words simply concatenated
+            together (no underscores). For example,<code class="code">com.example.deepspace</code>, not
+            <code class="code">com.example.deepSpace
+            </code>
+            or<code class="code">com.example.deep_space</code>.
+         </p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e1451"></a>Class names</h5></div></div></div><p>Class names are written in UpperCamelCase (
+            <a class="xref" href="dev.contributor.developing.coding-standards.html#sec-camel-case" title="Camel case: defined">the section called &#8220;Camel case: defined&#8221;</a>).
+         </p><p>Class names are typically nouns or noun phrases. For example,
+            <code class="code">Character
+            </code>
+            or<code class="code">ImmutableList</code>.
+            Interface names may also be nouns or noun phrases (for example,<code class="code">List</code>), but may sometimes be adjectives or adjective phrases instead (for
+            example,<code class="code">Readable</code>).
+         </p><p>There are no specific rules or even well-established conventions for naming
+            annotation types.
+         </p><p>
+            <span class="italic">Test</span>
+            classes are named starting with the name
+            of the class they are testing, and ending with<code class="code">Test</code>. For
+            example,
+            <code class="code">HashTest</code>
+            or<code class="code">HashIntegrationTest</code>.
+         </p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e1488"></a>Method names</h5></div></div></div><p>Method names are written in lowerCamelCase (
+            <a class="xref" href="dev.contributor.developing.coding-standards.html#sec-camel-case" title="Camel case: defined">the section called &#8220;Camel case: defined&#8221;</a>).
+         </p><p>Method names are typically verbs or verb phrases. For example,
+            <code class="code">sendMessage
+            </code>
+            or<code class="code">stop</code>.
+         </p><p>Underscores may appear in JUnit test method names to separate logical components
+            of the name. One typical pattern is<code class="code">test&lt;MethodUnderTest&gt;_&lt;state&gt;</code>, for example<code class="code">testPop_emptyStack</code>. There is no
+            <span class="bold"><strong>one correct
+               way
+            </strong></span>
+            to name test methods.
+         </p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e1514"></a>Constant names</h5></div></div></div><p>Constant names use<code class="code">CONSTANT_CASE</code>: all uppercase
+            letters, with words separated by underscores. But what
+            <span class="italic">is
+            </span>
+            a constant, exactly?
+         </p><p>Every constant is a static final field, but not all static final fields are
+            constants. Before choosing constant case, consider whether the field
+            <span class="italic">really feels
+            </span>
+            like a constant. For example, if any of that
+            instance's observable state can change, it is almost certainly not a constant. Merely
+            <span class="italic">intending</span>
+            to never mutate the object is
+            generally not enough.
+         </p><p>Examples:</p><pre class="programlisting"><span class="hl-comment">// Constants</span>
+<span class="hl-keyword">static</span> <span class="hl-keyword">final</span> <span class="hl-keyword">int</span> NUMBER = <span class="hl-number">5</span>;
+<span class="hl-keyword">static</span> <span class="hl-keyword">final</span> ImmutableList&lt;String&gt; NAMES = ImmutableList.of(<span class="hl-string">"Ed"</span>, <span class="hl-string">"Ann"</span>);
+
+<span class="hl-comment">// because Joiner is immutable</span>
+<span class="hl-keyword">static</span> <span class="hl-keyword">final</span> Joiner COMMA_JOINER = Joiner.on(<span class="hl-string">','</span>);
+<span class="hl-keyword">static</span> <span class="hl-keyword">final</span> SomeMutableType[] EMPTY_ARRAY = {};
+enum SomeEnum { ENUM_CONSTANT }
+
+<span class="hl-comment">// Not constants</span>
+<span class="hl-keyword">static</span> String nonFinal = <span class="hl-string">"non-final"</span>;
+<span class="hl-keyword">final</span> String nonStatic = <span class="hl-string">"non-static"</span>;
+<span class="hl-keyword">static</span> <span class="hl-keyword">final</span> Set&lt;String&gt; mutableCollection = <span class="hl-keyword">new</span> HashSet&lt;String&gt;();
+<span class="hl-keyword">static</span> <span class="hl-keyword">final</span> ImmutableSet&lt;SomeMutableType&gt; mutableElements =
+      ImmutableSet.of(mutable);
+<span class="hl-keyword">static</span> <span class="hl-keyword">final</span> Logger logger = Logger.getLogger(MyClass.getName());
+<span class="hl-keyword">static</span> <span class="hl-keyword">final</span> String[] nonEmptyArray = {<span class="hl-string">"these"</span>, <span class="hl-string">"can"</span>, <span class="hl-string">"change"</span>};</pre><p>These names are
+            typically nouns or noun phrases.
+         </p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e1539"></a>Non-constant field names</h5></div></div></div><p>Non-constant field names (static or otherwise) are written in lowerCamelCase
+            (
+            <a class="xref" href="dev.contributor.developing.coding-standards.html#sec-camel-case" title="Camel case: defined">the section called &#8220;Camel case: defined&#8221;</a>).
+         </p><p>These names are typically nouns or noun phrases. For example,
+            <code class="code">computedValues
+            </code>
+            or<code class="code">index</code>.
+         </p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e1554"></a>Parameter names</h5></div></div></div><p>Parameter names are written in lowerCamelCase (
+            <a class="xref" href="dev.contributor.developing.coding-standards.html#sec-camel-case" title="Camel case: defined">the section called &#8220;Camel case: defined&#8221;</a>).
+         </p><p>One-character parameter names should be avoided.</p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e1563"></a>Exception parameter names</h5></div></div></div><p>Parameters in <code class="code">catch</code> clauses of exceptions can use one-character
+            names.</p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e1571"></a>Local variable names</h5></div></div></div><p>Local variable names are written in lowerCamelCase (
+            <a class="xref" href="dev.contributor.developing.coding-standards.html#sec-camel-case" title="Camel case: defined">the section called &#8220;Camel case: defined&#8221;</a>), and can be abbreviated more liberally than other types of names.
+         </p><p>However, one-character names should be avoided, except for temporary and looping
+            variables.
+         </p><p>Even when final and immutable, local variables are not considered to be constants,
+            and should not be styled as constants.
+         </p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e1582"></a>Type variable names</h5></div></div></div><p>Each type variable is named in one of two styles:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>A single capital letter, optionally followed by a single numeral (such as
+                  <code class="code">E</code>,<code class="code">T</code>,<code class="code">X</code>,<code class="code">T2</code>).
+               </p></li><li class="listitem"><p>A name in the form used for classes (see Class names above), followed by the
+                  capital letter
+                  <code class="code">T</code>
+                  (examples:<code class="code">RequestT</code>,<code class="code">FooBarT</code>).
+               </p></li></ul></div></div></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="sec-camel-case"></a>Camel case: defined</h4></div></div></div><p>Sometimes there is more than one reasonable way to convert an English phrase into
+         camel case, such as when acronyms or unusual constructs like "IPv6" or "iOS" are
+         present. To improve predictability, Google Style specifies the following (nearly)
+         deterministic scheme.
+      </p><p>Beginning with the prose form of the name:</p><p>
+         </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>Convert the phrase to plain ASCII and remove any apostrophes. For example,
+                  "M&uuml;ller's algorithm" might become "Muellers algorithm".
+               </p></li><li class="listitem"><p>Divide this result into words, splitting on spaces and any remaining
+                  punctuation (typically hyphens).
+               </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+                        <span class="italic">Recommended:</span>
+                        if any word already
+                        has a conventional camel-case appearance in common usage, split this into
+                        its constituent parts (e.g., "AdWords" becomes "ad words"). Note that a
+                        word such as "iOS" is not really in camel case<span class="italic">per se</span>; it defies
+                        <span class="italic">any</span>
+                        convention, so this recommendation does not apply.
+                     </p></li></ul></div></li><li class="listitem"><p>Now lowercase
+                  <span class="italic">everything</span>
+                  (including
+                  acronyms), then uppercase only the first character of:
+               </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>... each word, to yield upper camel case, or</p></li><li class="listitem"><p>... each word except the first, to yield lower camel case.</p></li></ul></div></li><li class="listitem"><p>Finally, join all the words into a single identifier.</p></li></ol></div><p>
+         Note that the casing of the original words is almost entirely disregarded. Examples:
+         </p><div class="table"><a name="d0e1661"></a><div class="table-contents"><table summary="Camel case examples" border="1"><colgroup><col width="33%" class="Prose form"><col width="33%" class="Correct"><col width="34%" class="Incorrect"></colgroup><thead><tr><th>Prose form</th><th>Correct</th><th>Incorrect</th></tr></thead><tbody><tr><td>"XML HTTP request"</td><td>XmlHttpRequest</td><td>XMLHTTPRequest</td></tr><tr><td>"new customer ID"</td><td>newCustomerId</td><td>newCustomerID</td></tr><tr><td>"inner stopwatch"</td><td>innerStopwatch</td><td>innerStopWatch</td></tr><tr><td>"supports IPv6 on iOS?"</td><td>supportsIpv6OnIos</td><td>supportsIPv6OnIOS</td></tr><tr><td>"YouTube importer"</td><td>YouTubeImporter, YoutubeImporter*</td><td>&nbsp;</td></tr></tbody></table></div><p class="title"><b>Table&nbsp;2.3.&nbsp;Camel case examples</b></p></div><p><br class="table-break">
+      </p><p>*Acceptable, but not recommended.</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>Some words are ambiguously hyphenated in the English language: for example
+            "nonempty" and "non-empty" are both correct, so the method names
+            <code class="code">checkNonempty
+            </code>
+            and
+            <code class="code">checkNonEmpty
+            </code>
+            are likewise both correct.
+         </p></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="dev.contributor.developing.code-standards.practices"></a>2.4.5.&nbsp;Programming practices</h3></div></div></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="d0e1726"></a>@Override: always used</h4></div></div></div><p>A method is marked with the
+         <code class="code">@Override</code>
+         annotation
+         whenever it is legal. This includes a class method overriding a superclass method, a
+         class method implementing an interface method, and an interface method respecifying a
+         superinterface method.
+      </p><p>
+         <span class="bold"><strong>Exception:</strong></span>
+         <code class="code">@Override</code>
+         may be omitted when the parent method is<code class="code">@Deprecated</code>.
+      </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="d0e1745"></a>Caught exceptions: not ignored</h4></div></div></div><p>Except as noted below, it is very rarely correct to do nothing in response to a
+         caught exception. Typical responses are to log it, or if it is considered "impossible",
+         rethrow it as an IllegalStateException.
+      </p><p>When it truly is appropriate to take no action whatsoever in a catch block, the
+         reason this is justified is explained in a comment.
+      </p><p>
+         </p><pre class="programlisting"><span class="hl-keyword">try</span> {
+   <span class="hl-keyword">int</span> i = Integer.parseInt(response);
+   <span class="hl-keyword">return</span> handleNumericResponse(i);
+} <span class="hl-keyword">catch</span> (NumberFormatException ok) {
+   <span class="hl-comment">// it's not numeric; that's fine, just continue</span>
+}
+<span class="hl-keyword">return</span> handleTextResponse(response);</pre><p>
+      </p><p>
+         <span class="bold"><strong>Exception:</strong></span>
+         In tests, a caught exception may be
+         ignored without comment if it is named expected. The following is a very common idiom
+         for ensuring that the method under test does throw an exception of the expected type, so
+         a comment is unnecessary here.
+      </p><p>
+         </p><pre class="programlisting"><span class="hl-keyword">try</span> {
+   emptyStack.pop();
+   fail();
+} <span class="hl-keyword">catch</span> (NoSuchElementException expected) {
+}</pre><p>
+      </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="d0e1767"></a>Static members: qualified using class</h4></div></div></div><p>When a reference to a static class member must be qualified, it is qualified with
+         that class's name, not with a reference or expression of that class's type.
+      </p><p>
+         </p><pre class="programlisting">Foo aFoo = ...;
+Foo.aStaticMethod(); <span class="hl-comment">// good</span>
+aFoo.aStaticMethod(); <span class="hl-comment">// bad</span>
+somethingThatYieldsAFoo().aStaticMethod(); <span class="hl-comment">// very bad</span></pre><p>
+      </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="d0e1777"></a>Finalizers: not used</h4></div></div></div><p>It is
+         <span class="bold"><strong>extremely rare</strong></span>
+         to override<code class="code">Object.finalize</code>.
+      </p><div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Tip</h3><p>Don't do it. If you absolutely must, first read and understand
+            <a class="link" href="http://books.google.com/books?isbn=8131726592" target="_top">Effective Java
+            </a>
+            Item 7, "Avoid Finalizers," very carefully, and then don't do it.
+         </p></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="dev.contributor.developing.code-standards.javadoc"></a>2.4.6.&nbsp;JavaDoc</h3></div></div></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="d0e1797"></a>Formatting</h4></div></div></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e1800"></a>General form</h5></div></div></div><p>The
+            <span class="italic">basic</span>
+            formatting of Javadoc blocks is as
+            seen in this example:
+         </p><p>
+            </p><pre class="programlisting"><span class="hl-doctype">/**
+ * Multiple lines of Javadoc text are written here,
+ * wrapped normally...
+ */</span>
+<span class="hl-keyword">public</span> <span class="hl-keyword">int</span> method(String p1) { ... }</pre><p>
+         </p><p>... or in this single-line example:</p><p>
+            </p><pre class="programlisting"><span class="hl-doctype">/** An especially short bit of Javadoc. */</span></pre><p>
+         </p><p>The basic form is always acceptable. The single-line form may be substituted when
+            there are no at-clauses present, and the entirety of the Javadoc block (including
+            comment markers) can fit on a single line.
+         </p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e1822"></a>Paragraphs</h5></div></div></div><p>One blank line -- that is, a line containing only the aligned leading asterisk (*)
+            -- appears between paragraphs, and before the group of "at-clauses" if present. Each
+            paragraph but the first has
+            <code class="code">&lt;p&gt;</code>
+            immediately
+            before the first word, with no space after.
+         </p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e1830"></a>At-clauses</h5></div></div></div><p>Any of the standard "at-clauses" that are used appear in the order<code class="code">@param</code>,<code class="code">@return</code>,<code class="code">@throws</code>,<code class="code">@deprecated</code>, and
+            these four types never appear with an empty description. When an at-clause doesn't
+            fit on a single line, continuation lines are indented
+            <span class="bold"><strong>six
+            </strong></span>
+            (or more) spaces from the position of the<code class="code">@</code>.
+         </p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e1853"></a>Language</h5></div></div></div><p>Use the third person in describing class purpose, method actions, parameters,
+            return types, exceptions and all others. Usually, present tense should be used. All
+            sentences including those describing parameters descriptions, thrown exceptions, and
+            return types start with an uppercase letter and end with a full stop.
+         </p><p>Avoid using reference to the item being described like<span class="emphasis"><em>this
+            class</em></span>,<span class="emphasis"><em>the purpose of this method</em></span>,<span class="emphasis"><em>it
+            stores</em></span>, etc. Also avoid obvious verbs including<span class="emphasis"><em>used
+            to</em></span>,<span class="emphasis"><em>returns</em></span>, etc. All these references are very
+            obvious in the resulting JavaDoc. Simply describe the immediate actions, purpose and
+            all tohers. The same applies to exceptions being thrown.
+         </p><p>Methods intended for fluent API returning
+            <code class="code">this</code>
+            should
+            describe the return value as<span class="emphasis"><em>Instance of this to support fluent
+               API.</em></span>.
+         </p><p>Following is an example of JavaDoc with the proper language:</p><p>
+            </p><pre class="programlisting"><span class="hl-doctype">/**
+ * Gets a value of an accumulated result.
+ *
+ * @param key
+ *       Key in the results hash map.
+ * @return The value associated with the given key.
+ */</span>
+<span class="hl-keyword">protected</span> Object getAccumulatedResult(<span class="hl-keyword">final</span> String key) {
+   ...
+}</pre><p>
+         </p></div></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="d0e1890"></a>The summary fragment</h4></div></div></div><p>The Javadoc for each class and member begins with a brief<span class="bold"><strong>summary fragment</strong></span>. This fragment is very important: it is the only part of
+         the text that appears in certain contexts such as class and method indexes.
+      </p><p>This is a fragment -- a noun phrase or verb phrase, not a complete sentence. It does
+         not begin with<code class="code">A {@code Foo} is a...</code>, or<code class="code">This method returns...</code>, nor does it form a complete imperative
+         sentence like<code class="code">Save the record.</code>. However, the fragment is
+         capitalized and punctuated as if it were a complete sentence.
+      </p><div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Tip</h3><p>A common mistake is to write simple Javadoc in the form<code class="code">/**
+            @return the customer ID */</code>. This is incorrect, and should be changed
+            to
+         </p><p>
+            </p><pre class="programlisting"><span class="hl-doctype">/**
+ * Gets the customer ID.
+ * @return The customer ID.
+ */</span></pre><p>
+         </p></div><p>All of the sentences should be properly ended by a period including the sentences
+         following "at-clauses".
+      </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="d0e1922"></a>Where JavaDoc is used</h4></div></div></div><p>At the<span class="italic">minimum</span>, Javadoc is present for every
+         <code class="code">public
+         </code>
+         class, and every
+         <code class="code">public</code>
+         or
+         <code class="code">protected</code>
+         member of such a class, with a few exceptions
+         noted below.
+      </p><p>Other classes and members still have Javadoc as<span class="italic">needed</span>. Whenever an implementation comment would be used to define the
+         overall purpose or behavior of a class, method or field, that comment is written as
+         Javadoc instead (it's more uniform, and more tool-friendly.)
+      </p><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e1944"></a>Exception: self-explanatory methods</h5></div></div></div><p>Javadoc is optional for "simple, obvious" methods like<code class="code">getFoo</code>, in cases where there
+            <span class="italic">really and
+               truly
+            </span>
+            is nothing else worthwhile to say but "Returns the foo".
+         </p><div class="important" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Important</h3><p>It is not appropriate to cite this exception to justify omitting relevant
+               information that a typical reader might need to know. For example, for a method
+               named<code class="code">getCanonicalName</code>, don't omit its documentation
+               (with the rationale that it would say only<code class="code">/** Returns the
+                  canonical name. */</code>) if a typical reader may have no idea what the term
+               "canonical name" means!
+            </p></div></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e1964"></a>Exception: overrides</h5></div></div></div><p>Javadoc is not always present on a method that overrides a supertype method.
+         </p></div></div></div><div class="footnotes"><br><hr style="width:100; text-align:left;margin-left: 0"><div id="ftn.foot-google-code" class="footnote"><p><a href="#foot-google-code" class="para"><sup class="para">[1] </sup></a>
+            <a class="link" href="http://google-styleguide.googlecode.com/svn/trunk/javaguide.html" target="_top">http://google-styleguide.googlecode.com/svn/trunk/javaguide.html</a>
+         </p></div><div id="ftn.d0e426" class="footnote"><p><a href="#d0e426" class="para"><sup class="para">[2] </sup></a>
+                  <a class="link" href="http://blog.codinghorror.com/new-programming-jargon/" target="_top">http://blog.codinghorror.com/new-programming-jargon/</a>
+               </p></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="dev.contributor.developing.maven.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="dev.contributor.developing.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="dev.contributor.developing.tests.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">2.3.&nbsp;Maven Project&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="perfcake-developers-guide.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;2.5.&nbsp;Test Development</td></tr></table></div></body></html>

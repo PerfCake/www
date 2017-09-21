@@ -1,0 +1,60 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>3.7.&nbsp;Reporting</title><link rel="stylesheet" type="text/css" href="../css/guides.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="perfcake-developers-guide.html" title="PerfCake 7.x"><link rel="up" href="dev.contributor.architecture.html" title="Chapter&nbsp;3.&nbsp;PerfCake Architecture"><link rel="prev" href="dev.contributor.architecture.sequences.html" title="3.6.&nbsp;Sequences"><link rel="next" href="dev.contributor.architecture.validation.html" title="3.8.&nbsp;Validators"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">3.7.&nbsp;Reporting</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="dev.contributor.architecture.sequences.html">Prev</a>&nbsp;</td><th width="60%" align="center">Chapter&nbsp;3.&nbsp;PerfCake Architecture</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="dev.contributor.architecture.validation.html">Next</a></td></tr></table><hr></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dev.contributor.architectire.reporting"></a>3.7.&nbsp;Reporting</h2></div></div></div><p>In this section we will reveal as much details about reporting facilities as possible.
+      First we describe the architecture and then we discuss an approach to develop new reporters,
+      destinations and accumulators. </p><p>Bear in mind that the reporting itself can have a significant influence on the system being
+      measured. Be careful when extending this part of PerfCake.</p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="dev.contributor.architecture.reporting.architecture"></a>3.7.1.&nbsp;Reporting Architecture</h3></div></div></div><div class="figure"><a name="reporting-architecture"></a><div class="figure-contents"><div><table border="0" summary="manufactured viewport for HTML img" style="cellpadding: 0; cellspacing: 0;" width="100%"><tr><td><object type="image/svg+xml" data="./images/reporting-architecture.svg" width="100%"></object></td></tr></table></div></div><p class="title"><b>Figure&nbsp;3.3.&nbsp;Reporting Architecture</b></p></div><br class="figure-break"><p>The <code class="varname">SenderTask</code> instance measures the time needed to send a message by
+      using a <code class="varname">MessageSender</code>. It creates a <code class="varname">MeasurementUnit</code>
+      which is the basic unit carrying a single measurement. The information stored in the
+         <code class="varname">MeasurementUnit</code> are mainly time values of the events in the process of
+      sending a request.</p><p>All the <code class="varname">MeasurementUnits</code> are immediately reported to the
+         <code class="varname">ReportManager</code> which in turn reports this unit to all its
+         <code class="varname">Reporters</code>. A <code class="varname">Reporter</code> is supposed to process the
+      value as it needs. The <code class="varname">Reporter</code> typically accumulates (by utilizing
+         <code class="varname">Accumulators</code>) the values for later because not all
+         <code class="varname">MesurementUnits</code> are reported to the output (from practical reasons like
+      the number of records and performance impacts).</p><p>When it is the right time for the <code class="varname">Reporter</code> to report the
+         <code class="varname">Measurement</code> to the output (as specified in the scenario configuration by
+      using the reporting <code class="varname">Period</code>), it must publish the results. It is up to the
+         <code class="varname">Reporter</code> to make sure the results are reported at the right
+      moments.</p><p>The <code class="varname">Reporter</code> is supposed to create a <code class="varname">Measurement</code>
+      object carrying the accumulated results and pass it to all its
+      <code class="varname">Destinations</code>.</p><p>The <code class="varname">Destination</code> is a representation of the place where the results
+      should be reported. It can be a terminal console, a comma-separeted values (CSV) file, a chart
+      or any custom result repository.</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="dev.contributor.architecture.reporting.reporters"></a>3.7.2.&nbsp;Reporters</h3></div></div></div><p>A <code class="varname">Reporter</code> takes multiple <code class="varname">MeasurementUnits</code> and
+            combines them into a single <code class="varname">Measurement</code>. The core method is
+                  <code class="varname">report()</code> that is called each time a new
+                  <code class="varname">MeasurementUnit</code> is ready. </p><p>The <code class="varname">Reporter</code> should not report anything unless it has been started
+            with the <code class="varname">start()</code> method. If it is properly started, it should
+            regularly report to all registered <code class="varname">Destinations</code> depending on the
+            configured reporting <code class="varname">Periods</code>. </p><p>The <code class="varname">Reporter</code> can assume that <code class="varname">RunInfo</code> has been set
+            before its <code class="varname">start()</code> method was called for the first time. </p><p>It is the pure responsibility of the <code class="varname">Reporter</code> to publish
+                  <code class="varname">Measurement</code> results to the <code class="varname">Destinations</code> in
+            the configured <code class="varname">Periods</code>. All <code class="varname">PeriodTypes</code> must be
+            supported.</p><p>For easier development, it is advised to inherit from the
+                  <code class="varname">AbstractReporter</code> class which provides some common functionality
+            including proper results publishing. One should directly implement this interface only
+            when there is a serious reason. The <code class="varname">Reporter</code> must be thread safe as
+            it is heavily used from multiple threads at the same time.</p><p>All the values reported in the <code class="varname">Measurement</code> should be accompanied by a
+            unit. This is accomplished by providing the <code class="varname">Quantity</code> type.</p><p>A nice example of a very simple Reporter is IterationsPerSecondReporter.</p><p>The <code class="varname">AbstractReporter</code> can also automatically accumulate individual
+                  <code class="varname">MeasurementUnits</code>. It is just important that its
+                  <code class="varname">getAccumulator()</code> method returns the correct
+                  <code class="varname">Accumulator</code> for the given <code class="varname">MeasurementUnit</code>
+            results map key. More on accumulator can be found in <a class="xref" href="dev.contributor.architectire.reporting.html#dev.contributor.architecture.reporting.accumulators" title="3.7.4.&nbsp;Accumulators">Section&nbsp;3.7.4, &#8220;Accumulators&#8221;</a>.</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="dev.contributor.architecture.reporting.destinations"></a>3.7.3.&nbsp;Destinations</h3></div></div></div><p>A <code class="varname">Destination</code> is a channel to which performance measurement results
+            can be reported. The <code class="varname">Destination</code> is registered with a
+                  <code class="varname">Reporter</code> and is completely controlled by the
+                  <code class="varname">Reporter</code>. The only responsibility of the
+                  <code class="varname">Destination</code> is to open a reporting channel, report
+                  <code class="varname">Measurements</code>, and close the reporting channel. </p><p>It is the role of the <code class="varname">Measurement</code> object to provide all the
+            information to be reported (including value types, names, units and custom
+            labels).</p><p>The core method of the <code class="varname">Destination</code> is <code class="varname">report()</code> and
+            it needs to be thread-safe as it is used by multiple threads at the same time.</p><p>One of the simplest <code class="varname">Destinations</code> is
+                  <code class="varname">ConsoleDestination</code>. </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="dev.contributor.architecture.reporting.accumulators"></a>3.7.4.&nbsp;Accumulators</h3></div></div></div><p>An <code class="varname">Accumulator</code> is a tool for reporters to accumulate multiple values
+            from <code class="varname">MeasurementUnits</code> into a single <code class="varname">Mesurement</code>. </p><p>The <code class="varname">Accumulator</code> must be thread-safe as it is called from multiple
+            threads at the same time.</p><p>It has three simple methods to reset the <code class="varname">Accumulator</code> to the
+            default/empty state (<code class="varname">reset()</code>), to accumulate a new value
+                  (<code class="varname">add()</code>), and to obtain the current result
+                  (<code class="varname">getResult()</code>).</p><p>The <code class="varname">Accumulator</code> is not obliged to remember all the added values as
+            long as it is capable of providing the correct results. E.g. while counting an average,
+            it is sufficient to store the sum and the count of added values. In some cases, it might
+            be necessary to store them all (e.g. harmonic mean).</p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="dev.contributor.architecture.sequences.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="dev.contributor.architecture.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="dev.contributor.architecture.validation.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">3.6.&nbsp;Sequences&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="perfcake-developers-guide.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;3.8.&nbsp;Validators</td></tr></table></div></body></html>

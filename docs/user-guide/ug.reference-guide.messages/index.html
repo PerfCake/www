@@ -1,0 +1,57 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>4.5.&nbsp;What - Messages</title><link rel="stylesheet" type="text/css" href="../css/guides.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="perfcake-user-guide.html" title="PerfCake 7.x"><link rel="up" href="ug.reference-guide.html" title="Chapter&nbsp;4.&nbsp;Reference Guide"><link rel="prev" href="ug.reference-guide.correlating.html" title="4.4.&nbsp;Correlating messages"><link rel="next" href="ug.reference-guide.sequences.html" title="4.6.&nbsp;Sequences"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">4.5.&nbsp;What - Messages</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ug.reference-guide.correlating.html">Prev</a>&nbsp;</td><th width="60%" align="center">Chapter&nbsp;4.&nbsp;Reference Guide</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ug.reference-guide.sequences.html">Next</a></td></tr></table><hr></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.reference-guide.messages"></a>4.5.&nbsp;What - Messages</h2></div></div></div><p>A message is an actual payload, that is sent by a sender. To specify what will be sent, you
+      can use the <code class="code">uri</code> attribute of the particular message element in the scenario
+      configuration. The <code class="code">uri</code> can be an absolute file path in a form of
+         <code class="code">file://...</code> , URL or just a file name, in which case PerfCake will look for the
+      file in the messages directory (See <a class="link" href="https://www.perfcake.org/quickstart/" target="_top">https://www.perfcake.org/quickstart/</a>
+      ). </p><p>The simple payload of the message can be specified directly in the scenario by using
+      <code class="code">content</code>
+      attribute instead of the<code class="code">uri</code>. The value of the
+      <code class="code">content</code>
+      attribute will be the actual message payload.
+   </p><p>The scenario can be configured to send more that one message or to send a message more than
+      once in a single iteration. To specify multiple different messages you just need to add more
+         <code class="code">message</code> elements in the <code class="code">messages</code> configuration. To send a
+      particular message more than once use the <code class="code">multiplicity</code> attribute of the
+      respective <code class="code">message</code> element. </p><div class="example"><a name="d0e4943"></a><p class="title"><b>Example&nbsp;4.30.&nbsp;An example of a simple message configuration:</b></p><div class="example-contents"><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;messages&gt;</span>
+&nbsp;&nbsp;2       ...
+&nbsp;&nbsp;3       <span class="hl-tag">&lt;message</span> <span class="hl-attribute">content</span>=<span class="hl-value">"Greetings stranger!"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;4       ...
+&nbsp;&nbsp;5    <span class="hl-tag">&lt;/messages&gt;</span></pre><p>In the example above there is a single message defined. The payload of the message is the value of the
+         <code class="code">content</code>
+         attribute .
+      </p></div></div><br class="example-break"><div class="example"><a name="d0e4953"></a><p class="title"><b>Example&nbsp;4.31.&nbsp;An example of multiple messages configuration:</b></p><div class="example-contents"><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;messages&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;message</span> <span class="hl-attribute">uri</span>=<span class="hl-value">"message1.txt"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;3          <span class="hl-tag">&lt;header</span> <span class="hl-attribute">name</span>=<span class="hl-value">"header.name"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"header.value"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;4          <span class="hl-tag">&lt;header</span> <span class="hl-attribute">name</span>=<span class="hl-value">"header2"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"you-know"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;5          <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"Empire.State.Building"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"A lot of $"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;6       <span class="hl-tag">&lt;/message&gt;</span>
+&nbsp;&nbsp;7       <span class="hl-tag">&lt;message</span> <span class="hl-attribute">uri</span>=<span class="hl-value">"message2.xml"</span> <span class="hl-attribute">multiplicity</span>=<span class="hl-value">"2"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;8    <span class="hl-tag">&lt;/messages&gt;</span></pre><p>
+         In the example above there are 2 messages defined. In the case of the first message the payload is taken from the file
+         <code class="code">message1.txt</code>
+         and the message has two headers and one property specified.
+         The second message is taken from the file
+         <code class="code">message2.xml</code>
+         and will be sent two times in
+         each iteration.
+      </p></div></div><br class="example-break"><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.reference-guide.messages.filtering"></a>4.5.1.&nbsp;Filtering and templates</h3></div></div></div><p>Messages stored in separate files can take an advantage of more complex filtering than
+      those with body specified directly in the scenario file. This is optimized for performance. 
+      However, take into account that this might have a negative impact on the
+      maximal message generation speed. It is recommended to create a comparative test without any
+      templates to be sure there is no significant drop in troughput. </p><p>All system properties are must be prefixed with the <span class="italic">props.</span> namespace declaration. All environment properties must be prefixed with
+      the <span class="italic">env.</span> namespace declaration. Internal PerfCake
+      properties (i.e. message number) do not need any prefix. Sequences are accessible without any prefix,
+      unless you defined with one. </p><p>While loading the message body from a file, all placeholders with the dollar sign are
+      replaced first (for example<code class="code">${env.JAVA_HOME}</code>). This is done only
+      once and no later changes to the property values take any effect. There is an option to be
+      able to replace a placeholder with a fresh property value each tima a new message is
+      created/being sent. Such a property placeholder uses the <span class="italic">at</span>
+      sign (for example<code class="code">@{props.counter}</code>). </p><p>To specify a default value for a property, the double pipe character is used. For instance:
+         <code class="code">${property_name||default_value}</code>
+   </p><p>Any occurrence of the placeholder can be escaped using the backslash sign. This means that
+      the following placeholders will never get replaced: <code class="code">\${non-replaceable} \@{ignored-placeholder}</code>
+   </p><p>
+      For more details see <a class="xref" href="ug.perfcake-features.scenario-definition.html#ug.perfcake-features.scenario-definition.filtering-properties" title="2.2.5.&nbsp;Filtering properties">Section&nbsp;2.2.5, &#8220;Filtering properties&#8221;</a>.
+   </p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ug.reference-guide.correlating.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="ug.reference-guide.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ug.reference-guide.sequences.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">4.4.&nbsp;Correlating messages&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="perfcake-user-guide.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;4.6.&nbsp;Sequences</td></tr></table></div></body></html>

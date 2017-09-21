@@ -1,0 +1,221 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>1.2.&nbsp;Your first performance test</title><link rel="stylesheet" type="text/css" href="../css/guides.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="perfcake-user-guide.html" title="PerfCake 7.x"><link rel="up" href="ug.introduction.html" title="Chapter&nbsp;1.&nbsp;Introduction"><link rel="prev" href="ug.introduction.html" title="Chapter&nbsp;1.&nbsp;Introduction"><link rel="next" href="ug.perfcake-features.html" title="Chapter&nbsp;2.&nbsp;PerfCake Features"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">1.2.&nbsp;Your first performance test</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ug.introduction.html">Prev</a>&nbsp;</td><th width="60%" align="center">Chapter&nbsp;1.&nbsp;Introduction</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ug.perfcake-features.html">Next</a></td></tr></table><hr></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.introduction.first-performance.test"></a>1.2.&nbsp;Your first performance test</h2></div></div></div><p>We have actually executed a performance test while validating our installation. Let's take
+      a look on it in more detail. Then we will walk through a quickstart example taken from our web
+      pages.</p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.introduction.first-performance-test.demo-httpbin"></a>1.2.1.&nbsp;First out-of-the box demo with httpbin.org</h3></div></div></div><p>Performance test execution in PerfCake is driven by a so called scenario. Scenarios are by
+      default placed in $PERFCAKE_HOME/resources/scenarios. You can place them in any location you
+      want, or they can be even online. But just this location is searched automatically. You even
+      do not need to specify the file extension when running a scenario. There are couple of
+      supported formats (see Section 2.1 for a complete list) that are recognized
+      automatically.</p><p>The scenario simply specifies how the load should be generated, where the
+      load/requests/messages should be sent to, what the request should look like and what do you
+      want to measure/report. You can also ask PerfCake to validate your messages or use sequences
+      to make each request uniqe. These advanced concepts are described later.</p><p>The scenario specification is pretty self-explaining. You just need to know what are the
+      possibilities (see <a class="xref" href="ug.reference-guide.html" title="Chapter&nbsp;4.&nbsp;Reference Guide">Chapter&nbsp;4, <i>Reference Guide</i></a> for hints on this).</p><p>
+      </p><pre class="programlisting"><span class="hl-directive">&nbsp;&nbsp;1 &lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+&nbsp;&nbsp;2 <span class="hl-tag">&lt;scenario</span> <span class="hl-attribute">xmlns</span>=<span class="hl-value">"urn:perfcake:scenario:7.0"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;3   <span class="hl-tag">&lt;run</span> <span class="hl-attribute">type</span>=<span class="hl-value">"${perfcake.run.type:time}"</span>
+&nbsp;&nbsp;4        <span class="hl-attribute">value</span>=<span class="hl-value">"${perfcake.run.duration:30000}"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;5   <span class="hl-tag">&lt;generator</span> <span class="hl-attribute">class</span>=<span class="hl-value">"DefaultMessageGenerator"</span>
+&nbsp;&nbsp;6        <span class="hl-attribute">threads</span>=<span class="hl-value">"${perfcake.thread.count:100}"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;7   <span class="hl-tag">&lt;sender</span> <span class="hl-attribute">class</span>=<span class="hl-value">"HttpSender"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;8      <span class="hl-tag">&lt;target&gt;</span>http://${server.host}/post<span class="hl-tag">&lt;/target&gt;</span>
+&nbsp;&nbsp;9      <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"method"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"POST"</span><span class="hl-tag">/&gt;</span>
+&nbsp;10   <span class="hl-tag">&lt;/sender&gt;</span>
+&nbsp;11   <span class="hl-tag">&lt;reporting&gt;</span>
+&nbsp;12      <span class="hl-tag">&lt;reporter</span> <span class="hl-attribute">class</span>=<span class="hl-value">"IterationsPerSecondReporter"</span><span class="hl-tag">&gt;</span>
+&nbsp;13         <span class="hl-tag">&lt;destination</span> <span class="hl-attribute">class</span>=<span class="hl-value">"ConsoleDestination"</span><span class="hl-tag">&gt;</span>
+&nbsp;14            <span class="hl-tag">&lt;period</span> <span class="hl-attribute">type</span>=<span class="hl-value">"time"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"1000"</span><span class="hl-tag"> /&gt;</span>
+&nbsp;15         <span class="hl-tag">&lt;/destination&gt;</span>
+&nbsp;16      <span class="hl-tag">&lt;/reporter&gt;</span>
+&nbsp;17   <span class="hl-tag">&lt;/reporting&gt;</span>
+&nbsp;18   <span class="hl-tag">&lt;messages&gt;</span>
+&nbsp;19      <span class="hl-tag">&lt;message</span> <span class="hl-attribute">uri</span>=<span class="hl-value">"plain.txt"</span><span class="hl-tag">/&gt;</span>
+&nbsp;20   <span class="hl-tag">&lt;/messages&gt;</span>
+&nbsp;21 <span class="hl-tag">&lt;/scenario&gt;</span></pre><p>
+   </p><p>As you can see, the simplest scenario runs for 30000ms = 30 seconds. It generates
+      messages/requests using 100 threads and sends them via HTTP to the server specified in a
+      property (see below for explanation) using the POST method. Performance test results are
+      reported to the console every 1000ms or 1 second. The content of the messages that are being
+      send is specified in the plain.txt file.</p><p>As you can see, there are some strange construts at a few places in the scenario. These are
+      ${property:default}. These are replaced by real values specified at the command line. If they
+      are not specified, they are replaced by the default values (configured following the colon).
+      If there is no default value and you do not pass the value at the command line, an empty
+      string is used instead. These properties can be used to dynamically change the behavior of the
+      scenario without actually changing the file.</p><p>To run the scenario, we can simply invoke PerfCake via the shell/bat script as described
+      earlier. The only mandatory command line argument is -s &lt;scenario name&gt;. To provide
+      property values we use -Dproperty=value. That's it. Try it once more.</p><p><code class="code">./bin/perfcake.sh -s http -Dserver.host=httpbin.org</code></p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.introduction.first-performance-test.quickstart"></a>1.2.2.&nbsp;Your own quickstart</h3></div></div></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="d0e171"></a>Preparing PerfCake</h4></div></div></div><p> After getting (see <a class="xref" href="ug.introduction.html#ug.introduction.getting-perfcake.downloading" title="1.1.1.&nbsp;Downloading distribution">Section&nbsp;1.1.1, &#8220;Downloading distribution&#8221;</a> ) and
+         unpacking PerfCake you will have your directory with the following structure: </p><pre class="programlisting">$PERFCAKE_HOME
+&#9500;&#9472;&#9472; bin/
+&#9474; &#9500;&#9472;&#9472; perfcake.bat
+&#9474; &#9492;&#9472;&#9472; perfcake.sh
+&#9500;&#9472;&#9472; docs/
+&#9474; &#9492;&#9472;&#9472; perfcake-7.x-javadoc.jar
+&#9500;&#9472;&#9472; lib/
+&#9474; &#9500;&#9472;&#9472;ext/
+&#9474; &#9500;&#9472;&#9472;plugins/
+&#9474; &#9492;&#9472;&#9472; *.jar
+&#9500;&#9472;&#9472; resources/
+&#9474; &#9500;&#9472;&#9472; keystores/
+&#9474; &#9500;&#9472;&#9472; messages/
+&#9474; &#9500;&#9472;&#9472; scenarios/
+&#9474; &#9500;&#9472;&#9472; schemas/
+&#9474; &#9492;&#9472;&#9472; xslt/
+&#9500;&#9472;&#9472; LICENSE.txt
+&#9492;&#9472;&#9472; log4j2.xml </pre><p> You may try to run PerfCake, you should receive output like this: </p><pre class="programlisting">$PERFCAKE_HOME/bin/perfcake.sh
+=== Welcome to PerfCake 7.5 ===
+usage: ScenarioExecution -s &lt;SCENARIO&gt; [options] [-D&lt;property=value&gt;]*
+ -d,--debug                                start debug JMX agent for
+                                           external monitoring
+ -D &lt;property=value&gt;                       system properties
+ -dn,--debug-name &lt;AGENT_NAME&gt;             debug agent name in the JMX
+                                           tree
+ -h,--help                                 prints help/usage
+ -log,--log-level &lt;LOG_LEVEL&gt;              logging level
+ -md,--messages-dir &lt;MESSAGES_DIR&gt;         directory for messages
+ -pd,--plugins-dir &lt;PLUGINS_DIR&gt;           directory for plugins
+ -pf,--properties-file &lt;PROPERTIES_FILE&gt;   custom system properties file
+ -r,--replay &lt;RAW_FILE&gt;                    raw file to be replayed
+ -s,--scenario &lt;SCENARIO&gt;                  scenario to be executed
+ -sd,--scenarios-dir &lt;SCENARIOS_DIR&gt;       directory for scenarios
+ -skip,--skip-timer-benchmark              skip system timer benchmark          </pre><p>The script assumes you have JDK installed and available on the system path, minimal
+         version 1.8 is required. Please note that the system being tested is not required to run on
+         Java 8. It might not run on Java at all! </p><p>In the <code class="code">bin</code> directory you can find executable scripts for running PerfCake
+         on Linux, Windows and Mac. </p><p>The <code class="code">lib</code> directory contains application libraries. You do not have to take
+         any care of these. </p><p>What is more interesting is the <code class="code">resources</code> directory. In its subdirectories
+         you can find sample scenarios, messages and all versions of XSD schemas for scenario files.
+         The <code class="code">keystores</code> directory is used for specific message sender, but we will not
+         deal with it in this quickstart. </p><p>If you feel like going wild, you can download <a href="#ftn.ug.introduction.first-performance-test.quickstart.footnote-download" class="footnote" name="ug.introduction.first-performance-test.quickstart.footnote-download"><sup class="footnote">[1]</sup></a> the source distribution and compile it by
+         </p><pre class="programlisting">mvn clean package assembly:assembly </pre><p>Then you can find the binary distributions in the <code class="code">target</code> directory and
+         continue with this quickstart guide. You will also see the output of tests so you can be
+         sure the project works fine on your system. </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="d0e219"></a>Configure and run</h4></div></div></div><p>In these days, your only possibility to prepare your first scenario is an XML file. You
+         can use your favourite editor to create this file. The structure is defined by an XSD
+         schema that can be found under <code class="code">resources/schemas</code> directory. Some of the
+         editors are able to use the schema file to suggest you valid tags. Our future plans include
+         providing GUI editor for Eclipse and InteliJ Idea that would allow you to create and edit
+         scenarios, stay tuned! If you wanted to contribute, we are happy to welcome you in our
+         community <a href="#ftn.d0e227" class="footnote" name="d0e227"><sup class="footnote">[2]</sup></a>. </p><p>
+         At minimum, simple scenario has to contain definitions for:
+         </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">Generator - how the load will be generated (see
+                  <a class="xref" href="ug.reference-guide.html#ug.reference-guide.generating" title="4.1.&nbsp;How - Generating load">Section&nbsp;4.1, &#8220;How - Generating load&#8221;</a>
+                  )
+               </li><li class="listitem">Sender - where the load will be sent - interface or protocol with address, you can choose from many already implemeted (see
+                  <a class="xref" href="ug.reference-guide.sending.html" title="4.2.&nbsp;Where - Sending messages">Section&nbsp;4.2, &#8220;Where - Sending messages&#8221;</a>
+                  )
+               </li></ul></div><p>
+      </p><p>
+         Let&#8217;s assume you need to stress your web application that has some function exposed on the following URL:
+         <code class="code">http://your-app.com/cool-app</code>
+         , and you need to test how fast the function is. You want to generate maximum load for 10 seconds (10000 miliseconds)
+         with 10 simultaneous clients (working threads).
+      </p><p>
+         If you do not have any such application at hand, you can consider using
+         <a class="link" href="http://httpbin.org/get" target="_top">http://httpbin.org/get</a>
+         but be polite and do not overload their server. It is provided for free.
+      </p><p>
+         Now the important part comes. Create a file called
+         <code class="code">http-echo.dsl</code>
+         (
+         <code class="code">http-echo.xml</code>
+         resp.) in the
+         <code class="code">$PERFCAKE_HOME/resources/scenarios</code>
+         directory.
+         Now insert the following DSL (XML resp.) snippet in it:
+      </p><p>
+         <code class="code">http-echo.dsl</code>:
+         </p><pre class="programlisting">&nbsp;&nbsp;1  scenario <span class="hl-string">"http-echo"</span>
+&nbsp;&nbsp;2     run <span class="hl-number">10.</span>s with ${thread.count:<span class="hl-number">10</span>}.threads
+&nbsp;&nbsp;3     generator <span class="hl-string">"DefaultMessageGenerator"</span>
+&nbsp;&nbsp;4     sender <span class="hl-string">"HttpSender"</span> target <span class="hl-string">"http://your-app.com/cool-app"</span> method <span class="hl-string">"GET"</span>
+&nbsp;&nbsp;5  end</pre><p>
+      </p><p>
+         <code class="code">http-echo.xml</code>:
+         </p><pre class="programlisting"><span class="hl-directive">&nbsp;&nbsp;1 &lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+&nbsp;&nbsp;2 <span class="hl-tag">&lt;scenario</span> <span class="hl-attribute">xmlns</span>=<span class="hl-value">"urn:perfcake:scenario:7.0"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;3    <span class="hl-tag">&lt;run</span> <span class="hl-attribute">type</span>=<span class="hl-value">"time"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"10000"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;4    <span class="hl-tag">&lt;generator</span> <span class="hl-attribute">class</span>=<span class="hl-value">"DefaultMessageGenerator"</span> 
+&nbsp;&nbsp;5               <span class="hl-attribute">threads</span>=<span class="hl-value">"${thread.count}"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;6    <span class="hl-tag">&lt;sender</span> <span class="hl-attribute">class</span>=<span class="hl-value">"HttpSender"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;7       <span class="hl-tag">&lt;target&gt;</span>http://your-app.com/cool-app<span class="hl-tag">&lt;/target&gt;</span>
+&nbsp;&nbsp;8    <span class="hl-tag">&lt;/sender&gt;</span>
+&nbsp;&nbsp;9 <span class="hl-tag">&lt;/scenario&gt;</span> </pre><p>You can see <code class="code">"${thread.count:10}"</code> in the generator&#8217;s definition. That is a
+         system property <code class="code">"thread.count"</code> that you may set and the actual value of the
+         property will be used. If the property is not set, the default value (10) will be used. </p><p>Now, all you need to do is to execute your new test scenario by running the following
+         command:
+         </p><pre class="programlisting">$PERFCAKE_HOME/bin/perfcake.sh -s http-echo </pre><p>Please note you do not need to specify the DSL (XML) extension. Only if you used both
+         DSL and XML variants. </p><p>Now you are running your fisrt stress test. Even if you cannot see what is going on,
+         PerfCake sends requests to your application in many threads. The test should run
+         approximately for 10 seconds. If you want to see some numbers (e.g. how fast your system
+         is), you have to add one more element to your scenario to evaluate the results - the
+         reporting. </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="d0e298"></a>Evaluate results</h4></div></div></div><p>For reporting some results of your measurement, you have to configure a Reporter - an object that is capable of computing results in some way and outputing them wherever you can imagine.
+      </p><p>Copy your
+         <code class="code">http-echo.dsl</code>
+         (
+         <code class="code">http-echo.xml</code>
+         resp.) file to
+         <code class="code">http-reporting.dsl</code>
+         (
+         <code class="code">http-reporting.xml</code>
+         resp.) and have it look like the listing below.
+      </p><p><code class="code">http-reporting.dsl</code>: </p><pre class="programlisting">&nbsp;&nbsp;1 scenario <span class="hl-string">"http-reporting"</span>
+&nbsp;&nbsp;2    run <span class="hl-number">10.</span>s with ${thread.count:<span class="hl-number">10</span>}.threads
+&nbsp;&nbsp;3    generator <span class="hl-string">"DefaultMessageGenerator"</span>
+&nbsp;&nbsp;4    sender <span class="hl-string">"HttpSender"</span> target <span class="hl-string">"http://your-app.com/cool-app"</span> method <span class="hl-string">"GET"</span>
+&nbsp;&nbsp;5    reporter <span class="hl-string">"ResponseTimeStatsReporter"</span> minimumEnabled <span class="hl-string">"false"</span> maximumEnabled <span class="hl-string">"false"</span>
+&nbsp;&nbsp;6       destination <span class="hl-string">"ChartDestination"</span> every <span class="hl-number">1.</span>s name <span class="hl-string">"Response Time"</span> group <span class="hl-string">"rt"</span> yAxis <span class="hl-string">"Response Time [ms]"</span> attributes <span class="hl-string">"Result,Average"</span>
+&nbsp;&nbsp;7       destination <span class="hl-string">"ConsoleDestination"</span> every <span class="hl-number">1.</span>s
+&nbsp;&nbsp;8 end </pre><p><code class="code">http-reporting.xml</code>: </p><pre class="programlisting"><span class="hl-directive">&nbsp;&nbsp;1 &lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+&nbsp;&nbsp;2 <span class="hl-tag">&lt;scenario</span> <span class="hl-attribute">xmlns</span>=<span class="hl-value">"urn:perfcake:scenario:7.0"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;3    <span class="hl-tag">&lt;run</span> <span class="hl-attribute">type</span>=<span class="hl-value">"time"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"10000"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;4    <span class="hl-tag">&lt;generator</span> <span class="hl-attribute">class</span>=<span class="hl-value">"DefaultMessageGenerator"</span> 
+&nbsp;&nbsp;5               <span class="hl-attribute">threads</span>=<span class="hl-value">"${thread.count:10}"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;6    <span class="hl-tag">&lt;sender</span> <span class="hl-attribute">class</span>=<span class="hl-value">"HttpSender"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;7       <span class="hl-tag">&lt;target&gt;</span>http://your-app.com/cool-app<span class="hl-tag">&lt;/target&gt;</span>
+&nbsp;&nbsp;8       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"method"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"GET"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;9    <span class="hl-tag">&lt;/sender&gt;</span>
+&nbsp;10    <span class="hl-tag">&lt;reporting&gt;</span>
+&nbsp;11       <span class="hl-tag">&lt;reporter</span> <span class="hl-attribute">class</span>=<span class="hl-value">"ResponseTimeStatsReporter"</span><span class="hl-tag">&gt;</span>
+&nbsp;12          <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"minimumEnabled"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"false"</span><span class="hl-tag">/&gt;</span>
+&nbsp;13          <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"maximumEnabled"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"false"</span><span class="hl-tag">/&gt;</span>
+&nbsp;14          <span class="hl-tag">&lt;destination</span> <span class="hl-attribute">class</span>=<span class="hl-value">"ChartDestination"</span><span class="hl-tag">&gt;</span>
+&nbsp;15             <span class="hl-tag">&lt;period</span> <span class="hl-attribute">type</span>=<span class="hl-value">"time"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"1000"</span><span class="hl-tag">/&gt;</span>
+&nbsp;16             <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"name"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"Response Time"</span><span class="hl-tag">/&gt;</span>
+&nbsp;17             <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"group"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"rt"</span><span class="hl-tag">/&gt;</span>
+&nbsp;18             <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"yAxis"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"Response Time [ms]"</span><span class="hl-tag">/&gt;</span>
+&nbsp;19             <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"attributes"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"Result,Average"</span><span class="hl-tag">/&gt;</span>
+&nbsp;20          <span class="hl-tag">&lt;/destination&gt;</span>
+&nbsp;21          <span class="hl-tag">&lt;destination</span> <span class="hl-attribute">class</span>=<span class="hl-value">"ConsoleDestination"</span><span class="hl-tag">&gt;</span>
+&nbsp;22             <span class="hl-tag">&lt;period</span> <span class="hl-attribute">type</span>=<span class="hl-value">"time"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"1000"</span><span class="hl-tag">/&gt;</span>
+&nbsp;23          <span class="hl-tag">&lt;/destination&gt;</span>
+&nbsp;24       <span class="hl-tag">&lt;/reporter&gt;</span>
+&nbsp;25    <span class="hl-tag">&lt;/reporting&gt;</span>
+&nbsp;26 <span class="hl-tag">&lt;/scenario&gt;</span></pre><p>Adding the <code class="code">reporting</code> section you let your scenario to
+         log results to some destination - in our case to the PerfCake&#8217;s console. Output will be
+         provided every 2 seconds (2000 miliseconds). </p><p>Try to run the scenario again by the following command: </p><pre class="programlisting">2016-06-14 22:01:56,155 INFO  {org.perfcake.ScenarioExecution} === Welcome to PerfCake 7.5 ===
+2016-06-14 22:01:56,386 INFO  {org.perfcake.scenario.ScenarioBuilder} Scenario configuration: file:/home/perfcake/perfcake-7.5/resources/scenarios/http-reporting.xml
+2016-06-14 22:01:56,455 INFO  {org.perfcake.util.TimerBenchmark} Benchmarking system timer resolution...
+2016-06-14 22:01:56,456 INFO  {org.perfcake.util.TimerBenchmark} This system is able to differentiate up to 334ns. A single thread is now able to measure maximum of 2994011 iterations/second.
+2016-06-14 22:01:56,468 INFO  {org.perfcake.message.generator.DefaultMessageGenerator} Starting to generate...
+[0:00:01][84 iterations][17%] [141.868302 ms] [warmUp =&gt; false] [Threads =&gt; 10] [ResponseSize =&gt; 0.00 B] [Minimum =&gt; 136.702416 ms] [failures =&gt; 0] [RequestSize =&gt; 0.00 B] [Average =&gt; 170.70281994047613 ms]
+[0:00:02][155 iterations][27%] [140.435482 ms] [warmUp =&gt; false] [Threads =&gt; 10] [ResponseSize =&gt; 0.00 B] [Minimum =&gt; 135.436574 ms] [failures =&gt; 0] [RequestSize =&gt; 0.00 B] [Average =&gt; 157.30522732903225 ms]
+[0:00:03][225 iterations][37%] [136.248079 ms] [warmUp =&gt; false] [Threads =&gt; 10] [ResponseSize =&gt; 0.00 B] [Minimum =&gt; 134.629032 ms] [failures =&gt; 0] [RequestSize =&gt; 0.00 B] [Average =&gt; 151.3000900355556 ms]
+[0:00:04][292 iterations][47%] [146.018769 ms] [warmUp =&gt; false] [Threads =&gt; 10] [ResponseSize =&gt; 0.00 B] [Minimum =&gt; 134.629032 ms] [failures =&gt; 0] [RequestSize =&gt; 0.00 B] [Average =&gt; 151.79159557191784 ms]
+[0:00:05][360 iterations][57%] [140.239096 ms] [warmUp =&gt; false] [Threads =&gt; 10] [ResponseSize =&gt; 0.00 B] [Minimum =&gt; 134.629032 ms] [failures =&gt; 0] [RequestSize =&gt; 0.00 B] [Average =&gt; 150.78039243888892 ms]
+[0:00:06][430 iterations][67%] [140.608011 ms] [warmUp =&gt; false] [Threads =&gt; 10] [ResponseSize =&gt; 0.00 B] [Minimum =&gt; 134.077543 ms] [failures =&gt; 0] [RequestSize =&gt; 0.00 B] [Average =&gt; 149.0632376767442 ms]
+[0:00:07][500 iterations][77%] [150.971978 ms] [warmUp =&gt; false] [Threads =&gt; 10] [ResponseSize =&gt; 0.00 B] [Minimum =&gt; 134.077543 ms] [failures =&gt; 0] [RequestSize =&gt; 0.00 B] [Average =&gt; 148.20699049399997 ms]
+[0:00:08][571 iterations][87%] [136.759408 ms] [warmUp =&gt; false] [Threads =&gt; 10] [ResponseSize =&gt; 0.00 B] [Minimum =&gt; 134.077543 ms] [failures =&gt; 0] [RequestSize =&gt; 0.00 B] [Average =&gt; 147.44373894921188 ms]
+[0:00:09][641 iterations][97%] [137.870229 ms] [warmUp =&gt; false] [Threads =&gt; 10] [ResponseSize =&gt; 0.00 B] [Minimum =&gt; 134.077543 ms] [failures =&gt; 0] [RequestSize =&gt; 0.00 B] [Average =&gt; 146.7737520499219 ms]
+2016-06-14 22:02:06,508 INFO  {org.perfcake.message.generator.DefaultMessageGenerator} Reached test end. All messages were prepared to be sent.
+2016-06-14 22:02:06,509 INFO  {org.perfcake.reporting.ReportManager} Checking whether there are more results to be reported...
+[0:00:10][662 iterations][100%] [142.601692 ms] [warmUp =&gt; false] [Threads =&gt; 10] [ResponseSize =&gt; 0.00 B] [Minimum =&gt; 134.077543 ms] [failures =&gt; 0] [RequestSize =&gt; 0.00 B] [Average =&gt; 146.55668455286997 ms]
+2016-06-14 22:02:06,620 INFO  {org.perfcake.message.generator.DefaultMessageGenerator} Shutting down execution...
+2016-06-14 22:02:06,620 INFO  {org.perfcake.ScenarioExecution} === Goodbye! ===         </pre><p>The
+            <code class="code">warmUp</code> attribute you can see in the results determines the mode of the
+         test. In our example we do not wait for the server to warm up so the attribute is set to
+         false all the time. </p><p>ChartDestination specified in the scenario produces a chart report with the chart
+         similar to the following that can be found under
+            <code class="code">$PERFCAKE_HOME/perfcake-charts</code> directory. </p><div class="figure"><a name="ug.introduction.first-performance-test.quickstart.chart"></a><div class="figure-contents"><div align="center"><table border="0" summary="manufactured viewport for HTML img" style="cellpadding: 0; cellspacing: 0;" width="100%"><tr><td align="center"><img src="./images/quickstart-chart.png" align="middle" width="100%" alt="Your first performance test chart report"></td></tr></table></div></div><p class="title"><b>Figure&nbsp;1.1.&nbsp;Your first performance test chart report</b></p></div><br class="figure-break"></div></div><div class="footnotes"><br><hr style="width:100; text-align:left;margin-left: 0"><div id="ftn.ug.introduction.first-performance-test.quickstart.footnote-download" class="footnote"><p><a href="#ug.introduction.first-performance-test.quickstart.footnote-download" class="para"><sup class="para">[1] </sup></a>
+               <a class="link" href="https://www.perfcake.org/download" target="_top">https://www.perfcake.org/download</a>
+            </p></div><div id="ftn.d0e227" class="footnote"><p><a href="#d0e227" class="para"><sup class="para">[2] </sup></a>
+               <a class="link" href="https://www.perfcake.org/community" target="_top">https://www.perfcake.org/community</a>
+            </p></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ug.introduction.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="ug.introduction.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ug.perfcake-features.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;1.&nbsp;Introduction&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="perfcake-user-guide.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;2.&nbsp;PerfCake Features</td></tr></table></div></body></html>

@@ -1,0 +1,129 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>2.3.&nbsp;Maven Project</title><link rel="stylesheet" type="text/css" href="../css/guides.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="perfcake-developers-guide.html" title="PerfCake 7.x"><link rel="up" href="dev.contributor.developing.html" title="Chapter&nbsp;2.&nbsp;Developing with PerfCake"><link rel="prev" href="dev.contributor.developing.perfcake-in-maven.html" title="2.2.&nbsp;Using PerfCake from a Maven project"><link rel="next" href="dev.contributor.developing.coding-standards.html" title="2.4.&nbsp;Coding Standards"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">2.3.&nbsp;Maven Project</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="dev.contributor.developing.perfcake-in-maven.html">Prev</a>&nbsp;</td><th width="60%" align="center">Chapter&nbsp;2.&nbsp;Developing with PerfCake</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="dev.contributor.developing.coding-standards.html">Next</a></td></tr></table><hr></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dev.contributor.developing.maven"></a>2.3.&nbsp;Maven Project</h2></div></div></div><p>The following Maven plugins and their goals can be used within the PerfCake project when
+      you work with the PerfCake's source code.</p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="dev.contributor.developing.maven.structure"></a>2.3.1.&nbsp;Project Structure</h3></div></div></div><p>There is a parent project composed of three child Maven modules. There is a Bill Of
+      Materials that defines all dependencies used with PerfCake, the PerfCake Agent which installs
+      into the application under inspection and needs to be compiled with an older Java version
+      because of compatibility reasons, and the main core of PerfCake. </p><p>Because of the split into multiple child modules, there is a need to run <span class="emphasis"><em>mvn
+         install -DskipTests </em></span> to install the parent module into your local repository
+      when working on the <span class="emphasis"><em>devel</em></span> Git branch.</p><p>The modules are as follows. </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><span class="emphasis"><em>perfcake-bom</em></span> Bill Of Materials with dependencies
+               definitions.</p></li><li class="listitem"><p>
+               <span class="emphasis"><em>parfcake</em></span> Core PerfCake module, contains all the code needed to
+               build the product. </p></li><li class="listitem"><p>
+               <span class="emphasis"><em>perfcake-agent</em></span> JVM Agent to be used when running target
+               application (application under inspection) with memory monitoring. This module is
+               compiled with an older Java version (1.5). </p></li></ul></div><p>
+   </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="dev.contributor.developing.maven.profiles"></a>2.3.2.&nbsp;Maven Profiles</h3></div></div></div><p>Use the following Maven profiles to achieve desired results.
+      </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+               <span class="emphasis"><em>production</em></span>
+               Generates output classes without debugging
+               information. This produces smaller results and is intended for binary
+               distributions. This must be used during the release procedure.
+            </p></li><li class="listitem"><p>
+               <span class="emphasis"><em>sign</em></span>
+               Automatically adds digital signatures of build
+               artifacts during the
+               <span class="emphasis"><em>install</em></span>
+               phase. Needs properly configured
+               GPG agent.
+            </p></li></ul></div><p>
+   </p><p>Profiles for controlling test groups can be found in section
+
+      <a class="xref" href="dev.contributor.developing.tests.html" title="2.5.&nbsp;Test Development">Section&nbsp;2.5, &#8220;Test Development&#8221;</a>
+      .
+   </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="dev.contributor.developing.maven.maven-goals"></a>2.3.3.&nbsp;Standard Maven Goals</h3></div></div></div><p>We try to minimalize the necessity for running standard Maven goals in a different manner
+      or in a way they are not originally intended to. We also try to make sure all of these goals
+      work with the parent project but this is not always possible. In case you realize the goal
+      does not work in the parent directory, try switching to the <span class="emphasis"><em>perfcake</em></span>
+      module. So far we use the following goals. </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+            <span class="emphasis"><em>clean</em></span>
+            Cleans the compiled artifacts and reports. Basically
+            deletes the
+            <code class="varname">target</code>
+            directory.
+         </p></li><li class="listitem"><p>
+            <span class="emphasis"><em>compile</em></span>
+            Compiles the whole project including tests.
+         </p></li><li class="listitem"><p>
+            <span class="emphasis"><em>test</em></span>
+            Executes all the tests. See section Profiles for controlling test groups can be found in section
+
+            <a class="xref" href="dev.contributor.developing.tests.html" title="2.5.&nbsp;Test Development">Section&nbsp;2.5, &#8220;Test Development&#8221;</a>
+            for Maven profiles that control test groups.
+         </p></li><li class="listitem"><p>
+            <span class="emphasis"><em>install</em></span>
+            Install project artifacts into the local Maven
+            repository. This is needed when working in the
+            <span class="emphasis"><em>devel</em></span>
+            Git branch
+            with snapshot versions.
+         </p></li><li class="listitem"><p>
+            <span class="emphasis"><em>package</em></span> Packages the distribution jar files. </p></li><li class="listitem"><p>
+            <span class="emphasis"><em>exec:exec</em></span>
+            Works only in the
+            <span class="emphasis"><em>perfcake</em></span>
+            module. Runs PerfCake, parameters are passed using
+            <span class="emphasis"><em>-Dparam=value</em></span>
+            . Never use
+            <span class="emphasis"><em>exec:java</em></span>
+            directly as Maven will comply about
+            missing configuration (the configuration is passed in from
+            <span class="emphasis"><em>exec:exec</em></span>
+            ).
+         </p></li><li class="listitem"><p>
+            <span class="emphasis"><em>site</em></span>
+            Works only in the
+            <span class="emphasis"><em>perfcake</em></span>
+            module.
+            Generates the Maven HTML site. Consumes output of other plugins like JaCoCo. If the
+            other consumables should be part of the generated site, they must be ready before
+            calling this goal.
+         </p></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="dev.contributor.developing.maven.documentation"></a>2.3.4.&nbsp;Documentation</h3></div></div></div><p>It is possible to generate JavaDoc for individual Maven modules as well as a single
+      aggregated package for all of them. </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+               <span class="emphasis"><em>javadoc:javadoc</em></span> Generates documentation for the current Maven
+               module. </p></li><li class="listitem"><p>
+               <span class="emphasis"><em>javadoc:aggregate</em></span> Generates aggregated documentation package
+               when executed in the parent project. </p></li></ul></div><p>
+   </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="dev.contributor.developing.maven.checkstyle"></a>2.3.5.&nbsp;Code Style with Checkstyle</h3></div></div></div><p>With checkstyle there is a (limited) possibility to check your code formatting that it
+      aligns according to this guide. There are some issues in checkstyle that report false
+      positives. In this case you can use the following format of a comment to ignore a warning for
+      th the given line.</p><div class="example"><a name="d0e247"></a><p class="title"><b>Example&nbsp;2.1.&nbsp;Ignoring a chackstyle warning</b></p><div class="example-contents"><pre class="programlisting">&nbsp;&nbsp;1 ...
+&nbsp;&nbsp;2       <span class="hl-comment">// follow the exact format of the comment: "// @checkstyle.ignore(&lt;warn1&gt;|&lt;warn2&gt;) - &lt;comment&gt;</span>
+&nbsp;&nbsp;3       <span class="hl-keyword">final</span> <span class="hl-keyword">long</span> results[] = <span class="hl-keyword">new</span> <span class="hl-keyword">long</span>[CYCLES]; <span class="hl-comment">// @checkstyle.ignore(ArrayTypeStyle) - A bug in checkstyle.</span>
+&nbsp;&nbsp;4 ...</pre></div></div><br class="example-break"><p>You can see the output with each build and also by calling <code class="code">mvn
+         checkstyle:check</code>. Checkstyle is configured to just display warnings and not fail the
+      build. A report is created when the site goal is executed. To get just this report call
+         <code class="code">mvn checkstyle:checkstyle</code>.</p><p>The resulting report can be found in the <code class="varname">target/site/checkstyle.html</code>
+      directory. </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="dev.contributor.developing.maven.license"></a>2.3.6.&nbsp;License</h3></div></div></div><p>PerfCake is licensed under Apache License 2.0 and the license text can be found in
+         <code class="varname">LICENSE.txt</code> file. license-maven-plugin is used to check that each file
+      has the appropriate header. </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+            <span class="emphasis"><em>license:check-file-header</em></span>
+            Checks the current status of the
+            license header in project files. This goals claims to modify the files but noothing
+            is done in fact. The output is a bit misleading.
+         </p></li><li class="listitem"><p>
+            <span class="emphasis"><em>license:update-file-header</em></span>
+            Performs the actual update of file
+            headers. Note that we recognize the true license by two hard space characters at the
+            end of some blank lines. Carefully configure your IDE to preserve these.
+         </p></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="dev.contributor.developing.maven.jacoco"></a>2.3.7.&nbsp;JaCoCo Code Coverage</h3></div></div></div><p>JaCoCo is configured to use a Java Agent so no class instrumentation is neede. The agent
+      is automatically switched on for running tests. The only goal needed is report generation
+      (jacoco:report) which must be done together or after test execution.
+   </p><p>
+      The resulting report can be found in the
+      <code class="varname">target/site/jacoco</code>
+      directory.
+   </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="dev.contributor.developing.maven.findbugs"></a>2.3.8.&nbsp;FindBugs Report</h3></div></div></div><p>We use FindBugs to warn us about bad code practices. To obtain the report execute the
+         <span class="emphasis"><em>findbugs:findbugs</em></span> goal. FindBugs works with the compiled classes, so
+      for a fresh report, the <code class="varname">compile</code> target must be invoked. </p><p>To inspect the code on the fly, run the <span class="emphasis"><em>findbugs:gui</em></span> tool. Please note
+      that it only shows the data from the previous analysis run. </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="dev.contributor.developing.maven.signatures"></a>2.3.9.&nbsp;Digital Signatures</h3></div></div></div><p>To sign the artifacts created by the <span class="emphasis"><em>package</em></span> goal, one need to run the
+         <span class="emphasis"><em>gpg:sign</em></span> goal. The resulting signatures accompany the files in the
+         <code class="varname">target</code> directory. </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="dev.contributor.developing.maven.distribution"></a>2.3.10.&nbsp;Distribution</h3></div></div></div><p>To create the archived distributions we offer for download at our website, simply run the
+         <span class="emphasis"><em>assembly:single</em></span> goal. Its output can be found in the
+         <code class="varname">target</code> directory as usually. </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="dev.contributor.developing.maven.scenario-transformation"></a>2.3.11.&nbsp;Transformation of Scenarios</h3></div></div></div><p>It is possible to automatically transform scenarios from previous versions of PerfCake into
+      the newest one. There are XSTL stylesheets included and they can be used by invoking the
+         <span class="emphasis"><em>xml:transform</em></span> goal and specific profile (see below). </p><p>There are properties that can be used to control the transformation. They are described in the following table.</p><p>It is currently possible to automatically migrate from version 2 to 3, and from version 4 to
+      5. The Maven profiles are correspondingly named <code class="code">2-to-3</code>, and <code class="code">4-to-5</code>.
+      The migration is started by invoking:</p><pre class="programlisting">$ mvn xml:transform -P 2-to-3 -Dtransform.scenarios.dir=&lt;source scenarios dir&gt; \
+      -Dtransform.scenarios.outputDir=&lt;target scenarios dir&gt;</pre><p>Both directories must exist before starting the migration. All XML scenarios found in the
+      directories are transformed.</p><div class="table"><a name="d0e359"></a><div class="table-contents"><table summary="XML plugin properties" border="1"><colgroup><col width="30%" align="left" class="property-name"><col width="24%" align="left" class="description"><col width="15%" align="left" class="required"><col width="31%" align="left" class="default-value"></colgroup><thead><tr><th align="left">Property name</th><th align="left">Description</th><th align="left">Required</th><th align="left">Default value</th></tr></thead><tbody><tr><td align="left">transform.scenarios.dir</td><td align="left">An input directory where the XML plugin will look for the scenarios to transform.</td><td align="left">Yes</td><td align="left">-</td></tr><tr><td align="left">transform.scenarios.outputDir</td><td align="left">An output directory where the transformed scenarios will be placed.</td><td align="left">No</td><td align="left">${project.build.directory}/scenarios</td></tr></tbody></table></div><p class="title"><b>Table&nbsp;2.1.&nbsp;XML plugin properties</b></p></div><br class="table-break"></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="dev.contributor.developing.perfcake-in-maven.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="dev.contributor.developing.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="dev.contributor.developing.coding-standards.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">2.2.&nbsp;Using PerfCake from a Maven project&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="perfcake-developers-guide.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;2.4.&nbsp;Coding Standards</td></tr></table></div></body></html>

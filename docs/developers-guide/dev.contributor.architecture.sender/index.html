@@ -1,0 +1,50 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>3.4.&nbsp;Message Senders</title><link rel="stylesheet" type="text/css" href="../css/guides.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="perfcake-developers-guide.html" title="PerfCake 7.x"><link rel="up" href="dev.contributor.architecture.html" title="Chapter&nbsp;3.&nbsp;PerfCake Architecture"><link rel="prev" href="dev.contributor.architecture.generator.html" title="3.3.&nbsp;Generators"><link rel="next" href="dev.contributor.architecture.receiver.html" title="3.5.&nbsp;Receivers and Correlators"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">3.4.&nbsp;Message Senders</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="dev.contributor.architecture.generator.html">Prev</a>&nbsp;</td><th width="60%" align="center">Chapter&nbsp;3.&nbsp;PerfCake Architecture</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="dev.contributor.architecture.receiver.html">Next</a></td></tr></table><hr></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dev.contributor.architecture.sender"></a>3.4.&nbsp;Message Senders</h2></div></div></div><p>A <code class="varname">MessageSender</code> is the typical interface that most of the developers are
+      likely to implement. It encapsulates the specific protocol communication. It does just one
+      thing and it should do it properly. Implementing a simple sender can be really fast but there
+      are some low hanging fruits that can make their development and usage easier. Let's start with
+      their contract.</p><p>The ultimate goal of the MessageSender is to send a message (or any other unit of
+      communication work), and possibly receive a response. Any implementation should not do
+      anything but the communication. It should be a pure wrapper of the message exchange
+      layer.</p><p>The <code class="varname">init()</code> and <code class="varname">close()</code> methods should be used to
+      establish and close a permanent connection. It is a design consideration of any implementation
+      whether to handle the connection establishment separately (and not measure it), or to open and
+      close a connection with every single request (and make it part of the performance
+      measurement). Most provided implementations (if not all) handle the connection separately as
+      we are really interested only in measuring the message exchange.</p><p>The <code class="varname">preSend()</code> and <code class="varname">postSend()</code> methods are still not
+      part of the performance measurement and can prepare the message for actual sending or handle
+      any cleanup.</p><p>The <code class="varname">send()</code> methods must handle just the message exchange. No logging or
+      complex error handling code should be placed here. Therefore we allow any generic exception to
+      be thrown.</p><p>The messages must always be sent somewhere. This is specified through the
+         <code class="varname">target</code> property.</p><p>In general, any of the configuration properties (including target) of the
+         <code class="varname">MessageSender</code> can contain templates that get replaced. If you want your
+      sender to support templates in any of the properties, always store them as a
+         <code class="varname">StringTemplate</code> as in the <code class="varname">AbstractSender.setTarget()</code>
+      method. Do not forget to render the resulting string each time it is used (if there are no
+      other intentions) typically by using message attributes that are passed to many methods in the
+         <code class="varname">MessageSender</code>.</p><p>TODO: How to develop a new sender, how to use inheritance from existing senders, how are senders used in a thread pool, are they thread safe?</p><p>To allow fluent API usage with senders, we strongly encourage you to make sure all your
+      senders' setters return<code class="code">this</code>.</p><p>It might be more convenient to extend <code class="varname">AbstractSender</code>. This class does
+      some work for you already. First, it can cache a connection to the <code class="varname">target</code>
+      so that it is not established separately for each message (see configurtion property
+         <code class="varname">keepConnection</code>). Second, it stores <code class="varname">target</code> as a
+         <code class="varname">StringTemplate</code>. It also combines these two features together so that the
+         <code class="varname">target</code> property can contain templates. However, replacing templates with
+      message attributes only works when <code class="varname">keepConnection</code> is
+         <code class="varname">false</code> because in the case of the cached connection, we do not reuse the
+         <code class="varname">target</code> property.</p><p>When building your own <code class="varname">MessageSender</code> on top of the
+         <code class="varname">AbstractSender</code> you just take care of the following methods.</p><p>In the <code class="varname">doInit()</code> method, you should establish the connection to the
+      target system. It is advised to use
+         <code class="varname">AbstractSender.safeGetTarget(messageAttributes)</code> call to obtain the
+      target address with properly replaced templates.</p><p>The counterpart method is <code class="varname">doClose()</code>. You should close the previously
+      created connection.</p><p>You can still use <code class="varname">preSend()</code> and <code class="varname">postSend()</code> methods to
+      do any preparations and cleanup like creating the protocol specific version of the message. In
+      this case, do not forget to call the methods in the ancestor as well
+         (<code class="varname">super.preSend()</code> and <code class="varname">super.postSend()</code>).</p><p>Finally, the core part is the <code class="varname">doSend()</code> method where you just send the
+      message, optionally returning a response if there was any expected. </p><p>Good examples of the described features are <code class="varname">JmsSender</code> and
+         <code class="varname">JdbcSender</code> for instance, however these do not allow any other properties
+      to carry templates.</p><p>The <code class="varname">HttpSender</code> on the other hand can use templates in the HTTP method
+      name. But the connection is handled in a different way here as
+         <code class="varname">HttpUrlConnection</code> is not reusable (Java handles its own cache
+      internally).</p><p>If in doubt, you can use the <code class="varname">DummySender</code> in the debug mode and see what
+      happens and what methods are being called depending on the configuration.</p></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="dev.contributor.architecture.generator.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="dev.contributor.architecture.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="dev.contributor.architecture.receiver.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">3.3.&nbsp;Generators&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="perfcake-developers-guide.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;3.5.&nbsp;Receivers and Correlators</td></tr></table></div></body></html>

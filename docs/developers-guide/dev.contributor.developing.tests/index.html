@@ -1,0 +1,30 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>2.5.&nbsp;Test Development</title><link rel="stylesheet" type="text/css" href="../css/guides.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="perfcake-developers-guide.html" title="PerfCake 7.x"><link rel="up" href="dev.contributor.developing.html" title="Chapter&nbsp;2.&nbsp;Developing with PerfCake"><link rel="prev" href="dev.contributor.developing.coding-standards.html" title="2.4.&nbsp;Coding Standards"><link rel="next" href="dev.contributor.developing.writing-guides.html" title="2.6.&nbsp;Writing Guides"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">2.5.&nbsp;Test Development</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="dev.contributor.developing.coding-standards.html">Prev</a>&nbsp;</td><th width="60%" align="center">Chapter&nbsp;2.&nbsp;Developing with PerfCake</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="dev.contributor.developing.writing-guides.html">Next</a></td></tr></table><hr></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dev.contributor.developing.tests"></a>2.5.&nbsp;Test Development</h2></div></div></div><p>All classes in PerfCake are supposed to have a good test coverage. This might not
+      currently be the situation for all of them but it definitely is our goal. When developing new
+      code, please make sure the tests are developed as well.
+   </p><p>There are the following test groups defined. Each of the test methods or classes should be
+      categorized at least into one of them.
+   </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+            <span class="emphasis"><em>unit</em></span>
+            - Test of a single component (class).
+         </p></li><li class="listitem"><p>
+            <span class="emphasis"><em>integration</em></span>
+            - Tests of multiple components working well in the
+            complete context of PerfCake and in relation to other components.
+         </p></li><li class="listitem"><p>
+            <span class="emphasis"><em>performance</em></span>
+            - Tests of a perfomance of a component or multiple
+            components to make sure they are not a bottle-neck.
+         </p></li><li class="listitem"><p>
+            <span class="emphasis"><em>stress</em></span>
+            - Tests to verify that a component or multiple components
+            work correctly under a heavy load.
+         </p></li><li class="listitem"><p>
+            <span class="emphasis"><em>ueber</em></span>
+            - Advanced integration/performance/stress tests that
+            verify components at larger scale than previous groups and take significant amount of
+            time. Tests in this group are not executed by default, unless a Maven profile
+            <span class="emphasis"><em>allTests</em></span>
+            is used.
+         </p></li></ul></div><p>To find out what is the current code coverage of tests, refer to the <a class="xref" href="dev.contributor.developing.maven.html#dev.contributor.developing.maven.jacoco" title="2.3.7.&nbsp;JaCoCo Code Coverage">Section&nbsp;2.3.7, &#8220;JaCoCo Code Coverage&#8221;</a> . </p></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="dev.contributor.developing.coding-standards.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="dev.contributor.developing.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="dev.contributor.developing.writing-guides.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">2.4.&nbsp;Coding Standards&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="perfcake-developers-guide.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;2.6.&nbsp;Writing Guides</td></tr></table></div></body></html>

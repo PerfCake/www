@@ -1,0 +1,411 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>4.2.&nbsp;Where - Sending messages</title><link rel="stylesheet" type="text/css" href="../css/guides.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="perfcake-user-guide.html" title="PerfCake 7.x"><link rel="up" href="ug.reference-guide.html" title="Chapter&nbsp;4.&nbsp;Reference Guide"><link rel="prev" href="ug.reference-guide.html" title="Chapter&nbsp;4.&nbsp;Reference Guide"><link rel="next" href="ug.reference-guide.receiving.html" title="4.3.&nbsp;Receiving messages"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">4.2.&nbsp;Where - Sending messages</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ug.reference-guide.html">Prev</a>&nbsp;</td><th width="60%" align="center">Chapter&nbsp;4.&nbsp;Reference Guide</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ug.reference-guide.receiving.html">Next</a></td></tr></table><hr></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.reference-guide.sending"></a>4.2.&nbsp;Where - Sending messages</h2></div></div></div><p>As it was mentioned before, a sender is an object responsible for sending a message to the tested system and receiving the response
+      in a specific way via a specific transport.
+   </p><p>To tell the sender where to send the messages, there is a <code class="code">&lt;target&gt;</code>
+      element mandatory for all senders.</p><p>All message senders provided in PerfCake distribution are based on the
+         <code class="code">AbstractSender</code> class which cannot be used standalone but provides an important
+      property available in all other senders. The property is <code class="code">keepConnection</code> and
+      instructs the sender to stay initialized for the whole run of the performance test. When set
+      to <code class="code">false</code>, the sender get initialized for each message. This influences the
+      performance results and needs to be considered whether this is a required behavior. The
+      default value of this property is <code class="code">true</code> and it is not required in the scenario
+      definition.</p><div class="example"><a name="d0e2990"></a><p class="title"><b>Example&nbsp;4.7.&nbsp;An example of a Sender configuration</b></p><div class="example-contents"><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;sender</span> <span class="hl-attribute">class</span>=<span class="hl-value">"..."</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;target&gt;</span>...<span class="hl-tag">&lt;/target&gt;</span>
+&nbsp;&nbsp;3       ...
+&nbsp;&nbsp;4       sender properties
+&nbsp;&nbsp;5       ...
+&nbsp;&nbsp;6    <span class="hl-tag">&lt;/sender&gt;</span></pre><p>When specifying the sender class, unless you enter a fully classified class name, the
+         default package <code class="code">org.perfcake.message.sender</code> is assumed.</p><p>In the following sections you can find a complete description of all
+         senders, that can be used by PerfCake including all of their properties.
+      </p></div></div><br class="example-break"><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.reference-guide.sending.CamelSender"></a>4.2.1.&nbsp;CamelSender</h3></div></div></div><p>The CamelSender can be used to send messages to any <a class="link" href="http://camel.apache.org" target="_top">Apache Camel</a> endpoint. The endpoint is defined
+      in the target attribute in the configuration. Any Camel endpoints are allowed. Just make sure
+      the corresponding Camel component JAR file and its dependencies are on the classpath. In the
+      binary distribution, this means putting the JAR files in the lib/ext directory.</p><p>Endpoints can be usually configured by using message headers. To set the headers use the
+         <code class="code">header</code> element of the particular <code class="code">message</code> element in the
+         <code class="code">messages</code> section of the scenario definition.</p><p>There are no extra configuration properties for <code class="code">CamelSender</code>.</p><div class="example"><a name="d0e3026"></a><p class="title"><b>Example&nbsp;4.8.&nbsp;An example of CamelSender configuration</b></p><div class="example-contents"><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;sender</span> <span class="hl-attribute">class</span>=<span class="hl-value">"CamelSender"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;target&gt;</span>http:127.0.0.1:8283/perfcake?param1=value1<span class="hl-tag">&lt;/target&gt;</span>
+&nbsp;&nbsp;3    <span class="hl-tag">&lt;/sender&gt;</span>
+&nbsp;&nbsp;4    ...
+&nbsp;&nbsp;5    <span class="hl-tag">&lt;messages&gt;</span>
+&nbsp;&nbsp;6       <span class="hl-tag">&lt;message</span> <span class="hl-attribute">content</span>=<span class="hl-value">"Hello from Camel"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;7          <span class="hl-tag">&lt;header</span> <span class="hl-attribute">name</span>=<span class="hl-value">"CamelHttpMethod"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"POST"</span><span class="hl-tag"> /&gt;</span>
+&nbsp;&nbsp;8       <span class="hl-tag">&lt;/message&gt;</span>
+&nbsp;&nbsp;9    <span class="hl-tag">&lt;/messages&gt;</span></pre><p>In this example, the <code class="code">CamelSender</code> is configured to use the HTTP Camel
+         component to send messages to an HTTP endpoint. The messages will be sent using the POST
+         method as configured in the message header.</p></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.reference-guide.sending.CoapSender"></a>4.2.2.&nbsp;CoapSender</h3></div></div></div><p>The sender can be used to send a single message using CoAP protocol
+      <a href="#ftn.d0e3041" class="footnote" name="d0e3041"><sup class="footnote">[6]</sup></a>
+      .
+   </p><p>The target of the sender is a CoAP endpoint in a form of CoAP URI
+      <a href="#ftn.d0e3049" class="footnote" name="d0e3049"><sup class="footnote">[7]</sup></a>
+      .
+      </p><div class="table"><a name="d0e3055"></a><div class="table-contents"><table summary="CoapSender properties" border="1"><colgroup><col width="28%" align="left" class="property-name"><col width="29%" align="left" class="description"><col width="14%" align="left" class="required"><col width="29%" align="left" class="default-value"></colgroup><thead><tr><th align="left">Property name</th><th align="left">Description</th><th align="left">Required</th><th align="left">Default value</th></tr></thead><tbody><tr><td align="left">method</td><td align="left">A name of CoAP method. One of <code class="code">GET</code>, <code class="code">POST</code>,
+                     <code class="code">PUT</code>
+                     or <code class="code">DELETE</code> is supported
+                     <a href="#ftn.d0e3091" class="footnote" name="d0e3091"><sup class="footnote">[a]</sup></a>
+                     .
+                  </td><td align="left">No</td><td align="left">POST</td></tr><tr><td align="left">requestType</td><td align="left">CoAP request type that the sender will use. Either
+                     <code class="code">confirmable</code>
+                     or <code class="code">nonConfirmable</code> is supported
+                     <a href="#ftn.d0e3112" class="footnote" name="d0e3112"><sup class="footnote">[b]</sup></a>
+                     .
+                  </td><td align="left">No</td><td align="left">nonConfirmable</td></tr></tbody><tbody class="footnotes"><tr><td colspan="4"><div id="ftn.d0e3091" class="footnote"><p><a href="#d0e3091" class="para"><sup class="para">[a] </sup></a>
+                           See
+                           <a class="link" href="https://tools.ietf.org/html/rfc7252#section-5.8" target="_top">https://tools.ietf.org/html/rfc7252#section-5.8</a>
+                           for more detail on request methods of the CoAP protocol.
+                        </p></div><div id="ftn.d0e3112" class="footnote"><p><a href="#d0e3112" class="para"><sup class="para">[b] </sup></a>See <a class="link" href="https://tools.ietf.org/html/rfc7252#section-2.1" target="_top">https://tools.ietf.org/html/rfc7252#section-2.1</a> for more detail on (non)confirmable requests of the CoAP protocol. </p></div></td></tr></tbody></table></div><p class="title"><b>Table&nbsp;4.6.&nbsp;CoapSender properties</b></p></div><p><br class="table-break">
+   </p><div class="example"><a name="d0e3123"></a><p class="title"><b>Example&nbsp;4.9.&nbsp;An example of CoapSender configuration</b></p><div class="example-contents"><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;sender</span> <span class="hl-attribute">class</span>=<span class="hl-value">"CoapSender"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;target&gt;</span>coap://${server.host}:5683/resource<span class="hl-tag">&lt;/target&gt;</span>
+&nbsp;&nbsp;3       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"method"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"GET"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;4       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"requestType"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"confirmable"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;5    <span class="hl-tag">&lt;/sender&gt;</span></pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.reference-guide.sending.CommandSender"></a>4.2.3.&nbsp;CommandSender</h3></div></div></div><p>The sender is able to invoke an external command (specified by the <code class="code">target</code>
+      property) in a separate process to send a message payload. The payload can be passed to the
+      standard input of the process (default behavior) or as the command argument. That is
+      configurable via <code class="code">messageFrom</code> proerty. </p><p>The target of the sender is a path to the file containing the commands that are to be executed.</p><p>Message properties and headers are passed to the process as the environmental variables.</p><div class="table"><a name="d0e3143"></a><div class="table-contents"><table summary="CommandSender properties" border="1"><colgroup><col width="28%" align="left" class="property-name"><col width="29%" align="left" class="description"><col width="14%" align="left" class="required"><col width="29%" align="left" class="default-value"></colgroup><thead><tr><th align="left">Property name</th><th align="left">Description</th><th align="left">Required</th><th align="left">Default value</th></tr></thead><tbody><tr><td align="left">messageFrom</td><td align="left">Specifies where the message is taken from by the sender. The supported values
+                  are <code class="code">stdin</code> or <code class="code">arguments</code>
+               </td><td align="left">No</td><td align="left">stdin</td></tr></tbody></table></div><p class="title"><b>Table&nbsp;4.7.&nbsp;CommandSender properties</b></p></div><br class="table-break"><div class="example"><a name="d0e3177"></a><p class="title"><b>Example&nbsp;4.10.&nbsp;An example of CommandSender configuration</b></p><div class="example-contents"><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;sender</span> <span class="hl-attribute">class</span>=<span class="hl-value">"CommandSender"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;target&gt;</span>/tmp/script.sh<span class="hl-tag">&lt;/target&gt;</span>
+&nbsp;&nbsp;3    <span class="hl-tag">&lt;/sender&gt;</span>
+&nbsp;&nbsp;4    ...
+&nbsp;&nbsp;5    <span class="hl-tag">&lt;messages&gt;</span>
+&nbsp;&nbsp;6       <span class="hl-tag">&lt;message&gt;</span>
+&nbsp;&nbsp;7          <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"GREETINGS"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"Be well!"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;8       <span class="hl-tag">&lt;/message&gt;</span>
+&nbsp;&nbsp;9    <span class="hl-tag">&lt;/messages&gt;</span></pre><p>In the example above there is a <code class="code">CommandSender</code> configured to execute a
+         script located in <code class="code">/tmp/script.sh</code> file. The environmental variable
+            <code class="code">GREETINGS</code> is set to the value of " <code class="code">Be well!</code> ". </p></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ch-ug-sending.validators.DummySender"></a>4.2.4.&nbsp;DummySender</h3></div></div></div><p>
+      This sender is intended to work as a dummy sender and to be used for testing scenarios and developing purposes. It does not actually send any message. It can simulate a synchronous waiting for a reply by setting the
+      <code class="code">delay</code>
+      property.
+   </p><p>While the target of the sender is mandatory for all senders, it is irrelevant for the
+      <code class="code">DummySender</code>
+      so it can be anything.
+   </p><div class="table"><a name="d0e3209"></a><div class="table-contents"><table summary="DummySender properties" border="1"><colgroup><col width="28%" align="left" class="property-name"><col width="29%" align="left" class="description"><col width="14%" align="left" class="required"><col width="29%" align="left" class="default-value"></colgroup><thead><tr><th align="left">Property name</th><th align="left">Description</th><th align="left">Required</th><th align="left">Default value</th></tr></thead><tbody><tr><td align="left">delay</td><td align="left">Time duration in milliseconds that the sender will simulate waiting for a response. If set to 0 (default) it will not wait at all.</td><td align="left">No</td><td align="left">0</td></tr></tbody></table></div><p class="title"><b>Table&nbsp;4.8.&nbsp;DummySender properties</b></p></div><br class="table-break"><div class="example"><a name="d0e3237"></a><p class="title"><b>Example&nbsp;4.11.&nbsp;An example of DummySender configuration</b></p><div class="example-contents"><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;sender</span> <span class="hl-attribute">class</span>=<span class="hl-value">"DummySender"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;target&gt;</span>out there!<span class="hl-tag">&lt;/target&gt;</span>
+&nbsp;&nbsp;3       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"delay"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"500"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;4    <span class="hl-tag">&lt;/sender&gt;</span></pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.reference-guide.sending.GroovySender"></a>4.2.5.&nbsp;GroovySender</h3></div></div></div><p>
+      Groovy sender can be used to implement the message sending in a Groovy script. By default the sender uses the
+      <code class="code">groovy</code>
+      installed on the system, where the PerfCake is executed. PerfCake would try to find it at the following path:
+      <code class="code">$GROOVY_HOME/bin/groovy</code>
+      on UNIX systems or
+      <code class="code">%GROOVY_HOME%\bin\groovy</code>
+      in case of Windows, where
+      <code class="code">GROOVY_HOME</code>
+      is an environment variable.
+   </p><p>
+      The Groovy binary doesn't have to be the one, that is
+      installed on the system. There is a possibility to use
+      <code class="code">groovyExecutable</code>
+      property to specify, what Groovy binaries would be used to execute the target script.
+   </p><p>
+      The message configured in the scenario is passed to the Groovy script through standard input, so it can be accessed via
+      <code class="code">System.in</code>
+      . The response is supposed to be passed back through a standard output via
+      <code class="code">System.out</code>
+      .
+   </p><p>The target of the sender is a path or URL to the Groovy script that is to be executed.</p><p>The following table describes all the GroovySender's properties.</p><div class="table"><a name="d0e3276"></a><div class="table-contents"><table summary="GroovySender properties" border="1"><colgroup><col width="28%" align="left" class="property-name"><col width="29%" align="left" class="description"><col width="14%" align="left" class="required"><col width="29%" align="left" class="default-value"></colgroup><thead><tr><th align="left">Property name</th><th align="left">Description</th><th align="left">Required</th><th align="left">Default value</th></tr></thead><tbody><tr><td align="left">groovyExecutable</td><td align="left">Path to the Groovy binary, that would be used to execute the script.</td><td align="left">No</td><td align="left">$GROOVY_HOME/bin/groovy</td></tr><tr><td align="left">classpath</td><td align="left">Classpath for groovy executable - specifies where to find the class or groovy files.</td><td align="left">No</td><td align="left">-</td></tr></tbody></table></div><p class="title"><b>Table&nbsp;4.9.&nbsp;GroovySender properties</b></p></div><br class="table-break"><div class="example"><a name="d0e3313"></a><p class="title"><b>Example&nbsp;4.12.&nbsp;An example of GroovySender configuration</b></p><div class="example-contents"><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;sender</span> <span class="hl-attribute">class</span>=<span class="hl-value">"GroovySender"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;target&gt;</span>/tmp/script.groovy"<span class="hl-tag">&lt;/target&gt;</span>
+&nbsp;&nbsp;3       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"classpath"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"~/common-classes"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;4    <span class="hl-tag">&lt;/sender&gt;</span></pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.reference-guide.sending.HttpSender"></a>4.2.6.&nbsp;HttpSender</h3></div></div></div><p>The <code class="code">HttpSender</code> can be used to send messages via HTTP protocol using POST
+      method as default to the URL specified by the 'target' property. The HTTP method can be
+      changed using the <code class="code">method</code> property. </p><p>Various scenarios can lead to different HTTP response codes that are expected. The scenario
+      can be set to expect one or more response codes. It can be set via the
+         <code class="code">expectedResponseCodes</code> property. Default expected response code is 200. </p><p>To set headers of the HTTP request use the <code class="code">header</code> element of the particular
+         <code class="code">message</code> element in the <code class="code">messages</code> section of the scenario
+      definition.</p><p>The <code class="code">Content-Type</code> header is set automatically by the sender for all messages to
+      the value of <code class="code">text/plain; charset=utf-8</code> by default. Also
+         <code class="code">Content-Length</code> header is generated and set automatically to the value of
+      message payload size if the payload is not empty.</p><p>The target of the sender is an URL, where the message is send.</p><p>Following table shows the properties of the HttpSender: </p><div class="table"><a name="d0e3360"></a><div class="table-contents"><table summary="HttpSender properties" border="1"><colgroup><col width="28%" align="left" class="property-name"><col width="29%" align="left" class="description"><col width="14%" align="left" class="required"><col width="29%" align="left" class="default-value"></colgroup><thead><tr><th align="left">Property name</th><th align="left">Description</th><th align="left">Required</th><th align="left">Default value</th></tr></thead><tbody><tr><td align="left">expectedResponseCodes</td><td align="left">A comma separated list of HTTP response code(s) that is expected to be
+                     returned. </td><td align="left">No</td><td align="left">200</td></tr><tr><td align="left">method</td><td align="left"> An HTTP method to be used. <a href="#ftn.d0e3393" class="footnote" name="d0e3393"><sup class="footnote">[a]</sup></a>
+                  </td><td align="left">No</td><td align="left">POST</td></tr><tr><td align="left">storeCookies</td><td align="left">
+                    Should the individual threads store cookies between requests? When true, the cookies are stored.
+                  </td><td align="left">No</td><td align="left">false</td></tr></tbody><tbody class="footnotes"><tr><td colspan="4"><div id="ftn.d0e3393" class="footnote"><p><a href="#d0e3393" class="para"><sup class="para">[a] </sup></a> See <a class="link" href="http://docs.oracle.com/javase/7/docs/api/java/net/HttpURLConnection.html#setRequestMethod(java.lang.String)" target="_top">http://docs.oracle.com/javase/7/docs/api/java/net/HttpURLConnection.html#setRequestMethod(java.lang.String)</a> for a complete list of available methods. </p></div></td></tr></tbody></table></div><p class="title"><b>Table&nbsp;4.10.&nbsp;HttpSender properties</b></p></div><p><br class="table-break"></p><div class="example"><a name="d0e3412"></a><p class="title"><b>Example&nbsp;4.13.&nbsp;An example of HttpSender configuration</b></p><div class="example-contents"><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;sender</span> <span class="hl-attribute">class</span>=<span class="hl-value">"HttpSender"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;target&gt;</span>http://domain.com/cool-url<span class="hl-tag">&lt;/target&gt;</span>
+&nbsp;&nbsp;3       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"method"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"GET"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;4       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"expectedResponseCodes"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"200,202"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;5    <span class="hl-tag">&lt;/sender&gt;</span></pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.reference-guide.sending.HttpsSender"></a>4.2.7.&nbsp;HttpsSender</h3></div></div></div><p> HttpsSender is similar to the HttpSender (see <a class="xref" href="ug.reference-guide.sending.html#ug.reference-guide.sending.HttpSender" title="4.2.6.&nbsp;HttpSender">Section&nbsp;4.2.6, &#8220;HttpSender&#8221;</a> ), thus it inherits the same properties.
+      The difference is that the HttpsSender uses HTTPS instead of plain HTTP protocol to send
+      messages. </p><p> The HttpsSender's properties are described in the following table: </p><div class="table"><a name="d0e3426"></a><div class="table-contents"><table summary="HttpsSender additional properties" border="1"><colgroup><col width="28%" align="left" class="property-name"><col width="29%" align="left" class="description"><col width="14%" align="left" class="required"><col width="29%" align="left" class="default-value"></colgroup><thead><tr><th align="left">Property name</th><th align="left">Description</th><th align="left">Required</th><th align="left">Default value</th></tr></thead><tbody><tr><td align="left">keyStore</td><td align="left">Path to the key store</td><td align="left">No</td><td align="left">-</td></tr><tr><td align="left">keyStorePassword</td><td align="left">Key store password</td><td align="left">No</td><td align="left">-</td></tr><tr><td align="left">trustStore</td><td align="left">Path to the trust store</td><td align="left">No</td><td align="left">-</td></tr><tr><td align="left">trustStorePassword</td><td align="left">Trust store password</td><td align="left">No</td><td align="left">-</td></tr></tbody></table></div><p class="title"><b>Table&nbsp;4.11.&nbsp;HttpsSender additional properties</b></p></div><p><br class="table-break"></p><div class="example"><a name="d0e3481"></a><p class="title"><b>Example&nbsp;4.14.&nbsp;An example of HttpsSender configuration</b></p><div class="example-contents"><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;sender</span> <span class="hl-attribute">class</span>=<span class="hl-value">"HttpsSender"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;target&gt;</span>https://domain.com/secured_url<span class="hl-tag">&lt;/target&gt;</span>
+&nbsp;&nbsp;3       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"method"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"POST"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;4       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"trustStore"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"${my.keystores}/cacert.jks"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;5       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"trustStorePassword"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"ts_passsword"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;6    <span class="hl-tag">&lt;/sender&gt;</span></pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.reference-guide.sending.ChannelDatagramSender"></a>4.2.8.&nbsp;ChannelDatagramSender</h3></div></div></div><p>Sends messages through NIO
+      <a href="#ftn.ug.reference-guide.sending.ChannelDatagramSender.footnote-nio" class="footnote" name="ug.reference-guide.sending.ChannelDatagramSender.footnote-nio"><sup class="footnote">[8]</sup></a>
+      <code class="code">DatagramChannel</code>
+      <a href="#ftn.d0e3500" class="footnote" name="d0e3500"><sup class="footnote">[9]</sup></a>
+      .
+   </p><p>The sender's target is an URL of a datagram socket in a form of
+      <code class="code">&lt;host&gt;:&lt;port&gt;</code>.
+   </p><div class="table"><a name="d0e3511"></a><div class="table-contents"><table summary="ChannelDatagramSender properties" border="1"><colgroup><col width="28%" align="left" class="property-name"><col width="29%" align="left" class="description"><col width="14%" align="left" class="required"><col width="29%" align="left" class="default-value"></colgroup><thead><tr><th align="left">Property name</th><th align="left">Description</th><th align="left">Required</th><th align="left">Default value</th></tr></thead><tbody><tr><td align="left">awaitResponse</td><td align="left">Determines whether we should wait for the response from the channel.
+               </td><td align="left">No</td><td align="left"><code class="code">false</code></td></tr><tr><td align="left">maxResponseSize</td><td align="left">Expected maximum response size. Defaults to -1 which means to instantiate the buffer of the same size as the request messages.
+               </td><td align="left">No</td><td align="left">-1</td></tr></tbody></table></div><p class="title"><b>Table&nbsp;4.12.&nbsp;ChannelDatagramSender properties</b></p></div><br class="table-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.reference-guide.sending.ChannelFileSender"></a>4.2.9.&nbsp;ChannelFileSender</h3></div></div></div><p>Sends messages through NIO
+      <a href="ug.reference-guide.sending.html#ftn.ug.reference-guide.sending.ChannelDatagramSender.footnote-nio" class="footnoteref"><sup class="footnoteref">[8]</sup></a>
+      <code class="code">FileChannel</code>
+      <a href="#ftn.d0e3559" class="footnote" name="d0e3559"><sup class="footnote">[10]</sup></a>
+      .
+   </p><p>The sender's target is a path to the file to which message is sent (written) or received (read).</p><div class="table"><a name="d0e3567"></a><div class="table-contents"><table summary="ChannelFileSender properties" border="1"><colgroup><col width="28%" align="left" class="property-name"><col width="29%" align="left" class="description"><col width="14%" align="left" class="required"><col width="29%" align="left" class="default-value"></colgroup><thead><tr><th align="left">Property name</th><th align="left">Description</th><th align="left">Required</th><th align="left">Default value</th></tr></thead><tbody><tr><td align="left">awaitResponse</td><td align="left">Determines whether we should wait for the response from the channel.
+               </td><td align="left">No</td><td align="left"><code class="code">false</code></td></tr><tr><td align="left">maxResponseSize</td><td align="left">Expected maximum response size. Defaults to -1 which means to instantiate the buffer of the same size as the request messages.
+               </td><td align="left">No</td><td align="left">-1</td></tr></tbody></table></div><p class="title"><b>Table&nbsp;4.13.&nbsp;ChannelFileSender properties</b></p></div><br class="table-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.reference-guide.sending.ChannelSocketSender"></a>4.2.10.&nbsp;ChannelSocketSender</h3></div></div></div><p>Sends messages through NIO
+      <a href="ug.reference-guide.sending.html#ftn.ug.reference-guide.sending.ChannelDatagramSender.footnote-nio" class="footnoteref"><sup class="footnoteref">[8]</sup></a>&gt;
+      <code class="code">SocketChannel</code>
+      <a href="#ftn.d0e3615" class="footnote" name="d0e3615"><sup class="footnote">[11]</sup></a>
+      .
+   </p><p>The sender's target is an URL of a socket in a form of<code class="code">&lt;host&gt;:&lt;port&gt;</code>.
+   </p><div class="table"><a name="d0e3626"></a><div class="table-contents"><table summary="ChannelSocketSender properties" border="1"><colgroup><col width="28%" align="left" class="property-name"><col width="29%" align="left" class="description"><col width="14%" align="left" class="required"><col width="29%" align="left" class="default-value"></colgroup><thead><tr><th align="left">Property name</th><th align="left">Description</th><th align="left">Required</th><th align="left">Default value</th></tr></thead><tbody><tr><td align="left">awaitResponse</td><td align="left">Determines whether we should wait for the response from the channel.
+               </td><td align="left">No</td><td align="left"><code class="code">false</code></td></tr><tr><td align="left">maxResponseSize</td><td align="left">Expected maximum response size. Defaults to -1 which means to instantiate the buffer of the same size as the request messages.
+               </td><td align="left">No</td><td align="left">-1</td></tr></tbody></table></div><p class="title"><b>Table&nbsp;4.14.&nbsp;ChannelSocketSender properties</b></p></div><br class="table-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.reference-guide.sending.JdbcSender"></a>4.2.11.&nbsp;JdbcSender</h3></div></div></div><p>As the name of the sender clues JdbcSender is meant to be used to send JDBC queries. It can handle any query the JDBC is capable of.</p><p>The target of the sender is a JDBC URL of the target, where the query is send.</p><div class="table"><a name="d0e3671"></a><div class="table-contents"><table summary="JdbcSender properties" border="1"><colgroup><col width="28%" align="left" class="property-name"><col width="29%" align="left" class="description"><col width="14%" align="left" class="required"><col width="29%" align="left" class="default-value"></colgroup><thead><tr><th align="left">Property name</th><th align="left">Description</th><th align="left">Required</th><th align="left">Default value</th></tr></thead><tbody><tr><td align="left">driverClass</td><td align="left">A fully qualified JDBC Driver class.</td><td align="left">Yes</td><td align="left">-</td></tr><tr><td align="left">username</td><td align="left">A database user</td><td align="left">no</td><td align="left">""</td></tr><tr><td align="left">password</td><td align="left">A database password</td><td align="left">no</td><td align="left">""</td></tr></tbody></table></div><p class="title"><b>Table&nbsp;4.15.&nbsp;JdbcSender properties</b></p></div><br class="table-break"><div class="example"><a name="d0e3717"></a><p class="title"><b>Example&nbsp;4.15.&nbsp;An example of JdbcSender configuration</b></p><div class="example-contents"><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;sender</span> <span class="hl-attribute">class</span>=<span class="hl-value">"JdbcSender"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;target&gt;</span>jdbc:postgresql://localhost:5432/db<span class="hl-tag">&lt;/target&gt;</span>
+&nbsp;&nbsp;3       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"username"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"me-the-first"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;4       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"password"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"guess_me"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;5       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"driverClass"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"org.postgresql.Driver"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;6    <span class="hl-tag">&lt;/sender&gt;</span></pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.reference-guide.sending.JmsSender"></a>4.2.12.&nbsp;Jms[11]Sender</h3></div></div></div><p>There are two versions of JMS (Java Message Service) sender. An older one supporting JMS
+      API 1.1 - <code class="code">Jms11Sender</code> (introduced in PerfCake 7.0, previously known as
+         <code class="code">JmsSender</code>). And a new one supporting JMS API 2.0 - <code class="code">JmsSender</code> (new
+      in PerfCake 7.0). Except for the API version they use, there is no difference in their
+      functionality and properties. They should also have the same performance, depending on the
+      client driver used.</p><p>The Jms[11]Sender can be used to send a single JMS message.</p><p>The target of the sender is a JNDI name of the JMS destination where the JMS message is
+      send. Both JNDI and messaging can be secured independently.</p><p>For the sender to work properly, you need to have a JMS client adaptor on the class path.
+      In PerfCake, this means placing the messaging client driver to the <code class="code">lib/ext</code>
+      directory.</p><p>The following table describes the JmsSender's properties: </p><div class="table"><a name="d0e3747"></a><div class="table-contents"><table summary="JmsSender properties" border="1"><colgroup><col width="28%" align="left" class="property-name"><col width="29%" align="left" class="description"><col width="14%" align="left" class="required"><col width="29%" align="left" class="default-value"></colgroup><thead><tr><th align="left">Property name</th><th align="left">Description</th><th align="left">Required</th><th align="left">Default value</th></tr></thead><tbody><tr><td align="left">connectionFactory</td><td align="left">A name of a JMS Connection factory.</td><td align="left">Yes</td><td align="left">-</td></tr><tr><td align="left">jndiContextFactory</td><td align="left">A fully qualified name of the JNDI ContextFactory class.</td><td align="left">Yes</td><td align="left">-</td></tr><tr><td align="left">jndiUrl</td><td align="left">A JNDI location URL.</td><td align="left">Yes</td><td align="left">-</td></tr><tr><td align="left">jndiSecurityPrincipal</td><td align="left">A JNDI username</td><td align="left">No</td><td align="left">&nbsp;</td></tr><tr><td align="left">jndiSecurityCredentials</td><td align="left">A JNDI password</td><td align="left">No</td><td align="left">&nbsp;</td></tr><tr><td align="left">autoAck</td><td align="left">Indicates whether the received message will be auto-acknowledged.</td><td align="left">No</td><td align="left">true</td></tr><tr><td align="left">replyTo</td><td align="left">The destination where the reply is supposed to be sent by server. JMS
+                     'replyTo' header.</td><td align="left">No</td><td align="left">""</td></tr><tr><td align="left">persistent</td><td align="left">Indicate whether the message is to be persisted by JMS provider.</td><td align="left">No</td><td align="left">true</td></tr><tr><td align="left">transacted</td><td align="left">Indicate whether the message transport is to be transacted.</td><td align="left">No</td><td align="left">false</td></tr><tr><td align="left">messageType</td><td align="left"> Indicate the type of the message. The supported values are
+                        <code class="code">object</code> , <code class="code">string</code> and <code class="code">bytearray</code> . </td><td align="left">No</td><td align="left">string</td></tr><tr><td align="left">username</td><td align="left">A JMS security username. If not provided - JMS transport will be performed
+                     unsecured.</td><td align="left">No</td><td align="left">""</td></tr><tr><td align="left">password</td><td align="left">A JMS security password. If not provided - JMS transport will be performed
+                     unsecured.</td><td align="left">No</td><td align="left">""</td></tr><tr><td align="left">safePropertyNames</td><td align="left">Use safe message property names because some messaging implementations
+                     (e.g. Apache Artemis) do not allow anything but valid Java identifiers. When
+                     set to true (which is the default), anything else than letters, numbers and
+                     underscores is changed to underscores.</td><td align="left">No</td><td align="left">true</td></tr></tbody></table></div><p class="title"><b>Table&nbsp;4.16.&nbsp;JmsSender properties</b></p></div><p><br class="table-break">
+   </p><div class="example"><a name="d0e3891"></a><p class="title"><b>Example&nbsp;4.16.&nbsp;An example of JmsSender configuration</b></p><div class="example-contents"><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;sender</span> <span class="hl-attribute">class</span>=<span class="hl-value">"JmsSender"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;target&gt;</span>jms/queue/YourQueue<span class="hl-tag">&lt;/target&gt;</span>
+&nbsp;&nbsp;3       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"connectionFactory"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"jms/ConnFactory"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;4       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"username"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"KingRoland"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;5       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"password"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"12345"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;6       <span class="hl-comment">&lt;!-- JNDI properties--&gt;</span>
+&nbsp;&nbsp;7       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"jndiContextFactory"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"pkg.InitCtxFactory"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;8       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"jndiUrl"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"remote://${server.host}:4447"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;9       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"jndiSecurityPrincipal"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"KingRoland"</span><span class="hl-tag">/&gt;</span>
+&nbsp;10       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"jndiSecurityCredentials"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"12345"</span><span class="hl-tag">/&gt;</span>
+&nbsp;11    <span class="hl-tag">&lt;/sender&gt;</span></pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.reference-guide.sending.LdapSender"></a>4.2.13.&nbsp;LdapSender</h3></div></div></div><p>
+      The sender is able to query an LDAP server
+      <a href="#ftn.d0e3901" class="footnote" name="d0e3901"><sup class="footnote">[12]</sup></a>
+      .
+   </p><p>The target of the sender is an URL of the LDAP server in the form of
+      <code class="code">ldap://&lt;server-host&gt;:&lt;server-port&gt;</code>
+      .
+   </p><p>
+      Following table shows the properties of the HttpSender:
+      </p><div class="table"><a name="d0e3914"></a><div class="table-contents"><table summary="HttpSender properties" border="1"><colgroup><col width="28%" align="left" class="property-name"><col width="29%" align="left" class="description"><col width="14%" align="left" class="required"><col width="29%" align="left" class="default-value"></colgroup><thead><tr><th align="left">Property name</th><th align="left">Description</th><th align="left">Required</th><th align="left">Default value</th></tr></thead><tbody><tr><td align="left">searchBase</td><td align="left">DN (distinguished name) to use as the search base</td><td align="left">Yes</td><td align="left">-</td></tr><tr><td align="left">filter</td><td align="left">The search filter</td><td align="left">Yes</td><td align="left">-</td></tr><tr><td align="left">ldapUsername</td><td align="left">LDAP server user</td><td align="left">No</td><td align="left">-</td></tr><tr><td align="left">ldapPassword</td><td align="left">LDAP server password</td><td align="left">No</td><td align="left">-</td></tr></tbody></table></div><p class="title"><b>Table&nbsp;4.17.&nbsp;HttpSender properties</b></p></div><p><br class="table-break">
+   </p><div class="example"><a name="d0e3970"></a><p class="title"><b>Example&nbsp;4.17.&nbsp;An example of LdapSender configuration</b></p><div class="example-contents"><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;sender</span> <span class="hl-attribute">class</span>=<span class="hl-value">"LdapSender"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;target&gt;</span>ldap://localhost:389<span class="hl-tag">&lt;/target&gt;</span>
+&nbsp;&nbsp;3       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"searchBase"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"dc=example,dc=org"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;4       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"filter"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"(objectclass=*)"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;5    <span class="hl-tag">&lt;/sender&gt;</span></pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.reference-guide.sending.MqttSender"></a>4.2.14.&nbsp;MqttSender</h3></div></div></div><p>
+      The sender is capable to send MQTT
+      <a href="#ftn.d0e3980" class="footnote" name="d0e3980"><sup class="footnote">[13]</sup></a>
+      messages to a remote broker and receiving responses if needed. The response is expected only if
+      <code class="code">responseTarget</code>
+      property is set.
+   </p><p>The target of the sender is an URL of the remote broker with the topic name in a form of
+      <code class="code">&lt;protocol&gt;://&lt;host&gt;:&lt;port&gt;/&lt;topic name&gt;</code>
+      , where the message is send.
+   </p><p>
+      Following table shows the properties of the MqttSender:
+      </p><div class="table"><a name="d0e3996"></a><div class="table-contents"><table summary="MqttSender properties" border="1"><colgroup><col width="28%" align="left" class="property-name"><col width="29%" align="left" class="description"><col width="14%" align="left" class="required"><col width="29%" align="left" class="default-value"></colgroup><thead><tr><th align="left">Property name</th><th align="left">Description</th><th align="left">Required</th><th align="left">Default value</th></tr></thead><tbody><tr><td align="left">qos</td><td align="left">Quality of Service level
+                     <a href="#ftn.d0e4020" class="footnote" name="d0e4020"><sup class="footnote">[a]</sup></a>
+                     - guarantee for the message delivery from the sender to the remote broker. Supported values are
+                     <code class="code">EXACTLY_ONCE</code>,
+                     <code class="code">AT_LEAST_ONCE</code>
+                     and
+                     <code class="code">AT_MOST_ONCE</code>.
+                  </td><td align="left">No</td><td align="left">
+                     <code class="code">EXACTLY_ONCE</code>
+                  </td></tr><tr><td align="left">userName</td><td align="left">MQTT broker user name</td><td align="left">No</td><td align="left">-</td></tr><tr><td align="left">password</td><td align="left">MQTT broker password</td><td align="left">No</td><td align="left">-</td></tr><tr><td align="left">responseTarget</td><td align="left">An URL of the remote broker and a topic name, from which the response is received. If ordinary string is presented (not in a form of an URL),
+                     the string as a whole is considered to be a response topic name in the same broker where the original message was sent.
+                  </td><td align="left">No</td><td align="left">-</td></tr><tr><td align="left">responseQos</td><td align="left">Quality of service level for receiving a response. (see
+                     <code class="code">qos</code>
+                     property description for more details).
+                  </td><td align="left">No</td><td align="left">The value of
+                     <code class="code">qos</code>
+                     property.
+                  </td></tr><tr><td align="left">responseUserName</td><td align="left">MQTT broker user name for response</td><td align="left">No</td><td align="left">-</td></tr><tr><td align="left">responsePassword</td><td align="left">MQTT broker password for response</td><td align="left">No</td><td align="left">-</td></tr></tbody><tbody class="footnotes"><tr><td colspan="4"><div id="ftn.d0e4020" class="footnote"><p><a href="#d0e4020" class="para"><sup class="para">[a] </sup></a>
+                           <a class="link" href="http://docs.oasis-open.org/mqtt/mqtt/v3.1.1/os/mqtt-v3.1.1-os.html#_Toc398718099" target="_top">http://docs.oasis-open.org/mqtt/mqtt/v3.1.1/os/mqtt-v3.1.1-os.html#_Toc398718099</a>
+                        </p></div></td></tr></tbody></table></div><p class="title"><b>Table&nbsp;4.18.&nbsp;MqttSender properties</b></p></div><p><br class="table-break">
+   </p><div class="example"><a name="d0e4103"></a><p class="title"><b>Example&nbsp;4.18.&nbsp;An example of MqttSender configuration</b></p><div class="example-contents"><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;sender</span> <span class="hl-attribute">class</span>=<span class="hl-value">"MqttSender"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;target&gt;</span>tcp://localhost:1883/request.topic<span class="hl-tag">&lt;/target&gt;</span>
+&nbsp;&nbsp;3       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"responseTarget"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"response.topic"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;4    <span class="hl-tag">&lt;/sender&gt;</span></pre><p>I the example above there is a
+         <code class="code">MqttSender</code>
+         configured to send messages to topic with the name of
+         <code class="code">request.topic</code>
+         in a broker listening on
+         <code class="code">tcp://localhost:1883</code>. The response is expected and received from the topic with the name of
+         <code class="code">response.topic</code>
+         of the same broker. The quality of service level for both sending and receiving is default
+         <code class="code">EXACTLY_ONCE</code>.
+      </p></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.reference-guide.sending.OauthHttpSender"></a>4.2.15.&nbsp;OauthHttpSender</h3></div></div></div><p>OauthHttpSender is similar to the HttpSender
+      (see <a class="xref" href="ug.reference-guide.sending.html#ug.reference-guide.sending.HttpSender" title="4.2.6.&nbsp;HttpSender">Section&nbsp;4.2.6, &#8220;HttpSender&#8221;</a> ), thus it inherits the same
+      properties. The difference is that the OauthHttpSender allows token authentication to an HTTP
+      based service using OAuth2<a href="#ftn.d0e4132" class="footnote" name="d0e4132"><sup class="footnote">[14]</sup></a> protocol.</p><p> The OauthHttpSender's properties are described in the following table, where the defaults
+      works with Keycloak:<a href="#ftn.d0e4140" class="footnote" name="d0e4140"><sup class="footnote">[15]</sup></a>: </p><div class="table"><a name="d0e4146"></a><div class="table-contents"><table summary="HttpsSender additional properties" border="1"><colgroup><col width="28%" align="left" class="property-name"><col width="29%" align="left" class="description"><col width="14%" align="left" class="required"><col width="29%" align="left" class="default-value"></colgroup><thead><tr><th align="left">Property name</th><th align="left">Description</th><th align="left">Required</th><th align="left">Default value</th></tr></thead><tbody><tr><td align="left">tokenServerUrl</td><td align="left">URL of the server granting us a token. Default value works with Keycloak, supposing your realm name is <code class="code">demo</code>.
+                  </td><td align="left">No</td><td align="left">
+                     http://127.0.0.1:8180/auth/realms/demo/protocol/openid-connect/token
+                  </td></tr><tr><td align="left">tokenServerData</td><td align="left">Data to send to the server to request a token. Default value works with Keycloak.</td><td align="left">No</td><td align="left">
+                     grant_type=password&amp;client_id=jboss-javaee-webapp&amp;username=marvec&amp;password=abc123
+                  </td></tr><tr><td align="left">responseParser</td><td align="left">RegEx to create a capture group around the token value in the server's response.</td><td align="left">No</td><td align="left">
+                     .*"access_token":"([^"]*)".*
+                  </td></tr><tr><td align="left">oauthHeader</td><td align="left">Header where the token is passed to the target service. The default value works with Keycloak.</td><td align="left">No</td><td align="left">
+                     Authorization
+                  </td></tr><tr><td align="left">oauthHeaderFormat</td><td align="left">String formatting the value of authorization header. The token is placed instead of <code class="code">%s</code>.
+                     The default value works with Keycloak.
+                  </td><td align="left">No</td><td align="left">
+                     Bearer %s
+                  </td></tr><tr><td align="left">tokenTimeout</td><td align="left">How long in milliseconds is a token valid before a new one is needed. Defaults to 60s.</td><td align="left">No</td><td align="left">60000L</td></tr></tbody></table></div><p class="title"><b>Table&nbsp;4.19.&nbsp;HttpsSender additional properties</b></p></div><p><br class="table-break">
+   </p><div class="example"><a name="d0e4226"></a><p class="title"><b>Example&nbsp;4.19.&nbsp;An example of OauthHttpSender configuration</b></p><div class="example-contents"><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;sender</span> <span class="hl-attribute">class</span>=<span class="hl-value">"OauthHttpSender"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;target&gt;</span>http://domain.com/secured_url<span class="hl-tag">&lt;/target&gt;</span>
+&nbsp;&nbsp;3       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"method"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"POST"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;4       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"tokenServerUrl"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"http://127.0.0.1:8180/auth/realms/demo/protocol/openid-connect/token"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;5       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"tokenServerData"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"grant_type=password&amp;amp;client_id=jboss-javaee-webapp&amp;amp;username=marvec&amp;amp;password=abc123"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;6       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"responseParser"</span> <span class="hl-attribute">value</span>=<span class="hl-value">".*&amp;quot;access_token&amp;quot;:&amp;quot;([^&amp;quot;]*)&amp;quot;.*"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;7       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"oauthHeader"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"Authorization"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;8       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"oauthHeaderFormat"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"Bearer %s"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;9       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"tokenTimeout"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"60000"</span><span class="hl-tag">/&gt;</span>
+&nbsp;10    <span class="hl-tag">&lt;/sender&gt;</span></pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.reference-guide.sending.PlainSocketSender"></a>4.2.16.&nbsp;PlainSocketSender</h3></div></div></div><p>The sender uses a socket to send the message to and receive a response from.</p><p>The target of the sender is a socket in a form of "&lt;host&gt;:&lt;port&gt;"</p><div class="example"><a name="d0e4238"></a><p class="title"><b>Example&nbsp;4.20.&nbsp;An example of PlainSocketSender configuration</b></p><div class="example-contents"><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;sender</span> <span class="hl-attribute">class</span>=<span class="hl-value">"PlainSocketSender"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;target&gt;</span>127.0.0.1:12345<span class="hl-tag">&lt;/target&gt;</span>
+&nbsp;&nbsp;3    <span class="hl-tag">&lt;/sender&gt;</span></pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.reference-guide.sending.RequestResponseJmsSender"></a>4.2.17.&nbsp;RequestResponseJms[11]Sender</h3></div></div></div><p>Similarily to JmsSender, there are two variants of this sender for both JMS API 1.1
+         (<code class="code">RequestResponseJms11Sender</code>, new in PerfCake 7.0, formerly known as
+         <code class="code">RequestResponseJmsSender</code>) and 2.0 (<code class="code">RequestResponseJmsSender</code>, new
+      in PerfCake 7.0).</p><p>The <code class="code">RequestResponse[11]JmsSender</code> is supposed to be used in request-response
+      scenarios. First it sends a JMS message to the target destination (specified by the
+         <code class="code">target</code> property) and then waits to receive the response message from the
+      response destination (specified by the <code class="code">responseTarget</code> property).</p><p>It is based on <code class="code">Jms[11]Sender</code> (see <a class="xref" href="ug.reference-guide.sending.html#ug.reference-guide.sending.JmsSender" title="4.2.12.&nbsp;Jms[11]Sender">Section&nbsp;4.2.12, &#8220;Jms[11]Sender&#8221;</a> ) and inherits all its configuration
+      properties. Some properties, when not specified, use the same value as those present in
+         <code class="code">Jms[11]Sender</code>. However, security credentials always need to be set separately.
+      The following table contains additional properties of the
+         <code class="code">RequestResponseJms[11]Sender</code>: </p><div class="table"><a name="d0e4281"></a><div class="table-contents"><table summary="RequestResponseJms[11]Sender properties" border="1"><colgroup><col width="28%" align="left" class="property-name"><col width="29%" align="left" class="description"><col width="14%" align="left" class="required"><col width="29%" align="left" class="default-value"></colgroup><thead><tr><th align="left">Property name</th><th align="left">Description</th><th align="left">Required</th><th align="left">Default value</th></tr></thead><tbody><tr><td align="left">responseTarget</td><td align="left">A JMS destination where the sender will wait and receive a response message from.</td><td align="left">Yes</td><td align="left">-</td></tr><tr><td align="left">responseConnectionFactory</td><td align="left">A name of a JMS Connection factory for response.</td><td align="left">No</td><td align="left">
+                  Value of
+                  <code class="code">connectionFactory</code>
+                  of
+                  <code class="code">JmsSender</code>
+               </td></tr><tr><td align="left">responseJndiContextFactory</td><td align="left">A fully qualified name of the JNDI ContextFactory class for response.</td><td align="left">No</td><td align="left">
+                  Value of
+                  <code class="code">jndiContextFactory</code>
+                  of
+                  <code class="code">JmsSender</code>
+               </td></tr><tr><td align="left">responseJndiUrl</td><td align="left">A JNDI location URL for response.</td><td align="left">No</td><td align="left">
+                  Value of
+                  <code class="code">jndiUrl</code>
+                  of
+                  <code class="code">JmsSender</code>
+               </td></tr><tr><td align="left">responseJndiSecurityPrincipal</td><td align="left">A JNDI username for response</td><td align="left">No</td><td align="left">-</td></tr><tr><td align="left">responseJndiSecurityCredentials</td><td align="left">A JNDI password for response</td><td align="left">No</td><td align="left">-</td></tr><tr><td align="left">responseUsername</td><td align="left">A JMS security username for response. If not provided - JMS transport will be performed unsecured.</td><td align="left">No</td><td align="left">-</td></tr><tr><td align="left">responsePassword</td><td align="left">A JMS security password for response. If not provided - JMS transport will be performed unsecured.</td><td align="left">No</td><td align="left">-</td></tr><tr><td align="left">receivingTimeout</td><td align="left">A time duration in ms of specifying how long the sender will wait to receive the response message.</td><td align="left">No</td><td align="left">1000</td></tr><tr><td align="left">receiveAttempts</td><td align="left">A Number of attempts to receive the message.</td><td align="left">No</td><td align="left">5</td></tr></tbody></table></div><p class="title"><b>Table&nbsp;4.20.&nbsp;RequestResponseJms[11]Sender properties</b></p></div><br class="table-break"><div class="example"><a name="d0e4408"></a><p class="title"><b>Example&nbsp;4.21.&nbsp;An example of RequestResponseJmsSender configuration</b></p><div class="example-contents"><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;sender</span> <span class="hl-attribute">class</span>=<span class="hl-value">"RequestResponseJmsSender"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;target&gt;</span>jms/queue/RequestQueue<span class="hl-tag">&lt;/target&gt;</span>
+&nbsp;&nbsp;3       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"responseTarget"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"jms/queue/ResponseQueue"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;4       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"receivingTimeout"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"30000"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;5       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"receiveAttempts"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"1"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;6       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"connectionFactory"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"jms/ConnFactory"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;7       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"username"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"KingRoland"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;8       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"password"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"12345"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;9       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"responseUsername"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"KingRoland"</span><span class="hl-tag">/&gt;</span>
+&nbsp;10       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"responsePassword"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"12345"</span><span class="hl-tag">/&gt;</span>
+&nbsp;11       <span class="hl-comment">&lt;!-- JNDI properties--&gt;</span>
+&nbsp;12       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"jndiContextFactory"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"pkg.InitCtxFactory"</span><span class="hl-tag">/&gt;</span>
+&nbsp;13       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"jndiUrl"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"remote://${server.host}:4447"</span><span class="hl-tag">/&gt;</span>
+&nbsp;14       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"jndiSecurityPrincipal"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"KingRoland"</span><span class="hl-tag">/&gt;</span>
+&nbsp;15       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"jndiSecurityCredentials"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"12345"</span><span class="hl-tag">/&gt;</span>
+&nbsp;16       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"responseJndiSecurityPrincipal"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"KingRoland"</span><span class="hl-tag">/&gt;</span>
+&nbsp;17       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"responseJndiSecurityCredentials"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"12345"</span><span class="hl-tag">/&gt;</span>
+&nbsp;18    <span class="hl-tag">&lt;/sender&gt;</span></pre><p>In the example above there is a <code class="code">RequestResponseJmsSender</code> configured to send
+         messages to the queue <code class="code">jms/queue/RequestQueue</code> using a connection factory found
+         at <code class="code">jms/ConnFactory</code> in JNDI. After sending a JMS message the sender waits for
+         the response from the response queue <code class="code">jms/queue/ResponseQueue</code> for at most 30s.
+         It uses the same JMS provider for both request and response, so the request and response
+         credentials (both JMS and JNDI) are the same. Connection factory, JNDI context factory and
+         JNDI URL for the response are inherited from the respective request properties. </p></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.reference-guide.sending.ScriptSender"></a>4.2.18.&nbsp;ScriptSender</h3></div></div></div><p>The sender can be used to send a single message using a JSR 223
+      <a href="#ftn.d0e4432" class="footnote" name="d0e4432"><sup class="footnote">[16]</sup></a>
+      compliant script.
+   </p><p>The target of the sender is a path to the file where the script is implemented. To specify the scripting language engine there is a <code class="code">engine</code> property. The message and it's headers are passed to the script via script binding and should be available as variables or objects instances, according to the scripting language.
+   </p><p>
+      The following table shows the senders properties.
+      </p><div class="table"><a name="d0e4445"></a><div class="table-contents"><table summary="ScriptSender properties" border="1"><colgroup><col width="28%" align="left" class="property-name"><col width="29%" align="left" class="description"><col width="14%" align="left" class="required"><col width="29%" align="left" class="default-value"></colgroup><thead><tr><th align="left">Property name</th><th align="left">Description</th><th align="left">Required</th><th align="left">Default value</th></tr></thead><tbody><tr><td align="left">engine</td><td align="left">A scripting language engine name. <code class="code">groovy</code> is available out-of-the-box.
+                  </td><td align="left">No</td><td align="left">-</td></tr></tbody></table></div><p class="title"><b>Table&nbsp;4.21.&nbsp;ScriptSender properties</b></p></div><p><br class="table-break">
+   </p><div class="example"><a name="d0e4477"></a><p class="title"><b>Example&nbsp;4.22.&nbsp;An example of ScriptSender configuration</b></p><div class="example-contents"><p>Scenario:</p><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;sender</span> <span class="hl-attribute">class</span>=<span class="hl-value">"ScriptSender"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;target&gt;</span>/tmp/script.groovy<span class="hl-tag">&lt;/target&gt;</span>
+&nbsp;&nbsp;3       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"engine"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"groovy"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;4    <span class="hl-tag">&lt;/sender&gt;</span>
+&nbsp;&nbsp;5    ...
+&nbsp;&nbsp;6    <span class="hl-tag">&lt;messages&gt;</span>
+&nbsp;&nbsp;7       <span class="hl-tag">&lt;message</span> <span class="hl-attribute">content</span>=<span class="hl-value">"Soylent green"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;8          <span class="hl-tag">&lt;header</span> <span class="hl-attribute">name</span>=<span class="hl-value">"what"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"people"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;9       <span class="hl-tag">&lt;/message&gt;</span>
+&nbsp;10    <span class="hl-tag">&lt;/messages&gt;</span></pre><p>script.groovy file:</p><pre class="programlisting">&nbsp;&nbsp;1 println message.payload + <span class="hl-string">" is made out of "</span> + message.headers[<span class="hl-string">'what'</span>]; </pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.reference-guide.sending.SslSocketSender"></a>4.2.19.&nbsp;SslSocketSender</h3></div></div></div><p>
+      SslSocketSender is similar to the PlainSocketSender (see
+      <a class="xref" href="ug.reference-guide.sending.html#ug.reference-guide.sending.PlainSocketSender" title="4.2.16.&nbsp;PlainSocketSender">Section&nbsp;4.2.16, &#8220;PlainSocketSender&#8221;</a>
+      ) and so it shares the same properties. The difference is that the SslSocketSender uses a SSL socket.
+   </p><p>
+      </p><div class="table"><a name="d0e4497"></a><div class="table-contents"><table summary="SslSocketSender additional properties" border="1"><colgroup><col width="28%" align="left" class="property-name"><col width="29%" align="left" class="description"><col width="14%" align="left" class="required"><col width="29%" align="left" class="default-value"></colgroup><thead><tr><th align="left">Property name</th><th align="left">Description</th><th align="left">Required</th><th align="left">Default value</th></tr></thead><tbody><tr><td align="left">keyStore</td><td align="left">Path to the key store.</td><td align="left">No</td><td align="left">-</td></tr><tr><td align="left">keyStorePassword</td><td align="left">Key store password.</td><td align="left">No</td><td align="left">-</td></tr><tr><td align="left">trustStore</td><td align="left">Path to the trust store.</td><td align="left">No</td><td align="left">-</td></tr><tr><td align="left">trustStorePassword</td><td align="left">Trust store password.</td><td align="left">No</td><td align="left">-</td></tr></tbody></table></div><p class="title"><b>Table&nbsp;4.22.&nbsp;SslSocketSender additional properties</b></p></div><p><br class="table-break">
+   </p><p>If neither <code class="code">keyStore</code> or <code class="code">trustStore</code> are set, the default Java
+         <code class="code">SSLSocketFactory</code> is used. Its configuration depends on system
+      properties.</p><div class="example"><a name="d0e4564"></a><p class="title"><b>Example&nbsp;4.23.&nbsp;An example of SslSocketSender configuration</b></p><div class="example-contents"><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;sender</span> <span class="hl-attribute">class</span>=<span class="hl-value">"SslSocketSender"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;target&gt;</span>127.0.0.1:12345<span class="hl-tag">&lt;/target&gt;</span>
+&nbsp;&nbsp;3    <span class="hl-tag">&lt;/sender&gt;</span></pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.reference-guide.sending.WebSocketSender"></a>4.2.20.&nbsp;WebSocketSender</h3></div></div></div><p>
+      The WebSocketSender can be used to send a simple messages via websocket protocol to a remote websocket
+      server endpoint. The websocket technology creates a full-duplex connection over TCP and is suitable
+      for applications requiring fast responses. It was standardized as RFC 6455 and it is a part of Java EE 7
+      (JSR-356). Connections are initiated by sending an HTTP upgrade header. It is event
+      driven on both client
+      and server sides. Load of requests is generated after the connection session is successfully established.
+   </p><p>
+      There are two forms of remote endpoints, which can be set - basic and async. To set content of message payload,
+      set the
+      <code class="code">message</code>
+      element in the
+      <code class="code">messages</code>
+      section of the scenario definition. Payload can be set text, binary and ping. In PerfCake 5.x only text messages
+      are supported.
+   </p><p>The target of the sender is an URL of the remote endpoint, where the message is send.</p><p>
+      The following table shows the properties of the WebSocketSender:
+      </p><div class="table"><a name="d0e4586"></a><div class="table-contents"><table summary="WebSocketSender properties" border="1"><colgroup><col width="28%" align="left" class="property-name"><col width="29%" align="left" class="description"><col width="14%" align="left" class="required"><col width="29%" align="left" class="default-value"></colgroup><thead><tr><th align="left">Property name</th><th align="left">Description</th><th align="left">Required</th><th align="left">Default value</th></tr></thead><tbody><tr><td align="left">remoteEndpointType</td><td align="left">
+                     One of
+                     <code class="code">basic</code>
+                     or
+                     <code class="code">async</code>
+                     .
+                  </td><td align="left">No</td><td align="left">basic</td></tr><tr><td align="left">payloadType</td><td align="left">
+                     One of
+                     <code class="code">text</code>
+                     ,
+                     <code class="code">binary</code>
+                     or
+                     <code class="code">ping</code>
+                     .
+                     <a href="#ftn.d0e4634" class="footnote" name="d0e4634"><sup class="footnote">[a]</sup></a>
+                  </td><td align="left">No</td><td align="left">text</td></tr></tbody><tbody class="footnotes"><tr><td colspan="4"><div id="ftn.d0e4634" class="footnote"><p><a href="#d0e4634" class="para"><sup class="para">[a] </sup></a> Only text messages are supported in PerfCake 7.x. </p></div></td></tr></tbody></table></div><p class="title"><b>Table&nbsp;4.23.&nbsp;WebSocketSender properties</b></p></div><p><br class="table-break">
+   </p><div class="example"><a name="d0e4643"></a><p class="title"><b>Example&nbsp;4.24.&nbsp;An example of WebSocketSender configuration</b></p><div class="example-contents"><pre class="programlisting">&nbsp;&nbsp;1    <span class="hl-tag">&lt;sender</span> <span class="hl-attribute">class</span>=<span class="hl-value">"WebSocketSender"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;2       <span class="hl-tag">&lt;target&gt;</span>ws://domain.com/ws-ctx/ws-ep<span class="hl-tag">&lt;/target&gt;</span>
+&nbsp;&nbsp;3       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"remoteEndpointType"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"basic"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;4       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"payloadType"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"text"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;5    <span class="hl-tag">&lt;/sender&gt;</span></pre></div></div><br class="example-break"></div><div class="footnotes"><br><hr style="width:100; text-align:left;margin-left: 0"><div id="ftn.d0e3041" class="footnote"><p><a href="#d0e3041" class="para"><sup class="para">[6] </sup></a>
+            Costrained Application Protocol
+            <a class="link" href="http://coap.technology/" target="_top">http://coap.technology/</a>
+         </p></div><div id="ftn.d0e3049" class="footnote"><p><a href="#d0e3049" class="para"><sup class="para">[7] </sup></a>
+            See
+            <a class="link" href="https://tools.ietf.org/html/rfc7252#section-6" target="_top">https://tools.ietf.org/html/rfc7252#section-6</a>
+            for more detail on CoAP endpoint URI
+         </p></div><div id="ftn.ug.reference-guide.sending.ChannelDatagramSender.footnote-nio" class="footnote"><p><a href="#ug.reference-guide.sending.ChannelDatagramSender.footnote-nio" class="para"><sup class="para">[8] </sup></a>
+            <a class="link" href="http://docs.oracle.com/javase/8/docs/api/java/nio/package-summary.html#package.description" target="_top">http://docs.oracle.com/javase/8/docs/api/java/nio/package-summary.html#package.description</a>
+         </p></div><div id="ftn.d0e3500" class="footnote"><p><a href="#d0e3500" class="para"><sup class="para">[9] </sup></a>
+            <a class="link" href="http://docs.oracle.com/javase/8/docs/api/java/nio/channels/DatagramChannel.html" target="_top">http://docs.oracle.com/javase/8/docs/api/java/nio/channels/DatagramChannel.html</a>
+         </p></div><div id="ftn.d0e3559" class="footnote"><p><a href="#d0e3559" class="para"><sup class="para">[10] </sup></a>
+            <a class="link" href="http://docs.oracle.com/javase/8/docs/api/java/nio/channels/FileChannel.html" target="_top">http://docs.oracle.com/javase/8/docs/api/java/nio/channels/FileChannel.html</a>
+         </p></div><div id="ftn.d0e3615" class="footnote"><p><a href="#d0e3615" class="para"><sup class="para">[11] </sup></a>
+            <a class="link" href="http://docs.oracle.com/javase/8/docs/api/java/nio/channels/SocketChannel.html" target="_top">http://docs.oracle.com/javase/8/docs/api/java/nio/channels/SocketChannel.html</a>
+         </p></div><div id="ftn.d0e3901" class="footnote"><p><a href="#d0e3901" class="para"><sup class="para">[12] </sup></a>
+            <a class="link" href="http://en.wikipedia.org/wiki/Lightweight_Directory_Access_Protocol" target="_top">http://en.wikipedia.org/wiki/Lightweight_Directory_Access_Protocol</a>
+         </p></div><div id="ftn.d0e3980" class="footnote"><p><a href="#d0e3980" class="para"><sup class="para">[13] </sup></a>
+            <a class="link" href="http://mqtt.org/" target="_top">http://mqtt.org/</a>
+         </p></div><div id="ftn.d0e4132" class="footnote"><p><a href="#d0e4132" class="para"><sup class="para">[14] </sup></a> See <a class="link" href="https://oauth.net/2/" target="_top">https://oauth.net/2/</a> for the protocol details.</p></div><div id="ftn.d0e4140" class="footnote"><p><a href="#d0e4140" class="para"><sup class="para">[15] </sup></a> See <a class="link" href="http://www.keycloak.org" target="_top">http://www.keycloak.org</a> for more information about the
+            Keycloak server.</p></div><div id="ftn.d0e4432" class="footnote"><p><a href="#d0e4432" class="para"><sup class="para">[16] </sup></a>
+            See
+            <a class="link" href="https://www.jcp.org/en/jsr/detail?id=223" target="_top">https://www.jcp.org/en/jsr/detail?id=223</a>
+            for more details on JSR 223 specification.
+         </p></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ug.reference-guide.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="ug.reference-guide.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ug.reference-guide.receiving.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;4.&nbsp;Reference Guide&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="perfcake-user-guide.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;4.3.&nbsp;Receiving messages</td></tr></table></div></body></html>

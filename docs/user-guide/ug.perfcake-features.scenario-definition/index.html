@@ -1,0 +1,300 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>2.2.&nbsp;Performance scenario definition</title><link rel="stylesheet" type="text/css" href="../css/guides.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="perfcake-user-guide.html" title="PerfCake 7.x"><link rel="up" href="ug.perfcake-features.html" title="Chapter&nbsp;2.&nbsp;PerfCake Features"><link rel="prev" href="ug.perfcake-features.html" title="Chapter&nbsp;2.&nbsp;PerfCake Features"><link rel="next" href="ug.perfcake-features.configuration.html" title="2.3.&nbsp;Running PerfCake"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">2.2.&nbsp;Performance scenario definition</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ug.perfcake-features.html">Prev</a>&nbsp;</td><th width="60%" align="center">Chapter&nbsp;2.&nbsp;PerfCake Features</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ug.perfcake-features.configuration.html">Next</a></td></tr></table><hr></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.perfcake-features.scenario-definition"></a>2.2.&nbsp;Performance scenario definition</h2></div></div></div><p>Scenario is a receipt for telling PerfCake what to do. You can specify how PerfCake would
+      generate load by configuring a generator, where and what to send by defining a sender and
+      messages. To get any measured results such as an average throughput or a memory usage you can
+      use reporting capabilities. To check that the responses are correct a validation is available
+      for you to set in the scenario. There is also a possibility to specify scenario meta-data by
+      setting the scenario's properties. </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.perfcake-features.scenario-definition.xml"></a>2.2.1.&nbsp;XML scenario</h3></div></div></div><p>
+      As you can see from the following listing the XML scenario is defined by
+      <code class="code">urn:perfcake:scenario:7.0</code>
+      namespace
+      <a href="#ftn.d0e503" class="footnote" name="d0e503"><sup class="footnote">[3]</sup></a>. The scenario is divided into several sections: Properties, Run, Generator,
+      Sequences, Sender, Receiver, Reporting, Messages and Validation. </p><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="d0e509"></a>Scenario structure</h4></div></div></div><pre class="programlisting"><span class="hl-directive">&nbsp;&nbsp;1 &lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+&nbsp;&nbsp;2 <span class="hl-tag">&lt;scenario</span> <span class="hl-attribute">xmlns</span>=<span class="hl-value">"urn:perfcake:scenario:7.0"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;3    <span class="hl-comment">&lt;!-- Scenario properties (optional) --&gt;</span>
+&nbsp;&nbsp;4    <span class="hl-tag">&lt;properties&gt;</span>
+&nbsp;&nbsp;5       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"..."</span> <span class="hl-attribute">value</span>=<span class="hl-value">"..."</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;6       ...
+&nbsp;&nbsp;7    <span class="hl-tag">&lt;/properties&gt;</span>
+&nbsp;&nbsp;8 
+&nbsp;&nbsp;9    <span class="hl-comment">&lt;!-- Run section (required) --&gt;</span>
+&nbsp;10    <span class="hl-tag">&lt;run</span> <span class="hl-attribute">...</span><span class="hl-tag"> &gt;</span>
+&nbsp;11       ...
+&nbsp;12    <span class="hl-tag">&lt;/run&gt;</span>
+&nbsp;13 
+&nbsp;14    <span class="hl-comment">&lt;!-- Generator section (required) --&gt;</span>
+&nbsp;15    <span class="hl-tag">&lt;generator</span> <span class="hl-attribute">...</span><span class="hl-tag"> &gt;</span>
+&nbsp;16       ...
+&nbsp;17    <span class="hl-tag">&lt;/generator&gt;</span>
+&nbsp;18 
+&nbsp;19    <span class="hl-comment">&lt;!-- Sequences section (optional) --&gt;</span>
+&nbsp;20    <span class="hl-tag">&lt;sequences&gt;</span>
+&nbsp;21       ...
+&nbsp;22    <span class="hl-tag">&lt;/sequences&gt;</span>
+&nbsp;23 
+&nbsp;24    <span class="hl-comment">&lt;!-- Sender section (required) --&gt;</span>
+&nbsp;25    <span class="hl-tag">&lt;sender</span> <span class="hl-attribute">...</span><span class="hl-tag"> &gt;</span>
+&nbsp;26       ...
+&nbsp;27    <span class="hl-tag">&lt;/sender&gt;</span>
+&nbsp;28 
+&nbsp;29    <span class="hl-comment">&lt;!-- Receiver section (optional) --&gt;</span>
+&nbsp;30    <span class="hl-tag">&lt;receiver&gt;</span>
+&nbsp;31       ...
+&nbsp;32    <span class="hl-tag">&lt;/receiver&gt;</span>
+&nbsp;33 
+&nbsp;34    <span class="hl-comment">&lt;!-- Reporting section (optional) --&gt;</span>
+&nbsp;35    <span class="hl-tag">&lt;reporting&gt;</span>
+&nbsp;36       ...
+&nbsp;37    <span class="hl-tag">&lt;/reporting&gt;</span>
+&nbsp;38 
+&nbsp;39    <span class="hl-comment">&lt;!-- Messages section (optional) --&gt;</span>
+&nbsp;40    <span class="hl-tag">&lt;messages&gt;</span>
+&nbsp;41       ...
+&nbsp;42    <span class="hl-tag">&lt;/messages&gt;</span>
+&nbsp;43 
+&nbsp;44    <span class="hl-comment">&lt;!-- Validation section (optional) --&gt;</span>
+&nbsp;45    <span class="hl-tag">&lt;validation&gt;</span>
+&nbsp;46       ...
+&nbsp;47    <span class="hl-tag">&lt;/validation&gt;</span>
+&nbsp;48 <span class="hl-tag">&lt;/scenario&gt;</span></pre></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="ug.perfcake-features.scenario-definition.xml.sections"></a>Sections of the scenario</h4></div></div></div><p>Let's take a look at particular sections of the scenario.</p><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e519"></a>Scenario properties</h5></div></div></div><p>This optional section allows you to add some meta-data about your scenario. It can contain multiple properties.</p><p>All the scenario properties are set as Java System properties so can be used further in scenario (See
+         <a class="xref" href="ug.perfcake-features.scenario-definition.html#ug.perfcake-features.scenario-definition.filtering-properties" title="2.2.5.&nbsp;Filtering properties">Section&nbsp;2.2.5, &#8220;Filtering properties&#8221;</a>
+         for more details.).
+      </p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e528"></a>Run</h5></div></div></div><p>The run section specifies the duration for what the scenario will run. It is mandatory
+         since PerfCake needs to know how long to generate load.</p><p>The scenario run configuration is described in more details in <a class="xref" href="ug.reference-guide.html#ug.reference-guide.generating" title="4.1.&nbsp;How - Generating load">Section&nbsp;4.1, &#8220;How - Generating load&#8221;</a> . </p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e537"></a>Generator</h5></div></div></div><p>The generator section specifies the way how the load is generated. It is mandatory since
+         PerfCake needs to know how to generate load.</p><p>The generators are described in more details in <a class="xref" href="ug.reference-guide.html#ug.reference-guide.generating" title="4.1.&nbsp;How - Generating load">Section&nbsp;4.1, &#8220;How - Generating load&#8221;</a> . </p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e546"></a>Sender</h5></div></div></div><p>The sender section is about the transport (e.g. HTTP, MQTT, JMS, ...) and the target
+         where the load is directed. It is required to be specified in the scenario. </p><p>More information about the senders can be found in <a class="xref" href="ug.reference-guide.sending.html" title="4.2.&nbsp;Where - Sending messages">Section&nbsp;4.2, &#8220;Where - Sending messages&#8221;</a> . </p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e555"></a>Receiver and Correlator</h5></div></div></div><p>The receiver section defines a component used to receive responses from a separate
+         message channel. Because it is possible to send requests to some protocol and use a
+         completely different protocol to receive responses.</p><p>A receiver always needs to know which response
+         matches which original request. This is why it needs a correlator to be specified.</p><p>More information about the receivers and senders can be found in their corresponding chapters
+         <a class="xref" href="ug.reference-guide.receiving.html" title="4.3.&nbsp;Receiving messages">Section&nbsp;4.3, &#8220;Receiving messages&#8221;</a> and <a class="xref" href="ug.reference-guide.correlating.html" title="4.4.&nbsp;Correlating messages">Section&nbsp;4.4, &#8220;Correlating messages&#8221;</a>.</p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e568"></a>Reporting</h5></div></div></div><p>Reporting module is responsible for gathering metrics and reporting the results to various places in specified moments.
+         It is not required to configure the reporting in the scenario but without it the PerfCake has no way of measuring and reporting
+         results.
+      </p><p>The reporting abilities are described in <a class="xref" href="ug.reference-guide.reporting.html" title="4.7.&nbsp;Reporting">Section&nbsp;4.7, &#8220;Reporting&#8221;</a>
+         . </p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e577"></a>Messages</h5></div></div></div><p>The messages represent the payload that is transferred by senders to the tested system. It is optional since
+         there can be situations where there is no actual message being send.
+      </p><p>
+         The
+         <a class="xref" href="ug.reference-guide.messages.html" title="4.5.&nbsp;What - Messages">Section&nbsp;4.5, &#8220;What - Messages&#8221;</a>
+         describes the messages in more details.
+      </p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e586"></a>Sequences</h5></div></div></div><p>Inside of the messages and scenario configuration properties, you can use sequences of values. The sequences can be configured separately in
+         the scenario and just provide a next value in the sequence each time they are queried. This allows you to have unique messages or even send the
+         message to various targets.
+      </p><p>
+         The
+         <a class="xref" href="ug.reference-guide.sequences.html" title="4.6.&nbsp;Sequences">Section&nbsp;4.6, &#8220;Sequences&#8221;</a>
+         describes the sequences in more details.
+      </p></div><div class="section"><div class="titlepage"><div><div><h5 class="title"><a name="d0e595"></a>Validation</h5></div></div></div><p>Validation module allows to validate the response messages.</p><p>The validation capabilities are described in <a class="xref" href="ug.reference-guide.validation.html" title="4.8.&nbsp;Validation">Section&nbsp;4.8, &#8220;Validation&#8221;</a> . </p></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.perfcake-features.scenario-definition.dsl"></a>2.2.2.&nbsp;DSL scenario</h3></div></div></div><p>There is a possibility to specify scenarios in the form that resembles a natural language.
+      This is typically stored in a file with the .dsl suffix. It is useful to open these scenarios
+      in an editor that supports Groovy syntax as the DSL language is actually developed in
+      Groovy.</p><p>The DSL scenarios can use the same features, properties and constructs as the XML scenario.
+      The language is just different. Following is a sample DSL scenario.</p><p>
+      </p><pre class="programlisting">&nbsp;&nbsp;1 scenario <span class="hl-string">"my cool scenario"</span>
+&nbsp;&nbsp;2    qsName <span class="hl-string">"test"</span> propA <span class="hl-string">"hello"</span>
+&nbsp;&nbsp;3    run <span class="hl-number">10.</span>s with <span class="hl-number">4.</span>threads
+&nbsp;&nbsp;4    generator <span class="hl-string">"DefaultMessageGenerator"</span> senderTaskQueueSize <span class="hl-number">3000</span>
+&nbsp;&nbsp;5    sender <span class="hl-string">"TestSender"</span> target <span class="hl-string">"httpbin.org"</span> delay <span class="hl-number">12.</span>s
+&nbsp;&nbsp;6    reporter <span class="hl-string">"WarmUpReporter"</span>
+&nbsp;&nbsp;7    reporter <span class="hl-string">"ThroughputStatsReporter"</span> minimumEnabled false
+&nbsp;&nbsp;8       destination <span class="hl-string">"CsvDestination"</span> every <span class="hl-number">3.</span>s path <span class="hl-string">'${perfcake.scenario}-stats.csv'</span> enabled
+&nbsp;&nbsp;9       destination <span class="hl-string">"ConsoleDestination"</span> every <span class="hl-number">5.</span>percent disabled
+&nbsp;10    reporter <span class="hl-string">"ResponseTimeStatsReporter"</span>
+&nbsp;11       destination <span class="hl-string">"ConsoleDestination"</span> every <span class="hl-number">10.</span>percent
+&nbsp;12    message file:<span class="hl-string">"message1.xml"</span> send <span class="hl-number">10.</span>times
+&nbsp;13    message content:<span class="hl-string">"Hello World"</span> values <span class="hl-number">1</span>,<span class="hl-number">2</span>,<span class="hl-number">3</span>
+&nbsp;14    message <span class="hl-string">"file://message2.txt"</span> validate <span class="hl-string">"text1"</span>,<span class="hl-string">"text2"</span>
+&nbsp;15    message <span class="hl-string">"Simple text"</span> propA <span class="hl-string">"kukuk"</span> headers name:<span class="hl-string">"Franta"</span>,count:<span class="hl-number">10</span> validate <span class="hl-string">"text1, text2"</span>
+&nbsp;16    validation fast disabled
+&nbsp;17       validator <span class="hl-string">"RegExpValidator"</span> id <span class="hl-string">"text1"</span> pattern <span class="hl-string">"I am a fish!"</span>
+&nbsp;18       validator <span class="hl-string">"RegExpValidator"</span> id <span class="hl-string">"text2"</span> pattern <span class="hl-string">"I was a fish!"</span>
+&nbsp;19 end</pre><p>
+   </p><p>The language format is typically in the form of <code class="code">&lt;keyword&gt; &lt;attribute&gt;</code>.
+      Mandatory keywords used are <code class="code">scenario</code>, <code class="code">run</code>, <code class="code">generator</code>
+      and <code class="code">sender</code>. </p><p>In general, strings are in quotes or apostrophes, an array and a map are specified by the
+      elements separated by commas. The map elements are specified by the pairs
+         <code class="code">key:value</code> separated by a colon. There are some special units defined that can
+      be used with numbers. The format is a number followed by a dot and the unit name. Following is
+      the list of supported units, in the scenario source, they are represented by the abbreviations
+      shown in the parentheses: milliseconds (ms), seconds (s), minutes (m), hours (h), days (d),
+      iterations (iteration, iterations), percents (percent, percents), threads (thread, threads),
+      and times (times). </p><p><code class="code">Scenario</code> is followed by the scenario name and mandatory properties and their
+      values. </p><p><code class="code">Run</code> is followed by the time specification and the number of threads after the
+         <code class="code">with</code> keyword.</p><p><code class="code">Generator</code>, <code class="code">sender</code>, <code class="code">reporter</code>,
+         <code class="code">destination</code>, <code class="code">validator</code> and <code class="code">sequence</code> are followed by
+      the class name implementing the component. Then there are properties and their values for the
+      given component. A single component configuration cannot be split to multiple lines. It must
+      all be present at a single line.</p><p><code class="code">Message</code> is followed by the location of the message or its content. Either
+      there is a differentiator in the form <code class="code">file:</code> or <code class="code">content:</code>, or there is
+      a string with the protocol specification (<code class="code">file://</code>, <code class="code">http://</code>&#8230;),
+      or a string with message content. Following are more configuration properties. </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.perfcake-features.scenario-definition.api"></a>2.2.3.&nbsp;Scenario specified through API</h3></div></div></div><p>It is also possible to run PerfCake by utilizing its API. The simplest way is to load a
+      scenario specified in an external file (or even URL location) and execute it.</p><div class="example"><a name="d0e689"></a><p class="title"><b>Example&nbsp;2.1.&nbsp;Loading of a scenario definition and its execution from API </b></p><div class="example-contents"><pre class="programlisting"><span class="hl-keyword">import</span> org.perfcake.scenario.Scenario;
+<span class="hl-keyword">import</span> org.perfcake.scenario.ScenarioLoader;
+...
+      <span class="hl-keyword">final</span> Scenario scenario = ScenarioLoader.load(<span class="hl-string">"/full/path/http.xml"</span>);
+
+      scenario.init();
+      scenario.run();
+      scenario.close();</pre></div></div><br class="example-break"><p>A call to the <code class="code">run()</code> method is blocking and does not return until all messages
+      are sent or a fatal error occurs. It is however possible to stop the scenario execution from
+      another thread by a call to the <code class="code">stop()</code> method of the <code class="code">Scenario</code> class.
+      The termination is not immediate, rather a graceful shutdown is performed.</p><p>In a case when you do not require access to the scenario control object
+      (org.perfcake.scenario.Scenario) and you just want to run a test (for example in TestNG or
+      jUnit), there is a simplified method of the above.</p><div class="example"><a name="d0e707"></a><p class="title"><b>Example&nbsp;2.2.&nbsp;Executing a scenario with a single method call using PerfCake API</b></p><div class="example-contents"><pre class="programlisting">import org.perfcake.scenario.ScenarioExecution;
+...
+      ScenarioExecution.execute("scenario-name", new Properties());</pre></div></div><br class="example-break"><p>As a scenario name, the same value is passed as in the -s parameter on the command line.
+      The properties can configure anything that would normally go into -D parameter. Most other
+      command line parameters can be configured via these properties (see <a class="link" href="ug.perfcake-features.scenario-definition.filtering-properties" target="_top">ug.perfcake-features.scenario-definition.filtering-properties</a>).</p><p>It is also possible to build the complete scenario from scratch using PerfCake API. Most
+      objects are designed with fluent API so you can easily join multiple setter methods.</p><div class="example"><a name="d0e718"></a><p class="title"><b>Example&nbsp;2.3.&nbsp;Complete scenario definition and execution using its API</b></p><div class="example-contents"><pre class="programlisting"><span class="hl-keyword">import</span> org.perfcake.PerfCakeException;
+<span class="hl-keyword">import</span> org.perfcake.RunInfo;
+<span class="hl-keyword">import</span> org.perfcake.common.BoundPeriod;
+<span class="hl-keyword">import</span> org.perfcake.common.Period;
+<span class="hl-keyword">import</span> org.perfcake.common.PeriodType;
+<span class="hl-keyword">import</span> org.perfcake.message.Message;
+<span class="hl-keyword">import</span> org.perfcake.message.MessageTemplate;
+<span class="hl-keyword">import</span> org.perfcake.message.correlator.Correlator;
+<span class="hl-keyword">import</span> org.perfcake.message.correlator.GenerateHeaderCorrelator;
+<span class="hl-keyword">import</span> org.perfcake.message.generator.DefaultMessageGenerator;
+<span class="hl-keyword">import</span> org.perfcake.message.generator.MessageGenerator;
+<span class="hl-keyword">import</span> org.perfcake.message.receiver.HttpReceiver;
+<span class="hl-keyword">import</span> org.perfcake.message.receiver.Receiver;
+<span class="hl-keyword">import</span> org.perfcake.message.sender.HttpSender;
+<span class="hl-keyword">import</span> org.perfcake.message.sender.MessageSender;
+<span class="hl-keyword">import</span> org.perfcake.message.sequence.PrimitiveNumberSequence;
+<span class="hl-keyword">import</span> org.perfcake.message.sequence.Sequence;
+<span class="hl-keyword">import</span> org.perfcake.reporting.destination.ConsoleDestination;
+<span class="hl-keyword">import</span> org.perfcake.reporting.destination.Destination;
+<span class="hl-keyword">import</span> org.perfcake.reporting.reporter.IterationsPerSecondReporter;
+<span class="hl-keyword">import</span> org.perfcake.reporting.reporter.Reporter;
+<span class="hl-keyword">import</span> org.perfcake.validation.MessageValidator;
+<span class="hl-keyword">import</span> org.perfcake.validation.RegExpValidator;
+...
+      <span class="hl-keyword">final</span> Period period = <span class="hl-keyword">new</span> Period(PeriodType.TIME, <span class="hl-number">30</span>_<span class="hl-number">000</span>);
+      <span class="hl-keyword">final</span> RunInfo runInfo = <span class="hl-keyword">new</span> RunInfo(period);
+
+      <span class="hl-keyword">final</span> MessageGenerator generator = <span class="hl-keyword">new</span> DefaultMessageGenerator();
+      generator.setThreads(<span class="hl-number">10</span>);
+
+      <span class="hl-keyword">final</span> MessageValidator validator = <span class="hl-keyword">new</span> RegExpValidator().setCaseInsensitive(true).setPattern(<span class="hl-string">".*"</span>);
+
+      <span class="hl-keyword">final</span> Message message = <span class="hl-keyword">new</span> Message();
+      message.setPayload(<span class="hl-string">"Hello world no. @{intSeq}!"</span>);
+
+      <span class="hl-keyword">final</span> MessageTemplate messageTemplate = <span class="hl-keyword">new</span> MessageTemplate(message, <span class="hl-number">1</span>, Collections.singletonList(<span class="hl-string">"regExp"</span>));
+
+      <span class="hl-keyword">final</span> MessageSender sender = <span class="hl-keyword">new</span> HttpSender().setMethod(HttpSender.Method.POST).setTarget(<span class="hl-string">"http://httpbin.org/post"</span>);
+
+      <span class="hl-keyword">final</span> Correlator correlator = <span class="hl-keyword">new</span> GenerateHeaderCorrelator();
+
+      <span class="hl-keyword">final</span> Receiver receiver = <span class="hl-keyword">new</span> HttpReceiver().setSource(<span class="hl-string">"localhost:8282"</span>).setThreads(<span class="hl-number">10</span>);
+
+      <span class="hl-keyword">final</span> Sequence sequence = <span class="hl-keyword">new</span> PrimitiveNumberSequence();
+
+      <span class="hl-keyword">final</span> Destination destination = <span class="hl-keyword">new</span> ConsoleDestination();
+
+      <span class="hl-keyword">final</span> Reporter reporter = <span class="hl-keyword">new</span> IterationsPerSecondReporter();
+      reporter.registerDestination(destination, <span class="hl-keyword">new</span> Period(PeriodType.TIME, <span class="hl-number">1000</span>));
+
+      <span class="hl-keyword">final</span> ScenarioBuilder builder = <span class="hl-keyword">new</span> ScenarioBuilder(runInfo, generator, sender);
+      builder.setReceiver(receiver).setCorrelator(correlator);
+      builder.putMessageValidator(<span class="hl-string">"regExp"</span>, validator).addMessage(messageTemplate).
+            putSequence(<span class="hl-string">"intSeq"</span>, sequence).addReporter(reporter);
+
+      <span class="hl-keyword">final</span> Scenario scenario = builder.build();
+
+      scenario.init();
+      scenario.run();
+      scenario.close();</pre></div></div><br class="example-break"><p>The API is slightly counter-intuitive because the scenario needs to be composed from the
+      bottom to top. For example, we first need to define a <span class="emphasis"><em>Message Validator</em></span>
+      to validate a message and then use it to create a <span class="emphasis"><em>Message Template</em></span>. Next,
+      we set the <span class="emphasis"><em>Message Validator</em></span> reference ID later when passing it to the
+         <code class="code">ScenarioBuilder</code>.</p><p>Similar concept works for <span class="emphasis"><em>Sequences</em></span> and <span class="emphasis"><em>Message
+         Reporters</em></span> and others.</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.perfcake-features.scenario-definition.ide-plugins"></a>2.2.4.&nbsp;IDE plugins</h3></div></div></div><p>So far we have prepared preliminary versions of plugins for Eclipse and IntelliJ Idea. Some
+      efforts were done for NetBeans as well. None of the plugins is stable enough at the moment. We
+      are in a search of a brave contributor who could consolidate all the plugins and make them
+      stable and user friendly.</p><p>If you want to go wild, try to search the default repositories of your IDE. This comes with
+      no guarantees at the moment.</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.perfcake-features.scenario-definition.filtering-properties"></a>2.2.5.&nbsp;Filtering properties</h3></div></div></div><p>It is possible to use property placeholders in scenarios (and in other components of the
+      scenario, see later). The placeholders are replaced by the actual value of the particular
+      property or by the default value if specified in a process called property filtering.</p><p>This proces is quite complex and allows many useful manipulations with the values provided
+      in the scenario.</p><p>At first, when the scenario is loaded from a file (no matter which format is used), all the
+      placeholders of the following format are loaded and replaced by appropriate values if they are
+      found.</p><pre class="programlisting">${&lt;property name&gt;:&lt;default value&gt;}</pre><p>The colon and the default value are optional. Also, any properties specified in the scenario
+      are loaded and put into system properties.</p><p>During this phase, PerfCake checks for properties in the system properties and then in
+      environment properties. We can also limit it to check just one of the sources by providing a
+      prefix to the property name. The prefix can be <span class="italic">env.</span> for
+      environment properties and <span class="italic">props.</span> for system
+      properties.</p><p>The properties found in the scenario can be used throughout the scenario as well and can be
+      also used as in other properties. However, circular definitions do not work.</p><div class="example"><a name="d0e775"></a><p class="title"><b>Example&nbsp;2.4.&nbsp;An example of a scenario with properties</b></p><div class="example-contents"><pre class="programlisting"><span class="hl-directive">&nbsp;&nbsp;1 &lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+&nbsp;&nbsp;2 <span class="hl-tag">&lt;scenario</span> <span class="hl-attribute">xmlns</span>=<span class="hl-value">"urn:perfcake:scenario:7.0"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;3    <span class="hl-tag">&lt;properties&gt;</span>
+&nbsp;&nbsp;4       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"composedProperty"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"${defaultProperty}-2"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;5       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"defaultProperty"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"${test.missing.property:default-property-value}"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;6    <span class="hl-tag">&lt;/properties&gt;</span>
+&nbsp;&nbsp;7    ...
+&nbsp;&nbsp;8    <span class="hl-tag">&lt;messages&gt;</span>
+&nbsp;&nbsp;9       <span class="hl-tag">&lt;message</span> <span class="hl-attribute">uri</span>=<span class="hl-value">"unfiltered-message.txt"</span><span class="hl-tag">&gt;</span>
+&nbsp;10          <span class="hl-tag">&lt;header</span> <span class="hl-attribute">name</span>=<span class="hl-value">"testHeader"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"${defaultProperty}"</span><span class="hl-tag">/&gt;</span>
+&nbsp;11       <span class="hl-tag">&lt;/message&gt;</span>
+&nbsp;12    <span class="hl-tag">&lt;/messages&gt;</span>
+&nbsp;13 <span class="hl-tag">&lt;/scenario&gt;</span></pre></div></div><br class="example-break"><p>The property filtering process is performed in a moment, when a scenario file is loaded by
+      PerfCake, before it is parsed. There are no advanced features, just a simple string
+      replacement for scenario files. The placeholders can be at any place in the scenario file
+      because PerfCake approaches the scenario as a simple string without any syntax meaning. </p><p>The filtering tries to find the property by name. If the property is found, the whole
+      placeholder is replaced by property's actual value. If the specified property does not exist,
+      it looks for the default value if it is specified. If so the whole placeholder is replaced by
+      the default value. Otherwise it leaves the placeholder in place intact.</p><p>More complex filtering is available for some components of the system. The advanced
+      filtering works for: <span class="emphasis"><em>Sender</em></span>'s <span class="emphasis"><em>target</em></span> attribute, any
+      part of <span class="emphasis"><em>Message</em></span> including content loaded from an external file, and for
+      patterns in <span class="emphasis"><em>RegExpValidator</em></span>.</p><p>The following types of placeholders are supported:</p><p>
+      </p><pre class="programlisting">${&lt;property name&gt;:&lt;default value&gt;}
+@{&lt;property name&gt;:&lt;default value&gt;}</pre><p>
+   </p><p>The following characters can be escaped by a backslash: <code class="code">\</code> (backslash itself), <code class="code">$</code>, <code class="code">@</code>,
+         <code class="code">{</code>, and <code class="code">}</code>. These characters should not appear unescaped if they
+      are not supposed to act as control characters. However, the default value of a property can
+      contain anything except for <code class="code">}</code>. Also, backshlash needs to be escaped. Colon is not
+      allowed in the property name and no characters can be escaped in it.</p><p>The following table lists a few examples of strings and how they are rendered in the end.
+      Suppose we have the following system properties set: <code class="code">ab = 1</code>, <code class="code">cd =
+      2</code>.</p><div class="table"><a name="ug.perfcake-features.scenario-definition.filtering-properties.template-examples-table"></a><div class="table-contents"><table summary="Examples of templates and how they are rendered" border="1"><colgroup><col width="50%" align="left" class="Template"><col width="50%" align="left" class="Result"></colgroup><thead><tr><th align="left">Template</th><th align="left">Result</th></tr></thead><tbody><tr><td align="left"><code class="code">${ab:cd}</code></td><td align="left"><code class="code">1</code></td></tr><tr><td align="left"><code class="code">\\${cd}</code></td><td align="left"><code class="code">\2</code></td></tr><tr><td align="left"><code class="code">\${ab}</code></td><td align="left"><code class="code">${ab}</code></td></tr><tr><td align="left"><code class="code">${non.existing:\}$@\\}</code></td><td align="left"><code class="code">}$@\</code></td></tr><tr><td align="left"><code class="code">\\\@{cd}</code></td><td align="left"><code class="code">\@{cd}</code></td></tr><tr><td align="left"><code class="code">${env.JAVA_HOME}</code></td><td align="left">System dependant, for example: <code class="code">/opt/jdk</code></td></tr></tbody></table></div><p class="title"><b>Table&nbsp;2.1.&nbsp;Examples of templates and how they are rendered</b></p></div><br class="table-break"><p>Properties with the <span class="emphasis"><em>dollar</em></span> sign ($) are replaced just once, while the
+      properties with the <span class="emphasis"><em>at</em></span> sign (@, so called dynamic properties) are alsways
+      rendered again with every single use and thus containing a fresh value. This is mainly useful
+      for <a class="xref" href="ug.reference-guide.sequences.html" title="4.6.&nbsp;Sequences">Section&nbsp;4.6, &#8220;Sequences&#8221;</a>. Please note that rendering
+      values of the placeholders with the <span class="emphasis"><em>at</em></span> sign can introduce a slight
+      performance impact. PerfCake tries to switch off the placeholder rendering whenever possible
+      (when there are no dynamic properties present in the particular string).</p><p>In the case of advanced property filtering, the environment and system properties need to
+      be strictly separated and referenced with the corresponding prefix. The environment properties
+      are accessed by <code class="code">${env.&lt;property name&gt;}</code>. The system properties can be accessed
+      by <code class="code">${props.&lt;property value&gt;}</code>, <code class="code">${props[&lt;property value&gt;]}</code>, and
+         <code class="code">${props['&lt;property value&gt;']}</code>.</p><p>Also, these placeholders are considered ultimate and no more replacing is possible. So in
+      the case when there is no property available and there is no default value, they are replaced
+      by the <code class="code">null</code> string.</p><p>Both of the replacement strategies can be combined to achieve interesting results. For
+      example, to define a property in a scenario the value of which is derived from another
+      property defined there, and to use it in the meesage content, we need to use the following
+      approach.</p><div class="example"><a name="d0e924"></a><p class="title"><b>Example&nbsp;2.5.&nbsp;An example of a scenario with combined property replacement strategies</b></p><div class="example-contents"><pre class="programlisting"><span class="hl-directive">&nbsp;&nbsp;1 &lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+&nbsp;&nbsp;2 <span class="hl-tag">&lt;scenario</span> <span class="hl-attribute">xmlns</span>=<span class="hl-value">"urn:perfcake:scenario:7.0"</span><span class="hl-tag">&gt;</span>
+&nbsp;&nbsp;3    <span class="hl-tag">&lt;properties&gt;</span>
+&nbsp;&nbsp;4       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"composedProperty"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"${props.defaultProperty}-2"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;5       <span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"defaultProperty"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"${test.missing.property:default-property-value}"</span><span class="hl-tag">/&gt;</span>
+&nbsp;&nbsp;6    <span class="hl-tag">&lt;/properties&gt;</span>
+&nbsp;&nbsp;7    ...
+&nbsp;&nbsp;8    <span class="hl-tag">&lt;messages&gt;</span>
+&nbsp;&nbsp;9       <span class="hl-tag">&lt;message</span> <span class="hl-attribute">content</span>=<span class="hl-value">"${props.composedProperty}"</span><span class="hl-tag">/&gt;</span>
+&nbsp;10    <span class="hl-tag">&lt;/messages&gt;</span>
+&nbsp;11 <span class="hl-tag">&lt;/scenario&gt;</span></pre></div></div><br class="example-break"><p>As you can see, we had to use the advanced approach to refer to the
+         <code class="code">composedProperty</code> and to the <code class="code">defaultProperty</code>. This is because
+      PerfCake first reads the scenario, defines the values of both <code class="code">composedProperty</code>
+      and <code class="code">defaultProperty</code>. But at that time, we did not know the value of the
+         <code class="code">defaultProperty</code> and it could not be used to replace the value in the
+         <code class="code">composedProperty</code>. So the <code class="code">composedProperty</code> remains exactly as seen
+      the example. Now PerfCake parses the scenarion by a syntax parser. The value of the
+         <code class="code">defaultProperty</code> is now known but in this stage, only the advanced templating
+      is supported. So the <code class="code">props.</code> prefix worked and we got the correct value
+         <code class="code">default-property-value-2</code> in the message content.</p><p>To provide PerfCake the actual value of the property you can just pass it using an ordinary
+      way: </p><pre class="programlisting">-D&lt;property name&gt;=&lt;property value&gt;</pre><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>In Windows command shell, the parameter specifying the property name and value might
+         need to be placed in double quotes: <code class="code">"-D&lt;property name&gt;=&lt;property
+         value&gt;"</code></p></div><p>There are several properties that exist in PerfCake and that might be usefull in the scenarios
+      or messages (e.g. a timestamp of the scenario execution start). The following table describes all available
+      internal properties.
+   </p><div class="table"><a name="ug.perfcake-features.scenario-definition.filtering-properties.available-properties-table"></a><div class="table-contents"><table summary="Available PerfCake internal properties" border="1"><colgroup><col width="33%" align="left" class="property-name"><col width="67%" align="left" class="description"></colgroup><thead><tr><th align="left">Property name</th><th align="left">Description</th></tr></thead><tbody><tr><td align="left">perfcake.encoding</td><td align="left">Default encoding</td></tr><tr><td align="left">perfcake.messages.dir</td><td align="left">Messages directory</td></tr><tr><td align="left">perfcake.plugins.dir</td><td align="left">Plugins directory</td></tr><tr><td align="left">perfcake.properties.file</td><td align="left">Custom properties file</td></tr><tr><td align="left">perfcake.run.timestamp</td><td align="left">A Unix timestamp of the moment of the scenario execution start</td></tr><tr><td align="left">perfcake.run.nice.timestamp</td><td align="left">A timestamp of the moment of the scenario execution start in a human readable
+                  format (<code class="code">yyyyMMddHHmmss</code>).</td></tr><tr><td align="left">perfcake.scenario</td><td align="left">A name of the scenario</td></tr><tr><td align="left">perfcake.scenarios.dir</td><td align="left">Scenarios directory</td></tr><tr><td align="left">perfcake.logging.level</td><td align="left">Logging level of the PerfCake core</td></tr></tbody></table></div><p class="title"><b>Table&nbsp;2.2.&nbsp;Available PerfCake internal properties</b></p></div><br class="table-break"></div><div class="footnotes"><br><hr style="width:100; text-align:left;margin-left: 0"><div id="ftn.d0e503" class="footnote"><p><a href="#d0e503" class="para"><sup class="para">[3] </sup></a>
+            Schema can be found at
+            <a class="link" href="http://schema.perfcake.org/perfcake-scenario-7.0.xsd" target="_top">http://schema.perfcake.org/perfcake-scenario-7.0.xsd</a>
+         </p></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ug.perfcake-features.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="ug.perfcake-features.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ug.perfcake-features.configuration.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;2.&nbsp;PerfCake Features&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="perfcake-user-guide.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;2.3.&nbsp;Running PerfCake</td></tr></table></div></body></html>

@@ -1,0 +1,51 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>3.3.&nbsp;Generators</title><link rel="stylesheet" type="text/css" href="../css/guides.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="perfcake-developers-guide.html" title="PerfCake 7.x"><link rel="up" href="dev.contributor.architecture.html" title="Chapter&nbsp;3.&nbsp;PerfCake Architecture"><link rel="prev" href="dev.contributor.architecture.run-info.html" title="3.2.&nbsp;Run Info"><link rel="next" href="dev.contributor.architecture.sender.html" title="3.4.&nbsp;Message Senders"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">3.3.&nbsp;Generators</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="dev.contributor.architecture.run-info.html">Prev</a>&nbsp;</td><th width="60%" align="center">Chapter&nbsp;3.&nbsp;PerfCake Architecture</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="dev.contributor.architecture.sender.html">Next</a></td></tr></table><hr></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dev.contributor.architecture.generator"></a>3.3.&nbsp;Generators</h2></div></div></div><p>In this section we will reveal as much details about message generators as possible. First
+      we describe the architecture and then we discuss an approach to develop a new generator. </p><p>Generator is the most sensitive and fragile component in the whole PerfCake architecture.
+      It has the reponsibility of generating all the messages and load. It is recommended to study
+      the <code class="varname">MessageGenerator</code> interface, <code class="varname">AbstractMessageGenerator</code>
+      as its basic implementation and then the default implementation called
+         <code class="varname">DefaultMessageGenerator</code> before developing your own generator.</p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="dev.contributor.architecture.generator.architecture"></a>3.3.1.&nbsp;Generators Architecture</h3></div></div></div><div class="figure"><a name="generator-architecture"></a><div class="figure-contents"><div><table border="0" summary="manufactured viewport for HTML img" style="cellpadding: 0; cellspacing: 0;" width="100%"><tr><td><object type="image/svg+xml" data="./images/generator-architecture.svg" width="100%"></object></td></tr></table></div></div><p class="title"><b>Figure&nbsp;3.2.&nbsp;Generators Architecture</b></p></div><br class="figure-break"><p>The main responsibility of the generator is creation of <code class="code">SenderTask</code> instances
+      whil controlling the number of threads used and the speed of creation of these tasks. A
+      generator also keeps a thread pool that executes the tasks. The tasks are then processed as
+      fast as possible. There is nothing a generator could or should do about the speed of the
+      SenderTask execution. </p><p>A message generator is the most crucial and complicated component of PerfCake and it is
+      highly recommended to reuse one of existing implementations as they already offer mostly
+      wanted features. </p><p>The message generator needs to take care of the sending threads, create
+         <code class="varname">SenderTasks</code> as needed and monitor the test progress. It is important to
+      properly shutdown the message generation for both time and iteration based test length
+      control. In the case of an iteration based control, a generator must wait for all the tasks to
+      be processed (in case of a normal/unexceptional termination). In the case of a time based
+      control, the test stops immediately after the time has elapsed.</p><p>Each <code class="varname">SenderTask</code> takes a reference to its parent generator to notify this
+      generator of any errors that might have occurred.</p><p>A message generator carries links to all other system components and thus has an ultimate
+      control over the running performance test. It is the only class that indirectly manipulates
+         <code class="varname">RunInfo</code> through starting and stopping the
+         <code class="varname">ReportManager</code>.</p><p>A message generator usually maintains a queue of prepared <code class="code">SenderTasks</code> and
+      schedules their execution. It also controls the number of parallel threads running.</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="dev.contributor.architecture.generator.new"></a>3.3.2.&nbsp;Writing a New Generator</h3></div></div></div><p>The best way to implement a new generator is by modifying
+                  <code class="varname">DefaultMessageGenerator</code>. The main method is
+                  <code class="varname">generate()</code> that creates a new thread pool and generates
+                  <code class="varname">SenderTasks</code> until the test is finished.
+                  <code class="varname">SenderTasks</code> are submitted as tasks to the newly created thread
+            pool. In the end the thread pool is shut down according to <code class="varname">RunInfo</code>
+            configuration as described in the previous section.</p><p>It is worth noticing the custom thread factory
+                  <code class="varname">DefaultMessageGenerator.DaemonThreadFactory</code>. This makes sure we
+            can quit the process even if some threads got stuck. It also sets higher priority to
+            these threads.</p><p><code class="varname">DefaultMessageGenerator</code> keeps an eye on the number of prepared
+                  <code class="varname">SenderTasks</code> by using a BlockingQueue that is passed to the
+            underlying thread pool executor. This limits the size of memory used at once.</p><p>Now investigate the <code class="varname">AbstractMessageGenerator.newSenderTask()</code> method
+            to see how <code class="varname">SenderTasks</code> are created. You can notice that SenderTasks
+            constructors takes the generator to be able to report failures back. Other test
+            execution related classes are set on the <code class="code">SenderTask</code> as well for it to be
+            able to complete its goal. A <code class="code">SenderTask</code> instance implements
+                  <code class="code">Runnable</code> and except for default Java API, there is no notification of
+            its completion.</p><p>In the end just have a look to the <code class="varname">SenderTask</code> class. This class
+            implements <code class="varname">Runnable</code> and does the following steps. First, it acquires
+            a <code class="varname">MessageSender</code> from the senders pool, uses this
+                  <code class="varname">MessageSender</code> to send one or more messages while measuring the
+            time it took. When a <code class="code">Receiver</code> is used, it awaits for a message response on
+            a separate message channel. Upon the response's arrival, the total time is measured. In
+            the end, the <code class="varname">MessageSender</code> is released. When a <code class="code">Receiver</code>
+            is in place, the <code class="code">MessageSender</code> is not returned to the pool until we get a
+            response corresponding to the original request. This prevents another thread from using
+            the same <code class="code">MessageSender</code> and thus increasing the number of concurrent
+            clients.</p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="dev.contributor.architecture.run-info.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="dev.contributor.architecture.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="dev.contributor.architecture.sender.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">3.2.&nbsp;Run Info&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="perfcake-developers-guide.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;3.4.&nbsp;Message Senders</td></tr></table></div></body></html>

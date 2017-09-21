@@ -1,0 +1,90 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;1.&nbsp;Introduction</title><link rel="stylesheet" type="text/css" href="../css/guides.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="perfcake-user-guide.html" title="PerfCake 7.x"><link rel="up" href="perfcake-user-guide.html" title="PerfCake 7.x"><link rel="prev" href="acknowledgements.html" title="Acknowledgements"><link rel="next" href="ug.introduction.first-performance.test.html" title="1.2.&nbsp;Your first performance test"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;1.&nbsp;Introduction</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="acknowledgements.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ug.introduction.first-performance.test.html">Next</a></td></tr></table><hr></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="ug.introduction"></a>Chapter&nbsp;1.&nbsp;Introduction</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="section"><a href="ug.introduction.html#ug.introduction.getting-perfcake">1.1. Obtaining and installing PerfCake</a></span></dt><dd><dl><dt><span class="section"><a href="ug.introduction.html#ug.introduction.getting-perfcake.downloading">1.1.1. Downloading distribution</a></span></dt><dt><span class="section"><a href="ug.introduction.html#ug.introduction.getting-perfcake.building">1.1.2. Building distribution</a></span></dt><dt><span class="section"><a href="ug.introduction.html#ug.introduction.getting-perfcake.minimal-requirements">1.1.3. Minimal requirements</a></span></dt><dt><span class="section"><a href="ug.introduction.html#ug.introduction.getting-perfcake.installing">1.1.4. Installing PerfCake</a></span></dt><dt><span class="section"><a href="ug.introduction.html#ug.introduction.getting-perfcake.running">1.1.5. Running PerfCake</a></span></dt></dl></dd><dt><span class="section"><a href="ug.introduction.first-performance.test.html">1.2. Your first performance test</a></span></dt><dd><dl><dt><span class="section"><a href="ug.introduction.first-performance.test.html#ug.introduction.first-performance-test.demo-httpbin">1.2.1. First out-of-the box demo with httpbin.org</a></span></dt><dt><span class="section"><a href="ug.introduction.first-performance.test.html#ug.introduction.first-performance-test.quickstart">1.2.2. Your own quickstart</a></span></dt><dd><dl><dt><span class="section"><a href="ug.introduction.first-performance.test.html#d0e171">Preparing PerfCake</a></span></dt><dt><span class="section"><a href="ug.introduction.first-performance.test.html#d0e219">Configure and run</a></span></dt><dt><span class="section"><a href="ug.introduction.first-performance.test.html#d0e298">Evaluate results</a></span></dt></dl></dd></dl></dd></dl></div><p>Here we would like to smoothly introduce you PerfCake - the lightweight performance testing
+      tool and a load generator with the aim to be minimalistic, easy to use, provide stable
+      results, have minimum influence on the measured system, be platform independent, use component
+      design, allow high throughput.</p><p>First, we show you how to obtain PerfCake, run it and create your first performance test. </p><p>Then we introduce some core features of PerfCake as an application and how to configure it.
+      This is useful for further integration in your testing environment.</p><p>More details and practical test scenarios and use cases will be described in a separate
+      chapter. Its content will be created over time, for now we can suggest you to follow us on
+      Twitter and see recordings of our talks.</p><p>The most comprehensive part for now is the Reference Guide where you can find details about
+      configuration of individual components of PerfCake.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.introduction.getting-perfcake"></a>1.1.&nbsp;Obtaining and installing PerfCake</h2></div></div></div><p>So let's get our hands on PerfCake and start creating our first performance test.</p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.introduction.getting-perfcake.downloading"></a>1.1.1.&nbsp;Downloading distribution</h3></div></div></div><p>The best way to obtain a complete distribution of PerfCake is at
+      <a class="link" href="https://www.perfcake.org/download/" target="_top">https://www.perfcake.org/download/</a>. There you can find the latest stable binary release in multiple
+      formats.
+   </p><p>We assume that you already have Java installed. For the best performance of PerfCake, we
+      need to ask you to install Java Development Kit (JDK) as we compile some classes dynamically
+      during test execution. This cannot be done just with Java Runtime Environment (JRE). We also
+      do not provide distributions with Java included in them. There are two simple reasons - first,
+      you are likely to already have one, second, we do not have enough time to maintain and test
+      such distributions.
+   </p><p>If you are brave enough, you can even try our nightly builds from
+      <a class="link" href="https://perfcake.ci.cloudbees.com/job/PerfCake-devel/lastSuccessfulBuild/artifact/perfcake/target/" target="_top">https://perfcake.ci.cloudbees.com/job/PerfCake-devel/lastSuccessfulBuild/artifact/perfcake/target/</a>.
+   </p><p>We try not to commit broken code and the nightly builds contain all the newest features.
+      However, there are no guarantees and the features are usually not yet documented. You would
+      need to have a look in the source code to be able to fully use them.
+   </p><p>Once you have downloaded your favourite build file, you can just uncompress (unzip,
+      untar...) it in a directory you like. This is your complete installation and the location is
+      further referenced as $PERFCAKE_HOME.
+   </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.introduction.getting-perfcake.building"></a>1.1.2.&nbsp;Building distribution</h3></div></div></div><p>Another option is to build your own distribution from source code. PerfCake is written in Java and the project lifecycle is managed by Maven. If you are familiar
+      with these technologies, you can find more information on using the Maven goals in the Developers' Guide.</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.introduction.getting-perfcake.minimal-requirements"></a>1.1.3.&nbsp;Minimal requirements</h3></div></div></div><p>As was mentioned in <a class="xref" href="ug.introduction.html#ug.introduction.getting-perfcake.downloading" title="1.1.1.&nbsp;Downloading distribution">Section&nbsp;1.1.1, &#8220;Downloading distribution&#8221;</a> , the
+      main requirement is having Java Development Kit version 8 installed in your environment. In
+      case you have troubles installing Java, please search some tutorials on installing JDK on your
+      operating system on YouTube. There are plenty of useful videos on this topic.</p><p>Other requirements on the hardware depend on what you expect from PerfCake. The memory and
+      CPU power demands depand mainly on your performance scenario. </p><p>Up to our knowledge all components of PerfCake work offline without an Internet connection.
+      This is our intent, please report a bug should you have different findings. </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.introduction.getting-perfcake.installing"></a>1.1.4.&nbsp;Installing PerfCake</h3></div></div></div><p>There is no extra step required to install PerfCake. As long as you have unpacked the
+      downloaded distribution, the installation is complete.</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ug.introduction.getting-perfcake.running"></a>1.1.5.&nbsp;Running PerfCake</h3></div></div></div><p>There are multiple ways of running PerfCake. In the case you have just donwloaded and
+      unpacked the binary distribution, you can find a shell script and a Windows bat script in the
+      $PERFCAKE_HOME/bin directory. These are executables that can find your JDK and run PerfCake
+      properly. The scripts were tested on Linux, Windows and MacOS (in this case, some command line
+      tweaking might be necessary).</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>Windows users should be running perfcake.bat from the old Command shell and avoid using
+         PowerShell. Another way is to run PerfCake with the following command in PowerShell:</p><p>
+         <code class="code">cmd /c perfcake.bat</code></p><p>It might be also necessary to place some parameters in double quotes. Like the
+         following:</p><p><code class="code">"-Dperfcake.run.time=1000"</code></p></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>Some MacOS installations of Java might have a preconfigured directory with Java
+         libraries that are pre-loaded with each Java application. These libraries can interfere
+         with PerfCake libraries resulting in failure to start PerfCake and are placed under
+            <code class="code">/Library/Java/Extensions/</code> directory.</p><p>Move the libraries to some other temporary directory to be able to run PerfCake.</p></div><p> </p><p>In case of building from the source code, please refer to the Developers' Guide for more
+      instructions. Basically, the easiest way is to create the binary distribution from source code
+      and follow the usual steps. It is also possible to run PerfCake directly by invoking the java
+      command but this needs to take care of the classpath configuration. </p><p>It is also possible to run PerfCake using a Maven plugin or its API. These ways are
+      described either in the Developers' Guide or will be presented in
+      <a class="xref" href="ug.general-usage.html" title="Chapter&nbsp;3.&nbsp;General Usage">Chapter&nbsp;3, <i>General Usage</i></a>
+      .
+   </p><p>You can verify your installation by invoking the following command in the $PERFCAKE_HOME
+      directory. This uses a 3rd party HTTP test server, so try not to over-use it. Please note that
+      you need to be online for this to work.
+   </p><p>
+      <code class="code">$ ./bin/perfcake.sh -s http -Dserver.host=httpbin.org</code>
+   </p><p>Typical output of this command is:</p><p>
+      </p><pre class="programlisting">2015-09-22 18:35:51,774 INFO  {org.perfcake.ScenarioExecution} === Welcome to PerfCake 7.5 ===
+2015-09-22 18:35:52,109 INFO  {org.perfcake.scenario.ScenarioBuilder} Scenario configuration: file:/home/perfcake/perfcake-7.5/resources/scenarios/http.xml
+2015-09-22 18:35:52,175 INFO  {org.perfcake.util.TimerBenchmark} Benchmarking system timer resolution...
+2015-09-22 18:35:52,176 INFO  {org.perfcake.util.TimerBenchmark} This system is able to differentiate up to 296ns. A single thread is now able to measure maximum of 3378378 iterations/second.
+2015-09-22 18:35:52,254 INFO  {org.perfcake.message.generator.DefaultMessageGenerator} Starting to generate...
+[0:00:01][705 iterations][5%] [520.564841647836 iterations/s] [Threads =&gt; 100] [warmUp =&gt; false]
+[0:00:02][1274 iterations][8%] [543.478973435464 iterations/s] [Threads =&gt; 100] [warmUp =&gt; false]
+[0:00:03][1864 iterations][12%] [554.858934169279 iterations/s] [Threads =&gt; 100] [warmUp =&gt; false]
+[0:00:05][2702 iterations][17%] [558.7941704931123 iterations/s] [Threads =&gt; 100] [warmUp =&gt; false]
+[0:00:06][3259 iterations][20%] [556.9051580698836 iterations/s] [Threads =&gt; 100] [warmUp =&gt; false]
+[0:00:07][4102 iterations][25%] [558.5885486018642 iterations/s] [Threads =&gt; 100] [warmUp =&gt; false]
+[0:00:08][4640 iterations][28%] [555.9863705792504 iterations/s] [Threads =&gt; 100] [warmUp =&gt; false]
+[0:00:10][5479 iterations][33%] [555.9884127459794 iterations/s] [Threads =&gt; 100] [warmUp =&gt; false]
+[0:00:11][6056 iterations][37%] [557.3011260443153 iterations/s] [Threads =&gt; 100] [warmUp =&gt; false]
+[0:00:12][6844 iterations][42%] [554.6675191815857 iterations/s] [Threads =&gt; 100] [warmUp =&gt; false]
+[0:00:13][7422 iterations][45%] [555.9091245467328 iterations/s] [Threads =&gt; 100] [warmUp =&gt; false]
+[0:00:15][8251 iterations][50%] [555.2521148338107 iterations/s] [Threads =&gt; 100] [warmUp =&gt; false]
+[0:00:16][8794 iterations][53%] [554.5147995503934 iterations/s] [Threads =&gt; 100] [warmUp =&gt; false]
+[0:00:17][9653 iterations][58%] [556.0123329907502 iterations/s] [Threads =&gt; 100] [warmUp =&gt; false]
+[0:00:18][10187 iterations][62%] [555.1464631365413 iterations/s] [Threads =&gt; 100] [warmUp =&gt; false]
+[0:00:20][11067 iterations][67%] [556.8823382463153 iterations/s] [Threads =&gt; 100] [warmUp =&gt; false]
+[0:00:21][11646 iterations][70%] [558.2889227255424 iterations/s] [Threads =&gt; 100] [warmUp =&gt; false]
+[0:00:22][12513 iterations][75%] [559.6908864807248 iterations/s] [Threads =&gt; 100] [warmUp =&gt; false]
+[0:00:24][13377 iterations][80%] [560.5196319273848 iterations/s] [Threads =&gt; 100] [warmUp =&gt; false]
+[0:00:25][13952 iterations][83%] [561.1783986888915 iterations/s] [Threads =&gt; 100] [warmUp =&gt; false]
+[0:00:26][14795 iterations][88%] [561.2248746087415 iterations/s] [Threads =&gt; 100] [warmUp =&gt; false]
+[0:00:27][15363 iterations][92%] [561.705065775129 iterations/s] [Threads =&gt; 100] [warmUp =&gt; false]
+[0:00:29][16243 iterations][97%] [562.9609208077745 iterations/s] [Threads =&gt; 100] [warmUp =&gt; false]
+[0:00:30][16812 iterations][100%] [562.8103856281039 iterations/s] [Threads =&gt; 100] [warmUp =&gt; false]
+2015-09-22 18:36:22,256 INFO  {org.perfcake.message.generator.DefaultMessageGenerator} Reached test end. All messages were prepared to be sent.
+2015-09-22 18:36:22,257 INFO  {org.perfcake.reporting.ReportManager} Reporting final results:
+2015-09-22 18:36:22,258 INFO  {org.perfcake.message.generator.DefaultMessageGenerator} Shutting down execution...
+2015-09-22 18:36:22,421 INFO  {org.perfcake.ScenarioExecution} === Goodbye! ===</pre><p>
+   </p><p>For more details on running perfcake from a command line see <a class="xref" href="ug.perfcake-features.configuration.html#ug.perfcake-features.configuration.cli" title="2.3.1.&nbsp;Command line parameters">Section&nbsp;2.3.1, &#8220;Command line parameters&#8221;</a></p></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="acknowledgements.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ug.introduction.first-performance.test.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Acknowledgements&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="perfcake-user-guide.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;1.2.&nbsp;Your first performance test</td></tr></table></div></body></html>
